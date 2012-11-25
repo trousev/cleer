@@ -40,13 +40,15 @@ public interface Player {
 		void destroyed();
 	}
 	
-	public void open(String filename, SongState state);
+	public void open(Track track, SongState state);
 	public void close();
 
 	public void play();
 	public void stop();
 	public void pause();
 	public void resume();
+	
+	public Track now_playing();
 	Status getStatus();
 	
 }

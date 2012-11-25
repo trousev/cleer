@@ -1,5 +1,6 @@
 package pro.trousev.jplay;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public interface Track {
 	public String lyrics();
 	public List<String> tags();
 	public int user_rating();
-	
+	public File filename();
 	// Statistics
 	public int play_count();
 	public int skip_count();
@@ -30,6 +31,7 @@ public interface Track {
 	String serialize();
 	boolean deserialize(String contents);
 	String generate_query();
+	
 	// Modifications
 	void set_user_rating(int rating);
 	void stat_played();

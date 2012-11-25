@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import pro.trousev.jplay.Player;
+import pro.trousev.jplay.Track;
+
 public class PlayerDesk implements Player
 {
 	abstract class ExecutorDelegate
@@ -41,16 +43,16 @@ public class PlayerDesk implements Player
 	}
 	
 	SongState current_state = null;
-	File current_file = null;
+	Track current_track = null;
 	Executor mplayer = null;
 	@Override
-	public void open(String filename, SongState state) {
+	public void open(Track track, SongState state) {
 		if(current_state != null)
 			close();
 		current_state = state;
-		current_file = new File(filename);
-		if(!current_file.exists())
-			state.error(Error.FileNotFound, "File not found: "+filename);
+		current_track = track;
+		if(!current_track.filename().exists())
+			state.error(Error.FileNotFound, "File not found: "+track.filename());
 	}
 	@Override
 	public void close() {
@@ -59,7 +61,7 @@ public class PlayerDesk implements Player
 		stop();
 		current_state.destroyed();
 		current_state = null;
-		current_file = null;
+		current_track = null;
 	}
 	@Override
 	public void play() {
@@ -69,11 +71,10 @@ public class PlayerDesk implements Player
 		{
 			@Override
 			void stop(String reason) {
-				// TODO Auto-generated method stub
 				current_state.finished(reason);
 			}
 		};
-		mplayer = new Executor(current_file.getAbsolutePath(),d );
+		mplayer = new Executor(current_track.filename().getAbsolutePath(),d );
 		mplayer.start();
 	}
 	@Override
@@ -99,6 +100,10 @@ public class PlayerDesk implements Player
 		if(current_state != null)
 			return Status.Stopped;
 		return Status.Closed;
+	}
+	@Override
+	public Track now_playing() {
+		return current_track;
 	}
 	
 }

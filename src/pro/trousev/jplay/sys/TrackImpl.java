@@ -71,7 +71,14 @@ public class TrackImpl implements Track {
 
 	@Override
 	public int user_rating() {
-		return new Integer(_header.getRating());
+		try 
+		{
+			return new Integer(_header.getRating());
+		}
+		catch  (Throwable t)
+		{
+			return 0;
+		}
 	}
 
 	@Override
@@ -177,6 +184,10 @@ public class TrackImpl implements Track {
 		for(int i=0; i<user_rating(); i++)
 			query += "*";
 		return query;
+	}
+	@Override
+	public File filename() {
+		return new File(_header.getFilename());
 	}
 	
 

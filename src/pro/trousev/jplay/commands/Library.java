@@ -25,7 +25,6 @@ public class Library implements Plugin.Command {
 				"    library remove <folder>  -- remove folder from library\n" +
 				"    library scan <folder>    -- scan/rescan selected folder\n" +
 				"    library scan             -- scan/rescan all library\n";
-				
 	}
 
 	@Override
@@ -113,7 +112,7 @@ public class Library implements Plugin.Command {
 				}
 			};
 			if(folder == null) iface.library().folder_scan(callback);
-			iface.library().folder_scan(new File(folder), callback);
+			else iface.library().folder_scan(new File(folder), callback);
 		}
 		
 		return true;
