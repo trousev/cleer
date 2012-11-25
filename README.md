@@ -12,4 +12,4 @@ I don't have a lot of requirements to media player. I will be satisfied with one
  * Cost only 15mb RAM (or near)
 
 
-Unfortunately, I didn't found any player, that suits my needs and I'll write my own.
+Unfortunately,   I didn't found any player, that suits my needs and I'll write my own.
