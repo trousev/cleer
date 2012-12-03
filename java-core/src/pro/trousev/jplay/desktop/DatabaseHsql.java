@@ -138,7 +138,12 @@ public class DatabaseHsql implements Database {
 			else where += " AND "+clause;
 		}
 		try {
-			ResultSet set = link.prepareStatement(String.format("SELECT id, value FROM %s WHERE %s;",section,where))
+			String qq; 
+			if(where == null)
+				qq = String.format("SELECT id, value FROM %s;",section);
+			else
+				qq = String.format("SELECT id, value FROM %s WHERE %s;",section,where);
+			ResultSet set = link.prepareStatement(qq)
 				.executeQuery();
 			while(set.next())
 			{

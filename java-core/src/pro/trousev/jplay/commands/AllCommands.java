@@ -16,7 +16,13 @@ public class AllCommands implements Console
 	public AllCommands()
 	{
 		register( new Exit() );
+		register(new Help());
 		register (new Library());
+		register( new Test());
+		register(new BasicPlayerControl.Next());
+		register(new BasicPlayerControl.Previous());
+		register(new BasicPlayerControl.Stop());
+		register(new BasicPlayerControl.Play());
 	}
 	static class CommandNotFoundException extends Console.CommandNotFoundException
 	{

@@ -11,8 +11,9 @@ public interface Plugin {
 		Database storage();
 		Console console();
 		Player player();
+		Queue queue();
 	}
-	public interface Command
+	public interface Command extends Comparable<Plugin.Command>
 	{
 		/** 
 		 * Должна возвращать имя команды

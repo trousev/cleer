@@ -1,6 +1,6 @@
 package pro.trousev.jplay;
 
-public interface Player {
+public interface Player  {
 	
 	enum Error
 	{
@@ -9,6 +9,10 @@ public interface Player {
 	enum Status
 	{
 		Closed,Stopped,Playing,Paused
+	}
+	enum Reason
+	{
+		UserBreak, EndOfTrack, PlayerError
 	}
 	public interface SongState
 	{
@@ -20,7 +24,7 @@ public interface Player {
 		 * Вызывается после того, как песна закончила играть
 		 * @param reason Строковый комментарий, посвященный ошибке, если таковая была. Может быть null
 		 */
-		void finished(String reason);
+		void finished(Reason reason);
 		/**
 		 * Вызывается, если произошла какая-то ошибка
 		 * @param errorMessage
@@ -44,7 +48,7 @@ public interface Player {
 	public void close();
 
 	public void play();
-	public void stop();
+	public void stop(Reason reason);
 	public void pause();
 	public void resume();
 	

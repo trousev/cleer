@@ -13,8 +13,10 @@ import pro.trousev.jplay.Library;
 import pro.trousev.jplay.Player;
 import pro.trousev.jplay.Plugin;
 import pro.trousev.jplay.Plugin.Interface;
+import pro.trousev.jplay.Queue;
 import pro.trousev.jplay.commands.AllCommands;
 import pro.trousev.jplay.sys.LibraryImpl;
+import pro.trousev.jplay.sys.QueueImpl;
 
 public class ConsoleClient {
 	public static void main(String[] argv) throws SQLException, ClassNotFoundException 
@@ -25,7 +27,7 @@ public class ConsoleClient {
 	    final Database db = new DatabaseHsql("/tmp/hsql/database.hsql");
 	    final Library lib = new LibraryImpl(db);
 	    final Player player = new PlayerDesk();
-	    
+	    final Queue queue = new QueueImpl(player);
 	    Plugin.Interface iface = new Interface() {
 			
 			@Override
@@ -47,6 +49,11 @@ public class ConsoleClient {
 			public Player player() {
 				return player;
 			}
+
+			@Override
+			public Queue queue() {
+				return queue;
+			}
 		};
 		
 	    while(true)
@@ -67,6 +74,7 @@ public class ConsoleClient {
 				catch(Throwable t)
 				{
 					System.out.println("Command failed: "+t.getMessage());
+					t.printStackTrace();
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

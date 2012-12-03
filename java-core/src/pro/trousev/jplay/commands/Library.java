@@ -7,7 +7,7 @@ import java.util.List;
 import pro.trousev.jplay.Plugin;
 import pro.trousev.jplay.Plugin.Interface;
 
-public class Library implements Plugin.Command {
+public class Library extends Command {
 
 	@Override
 	public String name() {

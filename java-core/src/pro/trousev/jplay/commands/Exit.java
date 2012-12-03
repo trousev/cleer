@@ -6,7 +6,7 @@ import java.util.List;
 import pro.trousev.jplay.Plugin;
 import pro.trousev.jplay.Plugin.Interface;
 
-public class Exit implements Plugin.Command {
+public class Exit extends Command {
 
 	@Override
 	public String name() {

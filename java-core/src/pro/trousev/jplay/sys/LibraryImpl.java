@@ -121,6 +121,7 @@ public class LibraryImpl implements Library {
 			List<Track> ans = new ArrayList<Track>();
 			for(DatabaseObject dbo: _db.search("songs", query))
 				ans.add(new TrackImpl(dbo));
+			return ans;
 		}
 		catch (Exception e)
 		{

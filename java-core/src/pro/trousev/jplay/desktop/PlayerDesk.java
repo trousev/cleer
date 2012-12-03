@@ -1,109 +1,191 @@
 package pro.trousev.jplay.desktop;
 
+import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import pro.trousev.jplay.Player;
 import pro.trousev.jplay.Track;
 
 public class PlayerDesk implements Player
 {
-	abstract class ExecutorDelegate
+	interface SubprocessDelegate
 	{
-		abstract void stop(String reason);
-	}
-	public class Executor extends Thread {
-		String _filename;
+		void onCannotLaunchProcess(String message);
+		void onEndOfFileReached();
+		void onProcessKilled();
+		void onReadingError(String message);
+		void onStartedProcess();
+	};
+	class Subprocess extends Thread
+	{
+		String[] args;
+		SubprocessDelegate delegate;
 		Process _process;
-		ExecutorDelegate _delegate;
-		Executor(String filename, ExecutorDelegate delegate)
+		Boolean killed = new Boolean(false);
+		public Subprocess(String[] args, SubprocessDelegate delegate) 
 		{
-			_filename = filename;
-			_delegate = delegate;
+			this.args = args;
+			this.delegate = delegate;
 		}
-		Exception _exception = null;
-		Exception getException()
+		@Override
+		public void run()
 		{
-			return _exception;
-		}
-        public void run() {              
 			try {
-				String[] args = {"mplayer",_filename};
 				_process = Runtime.getRuntime().exec(args);
-				_delegate.stop(null);
 			} catch (IOException e) {
-				_exception  = e;
-				_delegate.stop(e.getMessage());
+				delegate.onCannotLaunchProcess(e.getMessage());
+				return ;
 			}
-        }
-        public void kill()
-        {
-        	_process.destroy();
-        }
-	}
-	
-	SongState current_state = null;
-	Track current_track = null;
-	Executor mplayer = null;
+			delegate.onStartedProcess();
+			InputStream is = _process.getInputStream();
+			//InputStream es = _process.getErrorStream();
+			byte[] buffer = new byte[1000];
+			while(true)
+			{
+				int length = 0;
+				try {
+					length = is.read(buffer);
+				} catch (IOException e) {
+					delegate.onReadingError(e.getMessage());
+					break;
+				}
+				if(length == -1)
+				{
+					synchronized (killed) 
+					{
+						if(killed)
+							delegate.onProcessKilled();
+						else
+							delegate.onEndOfFileReached();
+					}
+					break;
+				}
+			}
+			try {
+				is.close();
+				//es.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			_process.destroy();
+		}
+		void kill()
+		{
+			synchronized (killed) {
+				killed = true;
+			}
+			_process.destroy();
+			try {
+				this.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	};
+	Subprocess subprocess;
+	SongState current_state;
+	Status current_status = Status.Closed;
+	Track track;
 	@Override
 	public void open(Track track, SongState state) {
-		if(current_state != null)
-			close();
+		close();
+		String[] args = new String[2];
+		args[0] = "mplayer";
+		if(track == null)
+			return ;
+		args[1] = track.filename().getAbsolutePath();
 		current_state = state;
-		current_track = track;
-		if(!current_track.filename().exists())
-			state.error(Error.FileNotFound, "File not found: "+track.filename());
+		this.track = track;
+		subprocess = new Subprocess(args, new SubprocessDelegate() {
+			
+			@Override
+			public void onStartedProcess() {
+				System.out.println(" *** started");
+				
+			}
+			
+			@Override
+			public void onReadingError(String message) {
+				System.out.println(" *** error: "+message);
+				
+			}
+			
+			@Override
+			public void onEndOfFileReached() {
+				System.out.println(" *** EOF ");
+				stop(Reason.EndOfTrack);
+			}
+			
+			@Override
+			public void onCannotLaunchProcess(String message) {
+				System.out.println(" *** CLP ");
+				
+			}
+
+			@Override
+			public void onProcessKilled() {
+				System.out.println(" *** killed");
+				
+			}
+		});
+		current_status = Status.Stopped;
 	}
+
 	@Override
 	public void close() {
-		if(current_state == null)
+		if(current_status == Status.Closed)
 			return ;
-		stop();
-		current_state.destroyed();
+		stop(Reason.UserBreak);
+		track = null;
+		subprocess = null;
 		current_state = null;
-		current_track = null;
+		current_status = Status.Closed;
 	}
+
 	@Override
 	public void play() {
-		stop();
+		if(subprocess == null || current_state == null)
+			return ;
+		if(current_status == Status.Playing || current_status == Status.Paused)
+			stop(Reason.UserBreak);
+		subprocess.start();
 		current_state.started();
-		ExecutorDelegate d = new ExecutorDelegate() 
-		{
-			@Override
-			void stop(String reason) {
-				current_state.finished(reason);
-			}
-		};
-		mplayer = new Executor(current_track.filename().getAbsolutePath(),d );
-		mplayer.start();
+		current_status = Status.Playing;
 	}
+
 	@Override
-	public void stop() {
-		current_state.finished("User Break");
-		if(mplayer == null) return ;
-		mplayer.kill();
-		mplayer = null;
-		
+	public void stop(Reason reason) {
+		if(current_status == Status.Stopped || current_status == Status.Closed)
+			return ;
+		subprocess.kill();
+		current_state.finished(reason);
+		current_status = Status.Stopped;
 	}
+
 	@Override
 	public void pause() {
-		System.out.println("Play/Pause not implemented");
+		// TODO Auto-generated method stub
+		
 	}
+
 	@Override
 	public void resume() {
-		System.out.println("Play/Pause not implemented");
+		// TODO Auto-generated method stub
+		
 	}
-	@Override
-	public Status getStatus() {
-		if(mplayer != null)
-			return Status.Playing;
-		if(current_state != null)
-			return Status.Stopped;
-		return Status.Closed;
-	}
+
 	@Override
 	public Track now_playing() {
-		return current_track;
+		return track;
 	}
-	
+
+	@Override
+	public Status getStatus() {
+		return current_status;
+	}
 }
