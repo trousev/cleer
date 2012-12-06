@@ -25,13 +25,11 @@ public interface Library {
 	 * @param query Запрос плейлиста
 	 * @return Список инстанциированных объектов Track
 	 */
-	public List<Track> playlist(String query);
-	// List of user-defined playlists
-	
-	public String user_playlist(String name);
-	public List<Track> user_playlist_content(String name);
-	public List<String> user_playlist_list();
-	public boolean user_playlist_save(String name, String query);
-	public boolean user_playlist_remove(String name);
-	
+	Playlist focus();
+	Playlist setFocus(String playlist);
+	public Playlist search(String query);
+	public Playlist playlist(String query);
+	public List<Playlist> playlists();
+	public List<String> playlist_names();
+	public boolean playlist_remove(String name);
 }

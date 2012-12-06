@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.List;
 
 public class Tools {
 	public static String Serialize(Serializable object)
@@ -28,7 +29,7 @@ public class Tools {
 		try {
 			ByteArrayInputStream in = new ByteArrayInputStream(Base64.decode(contents));
 			ObjectInputStream iis = new ObjectInputStream(in);
-			Object ans = (AudioFileHeader) iis.readObject();
+			Object ans = (Type) iis.readObject();
 			return (Type) ans;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -39,6 +40,17 @@ public class Tools {
 		}
 	}
 
+    public static String StringJoin( List<String> list , String replacement  ) {
+        StringBuilder b = new StringBuilder();
+        for( String item: list ) { 
+            b.append( replacement ).append( item );
+        }
+        return b.toString().substring( replacement.length() );
+    }
+	public static String playlist_hash(String name)
+	{
+		return "pl"+Hash.hash(name);
+	}
 
 
 }

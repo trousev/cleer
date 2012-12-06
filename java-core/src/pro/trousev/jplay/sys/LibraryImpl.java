@@ -10,11 +10,20 @@ import java.util.List;
 import pro.trousev.jplay.Database;
 import pro.trousev.jplay.Library;
 import pro.trousev.jplay.Database.DatabaseObject;
+import pro.trousev.jplay.Playlist;
 import pro.trousev.jplay.Track;
 
 public class LibraryImpl implements Library {
 
-	Database _db;
+	final Database _db;
+	String _focus = "default";
+	private LibrarySmartPlaylist playlistFromDatabase(DatabaseObject dbo)
+	{
+		LibrarySmartPlaylist p = Tools.Deserialize(dbo.contents());
+		p.setDatabase(_db);
+		return p;
+	}
+	
 	public LibraryImpl(Database db)
 	{
 		_db = db;
@@ -115,75 +124,50 @@ public class LibraryImpl implements Library {
 		return false;
 	}
 	@Override
-	public List<Track> playlist(String query) {
-		try
-		{
-			List<Track> ans = new ArrayList<Track>();
-			for(DatabaseObject dbo: _db.search("songs", query))
-				ans.add(new TrackImpl(dbo));
-			return ans;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
+	public Playlist search(String query) {
+		Playlist p = new LibrarySmartPlaylist(_db,_focus,query);
+		p.save(_focus);
+		System.out.println(focus().query());
+		return p;
 	}
-	private static class Playlist implements Serializable
+
+	@Override
+	public Playlist playlist(String name) 
 	{
-		private static final long serialVersionUID = 6213357899867437099L;
-		public String name;
-		public String query;
-		public static Playlist fromDatabase(DatabaseObject dbo)
-		{
-			return Tools.Deserialize(dbo.contents());
-		}
-		Playlist(String name, String query)
-		{
-			this.name = name;
-			this.query = query;
-		}
-	}
-	public String playlist_hash(String name)
-	{
-		return "pl"+Hash.hash(name);
+		DatabaseObject dbo = _db.search("playlists", Tools.playlist_hash(name)).get(0);
+		return playlistFromDatabase(dbo);
 	}
 	@Override
-	public String user_playlist(String name) 
+	public List<Playlist> playlists()
 	{
-		return Playlist.fromDatabase(_db.search("playlists", playlist_hash(name)).get(0)).query;
-	}
-	@Override
-	public List<Track> user_playlist_content(String name) 
-	{
-		return playlist(user_playlist(name));
-	}
-	@Override
-	public List<String> user_playlist_list() 
-	{
-		List<String> ans = new ArrayList<String>();
-		for(DatabaseObject dbo: _db.search("playlists", playlist_hash("pl")))
-			ans.add(Playlist.fromDatabase(dbo).name);
+		List<Playlist> ans = new ArrayList<Playlist>();
+		for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl")))
+			ans.add(playlistFromDatabase(dbo));
 		return ans;
 	}
-	@Override
-	public boolean user_playlist_save(String name, String query) 
+	public List<String> playlist_names()
 	{
-		user_playlist_remove(name);
-		try
-		{
-			_db.store("playlists", Tools.Serialize(new Playlist(name, query)), playlist_hash(name));
-			return true;
-		}
-		catch (Exception e)
-		{
-			return false;
-		}
+		List<String> ans = new ArrayList<String>();
+		for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl")))
+			ans.add(playlistFromDatabase(dbo).title());
+		return ans;
 	}
+	
 	@Override
-	public boolean user_playlist_remove(String name) {
-		for(DatabaseObject dbo: _db.search("playlists", playlist_hash(name)))
+	public boolean playlist_remove(String name) {
+		for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash(name)))
 			_db.remove("playlists", dbo);
 		return true;
+	}
+
+	@Override
+	public Playlist focus() {
+		return playlist(_focus);
+	}
+
+	@Override
+	public Playlist setFocus(String playlist) {
+		_focus = playlist;
+		return focus();
 	}
 }

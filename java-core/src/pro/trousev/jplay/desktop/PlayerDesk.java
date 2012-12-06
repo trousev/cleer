@@ -105,31 +105,26 @@ public class PlayerDesk implements Player
 			
 			@Override
 			public void onStartedProcess() {
-				System.out.println(" *** started");
 				
 			}
 			
 			@Override
 			public void onReadingError(String message) {
-				System.out.println(" *** error: "+message);
 				
 			}
 			
 			@Override
 			public void onEndOfFileReached() {
-				System.out.println(" *** EOF ");
 				stop(Reason.EndOfTrack);
 			}
 			
 			@Override
 			public void onCannotLaunchProcess(String message) {
-				System.out.println(" *** CLP ");
 				
 			}
 
 			@Override
 			public void onProcessKilled() {
-				System.out.println(" *** killed");
 				
 			}
 		});
@@ -154,7 +149,7 @@ public class PlayerDesk implements Player
 		if(current_status == Status.Playing || current_status == Status.Paused)
 			stop(Reason.UserBreak);
 		subprocess.start();
-		current_state.started();
+		current_state.started(track);
 		current_status = Status.Playing;
 	}
 

@@ -24,16 +24,14 @@ public class QueueImpl implements Queue {
 			queue = q;
 		}
 		@Override
-		public void started() {
-			System.out.println("Started song.");
+		public void started(Track track) {
+			System.out.println("Now playing: "+track);
 		}
 
 		@Override
 		public void finished(Player.Reason reason) {
-			System.out.println("Stopped: "+reason);
 			if(reason == Player.Reason.EndOfTrack)
 			{
-				System.out.println("Next");
 				queue.next();
 			}
 		}
@@ -181,7 +179,6 @@ public class QueueImpl implements Queue {
 		player.stop(Player.Reason.UserBreak);
 		player.open(playing_track(), reactor);
 		player.play();
-		System.out.println("Now playing: "+playing_track());
 		return true;
 	}
 }

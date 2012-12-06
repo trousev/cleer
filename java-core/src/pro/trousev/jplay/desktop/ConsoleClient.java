@@ -11,6 +11,7 @@ import pro.trousev.jplay.Console;
 import pro.trousev.jplay.Database;
 import pro.trousev.jplay.Library;
 import pro.trousev.jplay.Player;
+import pro.trousev.jplay.Playlist;
 import pro.trousev.jplay.Plugin;
 import pro.trousev.jplay.Plugin.Interface;
 import pro.trousev.jplay.Queue;
@@ -59,7 +60,11 @@ public class ConsoleClient {
 	    while(true)
 	    {
 	    	try {
-				System.out.println("jplay# ");
+	    		pro.trousev.jplay.Playlist focus = lib.focus();
+				if(focus == null)
+					System.out.println("<no playlist> # ");
+				else
+					System.out.println(focus.title()+" '"+focus.query()+"' ("+focus.contents().size()+")"+"# ");
 	    		String command_line = stdin.readLine();
 	    		List<String> args = new ArrayList<String>();
 	    		for(String a: command_line.split(" "))
