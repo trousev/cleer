@@ -1,7 +1,6 @@
 package pro.trousev.jplay.sys;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -134,8 +133,15 @@ public class LibraryImpl implements Library {
 	@Override
 	public Playlist playlist(String name) 
 	{
-		DatabaseObject dbo = _db.search("playlists", Tools.playlist_hash(name)).get(0);
-		return playlistFromDatabase(dbo);
+		try
+		{
+			DatabaseObject dbo = _db.search("playlists", Tools.playlist_hash(name)).get(0);
+			return playlistFromDatabase(dbo);
+		}
+		catch(IndexOutOfBoundsException e)
+		{
+			return null;
+		}
 	}
 	@Override
 	public List<Playlist> playlists()

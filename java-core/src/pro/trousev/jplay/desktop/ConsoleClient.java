@@ -1,6 +1,7 @@
 package pro.trousev.jplay.desktop;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
@@ -11,7 +12,6 @@ import pro.trousev.jplay.Console;
 import pro.trousev.jplay.Database;
 import pro.trousev.jplay.Library;
 import pro.trousev.jplay.Player;
-import pro.trousev.jplay.Playlist;
 import pro.trousev.jplay.Plugin;
 import pro.trousev.jplay.Plugin.Interface;
 import pro.trousev.jplay.Queue;
@@ -25,7 +25,9 @@ public class ConsoleClient {
 		InputStreamReader inputStreamReader = new InputStreamReader (System.in);
 	    BufferedReader stdin = new BufferedReader (inputStreamReader);
 	    final Console console = new AllCommands();
-	    final Database db = new DatabaseHsql("/tmp/hsql/database.hsql");
+	    String dbpath = System.getProperty("user.home") + "/.config/jplay/database.hsql";
+	    
+	    final Database db = new DatabaseHsql(dbpath);
 	    final Library lib = new LibraryImpl(db);
 	    final Player player = new PlayerDesk();
 	    final Queue queue = new QueueImpl(player);

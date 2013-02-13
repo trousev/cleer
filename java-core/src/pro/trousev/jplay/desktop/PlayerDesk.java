@@ -1,8 +1,5 @@
 package pro.trousev.jplay.desktop;
 
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -79,12 +76,12 @@ public class PlayerDesk implements Player
 				killed = true;
 			}
 			_process.destroy();
-			try {
+			/*try {
 				this.join();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 		}
 	};
 	Subprocess subprocess;
@@ -110,7 +107,7 @@ public class PlayerDesk implements Player
 			
 			@Override
 			public void onReadingError(String message) {
-				
+				stop(Reason.EndOfTrack);
 			}
 			
 			@Override
@@ -125,7 +122,7 @@ public class PlayerDesk implements Player
 
 			@Override
 			public void onProcessKilled() {
-				
+				//System.out.println("ProcessKilled");
 			}
 		});
 		current_status = Status.Stopped;
@@ -155,6 +152,7 @@ public class PlayerDesk implements Player
 
 	@Override
 	public void stop(Reason reason) {
+		//System.out.println("Stop call, prev.status: "+current_status+", reason: "+reason);
 		if(current_status == Status.Stopped || current_status == Status.Closed)
 			return ;
 		subprocess.kill();

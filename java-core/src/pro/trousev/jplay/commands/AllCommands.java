@@ -23,6 +23,8 @@ public class AllCommands implements Console
 		register(new BasicPlayerControl.Stop());
 		register(new BasicPlayerControl.Play());
 		register(new BasicLibraryManagement.Search());
+		register(new BasicLibraryManagement.Focus());
+		register(new BasicLibraryManagement.Enqueue());
 	}
 	static class CommandNotFoundException extends Console.CommandNotFoundException
 	{

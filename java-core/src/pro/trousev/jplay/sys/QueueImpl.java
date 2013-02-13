@@ -16,11 +16,11 @@ public class QueueImpl implements Queue {
 	private int current = 0;
 	private static class Reactor implements Player.SongState
 	{
-		Player player;
+		//Player player;
 		QueueImpl queue;
 		Reactor(Player pl, QueueImpl q)
 		{
-			player = pl;
+			//player = pl;
 			queue = q;
 		}
 		@Override
@@ -30,8 +30,10 @@ public class QueueImpl implements Queue {
 
 		@Override
 		public void finished(Player.Reason reason) {
+			//System.out.println("Finished playing, reason: "+reason);
 			if(reason == Player.Reason.EndOfTrack)
 			{
+				//System.out.println("Playing next song...");
 				queue.next();
 			}
 		}

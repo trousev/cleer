@@ -3,6 +3,7 @@ package pro.trousev.jplay.sys;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Iterator;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -15,6 +16,7 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.TagField;
 
 public class AudioFileHeader implements Serializable {
 
@@ -148,6 +150,10 @@ public class AudioFileHeader implements Serializable {
 		_tags = tag.getFirst(FieldKey.TAGS);
 		_filename = file.getAbsolutePath();
 		_user_rating = tag.getFirst(FieldKey.RATING);
+		
+		//System.out.println(FieldKey.valueOf("TXXX").toString());
+		
+		//tag.getValue(arg0, arg1)
 	}
 	public String toString()
 	{

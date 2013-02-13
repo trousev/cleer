@@ -3,7 +3,6 @@ package pro.trousev.jplay.commands;
 import java.io.PrintStream;
 import java.util.List;
 
-import pro.trousev.jplay.Plugin;
 import pro.trousev.jplay.Plugin.Interface;
 
 public class Exit extends Command {

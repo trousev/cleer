@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.PrintStream;
 import java.util.List;
 
-import pro.trousev.jplay.Plugin;
 import pro.trousev.jplay.Plugin.Interface;
 
 public class Library extends Command {
@@ -99,6 +98,8 @@ public class Library extends Command {
 				public void progress(int current, int maximum) {
 					c = current;
 					m = maximum;
+					if(current % 100 == 0)
+						stdout.println(String.format("Overall progress : "+current+"/"+maximum));
 				}
 				
 				@Override
