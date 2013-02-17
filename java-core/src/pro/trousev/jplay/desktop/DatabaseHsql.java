@@ -38,6 +38,7 @@ public class DatabaseHsql implements Database {
 		String _contents = null;
 		DatabaseHsql _parent = null;
 		String _section= null;
+		String _search = null;
 		DatabaseObjectHsql(String section, DatabaseHsql parent, String id, String contents)
 		{
 			_parent = parent;
@@ -107,6 +108,22 @@ public class DatabaseHsql implements Database {
 		@Override
 		public boolean update_search(String search) {
 			return update(null,search);
+		}
+		@Override
+		public String search() {
+			if(_search == null)
+			{
+				try {
+					ResultSet set = _parent.link.prepareStatement(String.format("select search from %s where id='%s';",_section,_id)).executeQuery();
+					set.next();
+					_search = set.getString(1);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+			return _search;
+
 		}
 	}
 	@Override

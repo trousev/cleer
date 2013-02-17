@@ -12,4 +12,5 @@ public abstract class Command implements Plugin.Command{
 	    collator.setStrength(Collator.SECONDARY);
 	    return collator.compare(name(), compareObject.name());
 	}
+
 }

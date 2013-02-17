@@ -6,5 +6,5 @@
 	<classpathentry kind="lib" path="jars/jaudiotagger-2.0.4-20111207.115108-15-javadoc.jar"/>
 	<classpathentry kind="lib" path="jars/hsqldb.jar"/>
 	<classpathentry kind="lib" path="jars/hsqldb-javadoc.jar"/>
-	<classpathentry kind="output" path="build/bin"/>
+	<classpathentry kind="output" path="tmp/build-eclipse"/>
 </classpath>

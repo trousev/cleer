@@ -12,36 +12,36 @@ public interface Player  {
 	}
 	enum Reason
 	{
-		UserBreak, EndOfTrack, PlayerError
+		UserBreak, EndOfTrack, PlayerError, SystemBreak
 	}
 	public interface SongState
 	{
 		/**
 		 * Вызывается после того, как песня начала играть.
 		 */
-		void started(Track track);
+		void started(Player sender, Track track);
 		/**
 		 * Вызывается после того, как песна закончила играть
 		 * @param reason Строковый комментарий, посвященный ошибке, если таковая была. Может быть null
 		 */
-		void finished(Reason reason);
+		void finished(Player sender, Track track, Reason reason);
 		/**
 		 * Вызывается, если произошла какая-то ошибка
 		 * @param errorMessage
 		 */
-		void error(Error errorCode, String errorMessage);
+		void error(Player sender, Error errorCode, String errorMessage);
 		/**
 		 * Вызывается, если песню приостановили
 		 */
-		void paused();
+		void paused(Player sender, Track track);
 		/**
 		 * Вызывается, если песню продолжили играть
 		 */
-		void resumed();
+		void resumed(Player sender, Track track);
 		/**
 		 * Вызывается, если песня уничтожилась и плеер ее больше не играет
 		 */
-		void destroyed();
+		void destroyed(Player sender);
 	}
 	
 	public void open(Track track, SongState state);

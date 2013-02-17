@@ -151,13 +151,50 @@ public class AudioFileHeader implements Serializable {
 		_filename = file.getAbsolutePath();
 		_user_rating = tag.getFirst(FieldKey.RATING);
 		
-		//System.out.println(FieldKey.valueOf("TXXX").toString());
+		try
+		{
+			if(_user_rating == null || _user_rating.isEmpty())
+			{
+				Iterator<TagField> iter = tag.getFields();
+				while(iter.hasNext())
+				{
+					TagField field = iter.next();
+					if(field.getId().equals("TXXX"))
+					{
+						String s = field.toString();
+						s = s.replaceAll("Description=\"rating\"; Text=\"", "");
+						if(s.contains("Description")) continue;
+						s = s.replaceAll("[^0-9]+","");
+						_user_rating = s;
+						//if(_user_rating <= 0) _user_rating = s;
+					}
+				}
+			}
+		}
+		catch (Throwable t) {}
+		////
+		
+		//// This is Compability Layer with Winamp Comment Format
+		try
+		{
+			if(_user_rating == null || _user_rating.isEmpty())
+			{
+				String comm = tag.getFirst(FieldKey.COMMENT);
+				if(comm.contains("*****")) _user_rating = "5"; 
+				else if(comm.contains("****")) _user_rating = "4"; 
+				else if(comm.contains("***")) _user_rating = "3"; 
+				else if(comm.contains("**")) _user_rating = "2"; 
+				else if(comm.contains("*")) _user_rating = "1"; 
+			}
+		}
+		catch (Throwable t) {} 
+		////
 		
 		//tag.getValue(arg0, arg1)
 	}
 	public String toString()
 	{
-		return String.format("%s %s -- %s -- %s",_year, _title,_album,_artist);
+		return String.format("%s %s -- %s -- %s (r:%s)",_year, _title,_album,_artist,_user_rating);
 	}
 	
 }

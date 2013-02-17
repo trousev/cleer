@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
 import pro.trousev.jplay.Database;
-import pro.trousev.jplay.Library;
 import pro.trousev.jplay.Database.DatabaseObject;
+import pro.trousev.jplay.Library;
 import pro.trousev.jplay.Playlist;
 import pro.trousev.jplay.Track;
 
@@ -126,7 +125,6 @@ public class LibraryImpl implements Library {
 	public Playlist search(String query) {
 		Playlist p = new LibrarySmartPlaylist(_db,_focus,query);
 		p.save(_focus);
-		System.out.println(focus().query());
 		return p;
 	}
 
@@ -175,5 +173,16 @@ public class LibraryImpl implements Library {
 	public Playlist setFocus(String playlist) {
 		_focus = playlist;
 		return focus();
+	}
+
+	@Override
+	public boolean update(Track t) {
+		DatabaseObject dbo = t.linkedObject();
+		//FIXME: This is a BUG! Folder Information is lost!
+		
+		String fh = dbo.search().replaceAll(".*fh", "");
+		dbo.update_search(t.generate_query()+" fh"+fh);
+		//System.out.println(dbo.search());
+		return true;
 	}
 }

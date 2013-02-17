@@ -24,13 +24,13 @@ public class QueueImpl implements Queue {
 			queue = q;
 		}
 		@Override
-		public void started(Track track) {
-			System.out.println("Now playing: "+track);
+		public void started(Player sender, Track track) {
+			System.out.println("\nNow playing: "+track);
 		}
 
 		@Override
-		public void finished(Player.Reason reason) {
-			//System.out.println("Finished playing, reason: "+reason);
+		public void finished(Player sender, Track track,  Player.Reason reason) {
+			System.out.println("Finished playing, reason: "+reason);
 			if(reason == Player.Reason.EndOfTrack)
 			{
 				//System.out.println("Playing next song...");
@@ -39,23 +39,23 @@ public class QueueImpl implements Queue {
 		}
 
 		@Override
-		public void error(Error errorCode, String errorMessage) {
+		public void error(Player sender, Error errorCode, String errorMessage) {
 			
 			
 		}
 
 		@Override
-		public void paused() {
+		public void paused(Player sender, Track track) {
 			
 		}
 
 		@Override
-		public void resumed() {
+		public void resumed(Player sender, Track track) {
 			
 		}
 
 		@Override
-		public void destroyed() {
+		public void destroyed(Player sender) {
 			
 		}
 	}

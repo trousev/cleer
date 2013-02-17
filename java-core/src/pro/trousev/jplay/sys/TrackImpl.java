@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldDataInvalidException;
@@ -18,16 +20,19 @@ import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.TagException;
 
 import pro.trousev.jplay.Database;
+import pro.trousev.jplay.Database.DatabaseObject;
 import pro.trousev.jplay.Track;
 
 public class TrackImpl implements Track {
 
 	AudioFileHeader _header = null;
+	DatabaseObject _link = null;
 	public TrackImpl(Database.DatabaseObject dataObject) throws Exception
 	{
 		_header = new AudioFileHeader();
 		if(!deserialize(dataObject.contents()))
 			throw new Exception("Deserialisation failed");
+		_link = dataObject;
 	}
 	public TrackImpl(File filename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
 	{
@@ -139,10 +144,34 @@ public class TrackImpl implements Track {
 	@Override
 	public void set_user_rating(int rating) {
 		try {
+			_header.begin();
 			_header.setRating(String.format("%d",rating));
+			_header.commit();
+			//_header.commit();
 		} catch (KeyNotFoundException e) {
 			e.printStackTrace();
 		} catch (FieldDataInvalidException e) {
+			e.printStackTrace();
+		} catch (CannotReadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TagException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ReadOnlyFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidAudioFrameException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CannotWriteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -188,6 +217,10 @@ public class TrackImpl implements Track {
 	@Override
 	public File filename() {
 		return new File(_header.getFilename());
+	}
+	@Override
+	public DatabaseObject linkedObject() {
+		return _link;
 	}
 	
 

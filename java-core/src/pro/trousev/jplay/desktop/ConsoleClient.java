@@ -22,15 +22,19 @@ import pro.trousev.jplay.sys.QueueImpl;
 public class ConsoleClient {
 	public static void main(String[] argv) throws SQLException, ClassNotFoundException 
 	{
+
 		InputStreamReader inputStreamReader = new InputStreamReader (System.in);
 	    BufferedReader stdin = new BufferedReader (inputStreamReader);
+
 	    final Console console = new AllCommands();
-	    String dbpath = System.getProperty("user.home") + "/.config/jplay/database.hsql";
+	    String dbpath = System.getProperty("user.home") + "/.config/cleer/database.hsql";
 	    
 	    final Database db = new DatabaseHsql(dbpath);
-	    final Library lib = new LibraryImpl(db);
+	    
+		final Library lib = new LibraryImpl(db);
 	    final Player player = new PlayerDesk();
 	    final Queue queue = new QueueImpl(player);
+
 	    Plugin.Interface iface = new Interface() {
 			
 			@Override
@@ -62,11 +66,12 @@ public class ConsoleClient {
 	    while(true)
 	    {
 	    	try {
+	    		
 	    		pro.trousev.jplay.Playlist focus = lib.focus();
 				if(focus == null)
-					System.out.println("<no playlist> # ");
+					System.out.print("<no playlist> # ");
 				else
-					System.out.println(focus.title()+" '"+focus.query()+"' ("+focus.contents().size()+")"+"# ");
+					System.out.print(focus.title()+" '"+focus.query()+"' ("+focus.contents().size()+")"+"# ");
 	    		String command_line = stdin.readLine();
 	    		List<String> args = new ArrayList<String>();
 	    		for(String a: command_line.split(" "))

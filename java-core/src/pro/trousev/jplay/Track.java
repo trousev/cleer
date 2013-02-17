@@ -3,6 +3,8 @@ package pro.trousev.jplay;
 import java.io.File;
 import java.util.List;
 
+import pro.trousev.jplay.Database.DatabaseObject;
+
 /**
  * Эта штуковина репрезентует один музыкальный трек коллекции. 
  * @author doctor
@@ -37,5 +39,8 @@ public interface Track {
 	void stat_played();
 	void stat_skipped();
 	void stat_repeated();
+	
+	// Link
+	DatabaseObject linkedObject();
 	
 }

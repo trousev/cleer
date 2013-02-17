@@ -7,6 +7,7 @@ public interface Database {
 	{
 		String id();
 		String contents();
+		String search();
 		boolean update(String contents, String search);
 		boolean update_contents(String contents);
 		boolean update_search(String search);

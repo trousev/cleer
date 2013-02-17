@@ -25,6 +25,8 @@ public class AllCommands implements Console
 		register(new BasicLibraryManagement.Search());
 		register(new BasicLibraryManagement.Focus());
 		register(new BasicLibraryManagement.Enqueue());
+		register(new SystemCommands.GarbageCollection());
+		register(new RatingManagement.Rate());
 	}
 	static class CommandNotFoundException extends Console.CommandNotFoundException
 	{

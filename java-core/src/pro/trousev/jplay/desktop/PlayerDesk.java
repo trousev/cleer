@@ -146,7 +146,7 @@ public class PlayerDesk implements Player
 		if(current_status == Status.Playing || current_status == Status.Paused)
 			stop(Reason.UserBreak);
 		subprocess.start();
-		current_state.started(track);
+		current_state.started(this,track);
 		current_status = Status.Playing;
 	}
 
@@ -156,8 +156,8 @@ public class PlayerDesk implements Player
 		if(current_status == Status.Stopped || current_status == Status.Closed)
 			return ;
 		subprocess.kill();
-		current_state.finished(reason);
 		current_status = Status.Stopped;
+		current_state.finished(this,track,reason);
 	}
 
 	@Override

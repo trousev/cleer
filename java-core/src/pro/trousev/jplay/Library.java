@@ -32,4 +32,7 @@ public interface Library {
 	public List<Playlist> playlists();
 	public List<String> playlist_names();
 	public boolean playlist_remove(String name);
+	
+	// On-the-fly update API
+	public boolean update(Track t);
 }
