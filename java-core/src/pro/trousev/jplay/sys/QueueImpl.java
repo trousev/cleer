@@ -30,7 +30,7 @@ public class QueueImpl implements Queue {
 
 		@Override
 		public void finished(Player sender, Track track,  Player.Reason reason) {
-			System.out.println("Finished playing, reason: "+reason);
+			// System.out.println("Finished playing, reason: "+reason);
 			if(reason == Player.Reason.EndOfTrack)
 			{
 				//System.out.println("Playing next song...");
