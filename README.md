@@ -1,6 +1,8 @@
 cleer
 =====
 
+Nightly builds: http://cleer.cc.trousev.pro/nightly/
+
 I don't have a lot of requirements to media player. I will be satisfied with one, which will:
 
  * Have "Media Library" -- datavase with all my music indexed by ID3 tags
