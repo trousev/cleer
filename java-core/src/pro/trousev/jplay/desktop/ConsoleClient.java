@@ -12,7 +12,9 @@ import pro.trousev.jplay.Console;
 import pro.trousev.jplay.Database;
 import pro.trousev.jplay.Library;
 import pro.trousev.jplay.Player;
+import pro.trousev.jplay.Playlist;
 import pro.trousev.jplay.Plugin;
+import pro.trousev.jplay.Track;
 import pro.trousev.jplay.Plugin.Interface;
 import pro.trousev.jplay.Queue;
 import pro.trousev.jplay.commands.AllCommands;
@@ -20,7 +22,22 @@ import pro.trousev.jplay.sys.LibraryImpl;
 import pro.trousev.jplay.sys.QueueImpl;
 
 public class ConsoleClient {
-	public static void main(String[] argv) throws SQLException, ClassNotFoundException 
+	static String prompt(Plugin.Interface iface)
+	{
+		String pl = "[no playlist]";
+		Playlist focus = iface.library().focus();
+		if(focus != null)
+			pl = focus.title()+" '"+focus.query()+"' ("+focus.contents().size()+")";
+		
+		String np = "[No Song]";
+		Track t = iface.queue().playing_track();
+		if(t != null)
+			np = t.title();
+		
+		String sz = String.format("%d/%d",iface.queue().playing_index(), iface.queue().size());
+		return pl + " | " + sz + " " + np + " # ";
+	}
+	public static void main(String[] argv) throws SQLException, ClassNotFoundException, IOException 
 	{
 
 		InputStreamReader inputStreamReader = new InputStreamReader (System.in);
@@ -62,35 +79,37 @@ public class ConsoleClient {
 				return queue;
 			}
 		};
-		
 	    while(true)
 	    {
-	    	try {
-	    		
-	    		pro.trousev.jplay.Playlist focus = lib.focus();
-				if(focus == null)
-					System.out.print("<no playlist> # ");
-				else
-					System.out.print(focus.title()+" '"+focus.query()+"' ("+focus.contents().size()+")"+"# ");
-	    		String command_line = stdin.readLine();
-	    		List<String> args = new ArrayList<String>();
-	    		for(String a: command_line.split(" "))
-	    			args.add(a);
-				String command = args.remove(0);
-				try {
-					console.invoke(command, args, System.out, iface);
-				} catch (pro.trousev.jplay.Console.CommandNotFoundException e) {
-					// TODO Auto-generated catch block
-					System.out.println(e.getMessage());
-				}
-				catch(Throwable t)
-				{
-					System.out.println("Command failed: "+t.getMessage());
-					t.printStackTrace();
-				}
-			} catch (IOException e) {
+	    	java.io.Console sys_console = System.console();
+	    	pro.trousev.jplay.Playlist focus = lib.focus();
+			/*if(focus == null)
+				System.out.print("<no playlist> # ");
+			else
+				System.out.print(focus.title()+" '"+focus.query()+"' ("+focus.contents().size()+")"+"# ");*/
+			String command_line ; 
+			if(sys_console != null)
+				command_line=  sys_console.readLine(prompt(iface));
+			else
+			{
+				System.out.print(prompt(iface));
+				command_line= stdin.readLine();
+			}
+
+			List<String> args = new ArrayList<String>();
+			for(String a: command_line.split(" "))
+				args.add(a);
+			String command = args.remove(0);
+			try {
+				console.invoke(command, args, System.out, iface);
+			} catch (pro.trousev.jplay.Console.CommandNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(e.getMessage());
+			}
+			catch(Throwable t)
+			{
+				System.out.println("Command failed: "+t.getMessage());
+				t.printStackTrace();
 			}
 	    }
 	}

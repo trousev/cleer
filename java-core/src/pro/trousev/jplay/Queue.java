@@ -103,4 +103,9 @@ public interface Queue {
 	 * @return true if all OK. false else.
 	 */
 	boolean seek(int index);
+	
+	/**
+	 * Перемешивает всю очередь, за исключением текущего индекса
+	 */
+	void shuffle();
 }

@@ -3,8 +3,10 @@ package pro.trousev.jplay.commands;
 import java.io.PrintStream;
 import java.util.List;
 
+import pro.trousev.jplay.Playlist;
 import pro.trousev.jplay.Plugin.Interface;
 import pro.trousev.jplay.Queue;
+import pro.trousev.jplay.Track;
 import pro.trousev.jplay.sys.Tools;
 
 public class BasicLibraryManagement {
@@ -35,11 +37,34 @@ public class BasicLibraryManagement {
 				stdout.println("Wrong query or no query at all");
 				return false;
 			}
-			//iface.library().playlist("#current");
-			//iface.queue().enqueue(iface.library().search(query).contents(), Queue.EnqueueMode.ReplaceAll);
-			iface.library().search(query);
+			Playlist ans = iface.library().search(query);
+			for(Track t: ans.contents())
+			{
+				System.out.println(t.toString());
+			}
 			return false;
 		}
+	}
+	public static class Shuffle extends Command
+	{
+
+		@Override
+		public String name() {
+			return "shuffle";
+		}
+
+		@Override
+		public String help(boolean is_short) {
+			return "Shuffles current queue";
+		}
+
+		@Override
+		public boolean main(List<String> args, PrintStream stdout,
+				Interface iface) {
+			iface.queue().shuffle();
+			return true;
+		}
+		
 	}
 	public static class Focus extends Command
 	{

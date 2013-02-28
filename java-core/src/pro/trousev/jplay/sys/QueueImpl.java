@@ -2,10 +2,13 @@ package pro.trousev.jplay.sys;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import pro.trousev.jplay.Player;
 import pro.trousev.jplay.Player.Error;
+import pro.trousev.jplay.Player.Reason;
 import pro.trousev.jplay.Player.SongState;
+import pro.trousev.jplay.Player.Status;
 import pro.trousev.jplay.Queue;
 import pro.trousev.jplay.Track;
 
@@ -182,5 +185,28 @@ public class QueueImpl implements Queue {
 		player.open(playing_track(), reactor);
 		player.play();
 		return true;
+	}
+	@Override
+	public void shuffle() {
+		// TODO Auto-generated method stub
+		Random r = new Random();
+		int nti = -1;
+		if(player.getStatus() == Status.Playing)
+			nti = playing_index();
+		if(queue == null)
+			return ;
+		int N = queue.size();
+		for(int i=0; i<N*5; i++)
+		{
+			
+			int first = r.nextInt(N);
+			int second = r.nextInt(N);
+			if(first == second) continue;
+			if (first == nti || second == nti) continue;
+			Track F = queue.get(first);
+			Track S = queue.get(second);
+			queue.set(first, S);
+			queue.set(second, F);
+		}
 	}
 }

@@ -22,7 +22,10 @@ public class AllCommands implements Console
 		register(new BasicPlayerControl.Previous());
 		register(new BasicPlayerControl.Stop());
 		register(new BasicPlayerControl.Play());
+		register(new BasicPlayerControl.ListPlaylist());
+		register(new BasicPlayerControl.ClearQueue());
 		register(new BasicLibraryManagement.Search());
+		register(new BasicLibraryManagement.Shuffle());
 		register(new BasicLibraryManagement.Focus());
 		register(new BasicLibraryManagement.Enqueue());
 		register(new SystemCommands.GarbageCollection());
