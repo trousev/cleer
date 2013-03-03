@@ -2,9 +2,12 @@
 <project name="cleer">
     <path id="path.build.classpath">
 	<fileset dir="jars" includes="**/*.jar" />
+	<fileset dir="tmp/build/jars" includes="**/*.jar" />
     </path>
     <target name="desktop-compile">
 	<mkdir dir="tmp/build/bin" />
+	<mkdir dir="tmp/build/jars" />
+	<copy file="../submodules/jline2/target/jline-2.11-SNAPSHOT.jar" todir="tmp/build/jars" />
 	<javac includeAntRuntime="false" srcdir="src" destdir="tmp/build/bin" classpathref="path.build.classpath" />
     </target>
     <target name="desktop-jar" depends="desktop-compile">
@@ -15,6 +18,7 @@
             </manifest>
             <fileset dir="tmp/build/bin"/>
             <zipgroupfileset dir="." excludes="META-INF/*.SF" includes="jars/*.jar" />
+            <zipgroupfileset dir="." excludes="META-INF/*.SF" includes="tmp/build/jars/*.jar" />
         </jar>
     </target>
 </project>

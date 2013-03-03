@@ -8,6 +8,7 @@ import javax.sound.midi.Track;
 import pro.trousev.jplay.Player;
 import pro.trousev.jplay.Queue;
 import pro.trousev.jplay.commands.Command;
+import pro.trousev.jplay.Player.Status;
 import pro.trousev.jplay.Plugin.Interface;
 
 public class BasicPlayerControl {
@@ -161,6 +162,56 @@ public class BasicPlayerControl {
 				return false;
 			}
 			return iface.queue().seek(0);
+		}
+	}
+	public static class Jump extends Command
+	{
+
+		@Override
+		public String name() {
+			return "jump";
+		}
+
+		@Override
+		public String help(boolean is_short) {
+			return "Jump to specified #id or string in playlist";
+		}
+
+		@Override
+		public boolean main(List<String> args, PrintStream stdout,
+				Interface iface) {
+			int s_index = 0;
+			if(iface.player().getStatus() == Status.Playing)
+				s_index = iface.queue().playing_index();
+			int N = iface.queue().size();
+			List<pro.trousev.jplay.Track> tracks = iface.queue().queue();
+			int found = -1;
+			for(int i=s_index+1; i<N; i++)
+			{
+				if(tracks.get(i).generate_query().contains(args.get(0)))
+				{
+					found = i; 
+					break;
+				}
+			}
+			if(found == -1)
+			{
+				for(int i=0; i<N; i++)
+				{
+					if(tracks.get(i).generate_query().contains(args.get(0)))
+					{
+						found = i; 
+						break;
+					}
+				}
+			}
+			if(found == -1)
+			{
+				System.out.println("Can't find anything.");
+				return false;
+			}
+			iface.queue().seek(found - iface.queue().playing_index());
+			return true;
 		}
 	}
 }

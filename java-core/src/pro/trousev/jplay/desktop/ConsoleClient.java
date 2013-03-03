@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jline.console.ConsoleReader;
+
 import pro.trousev.jplay.Console;
 import pro.trousev.jplay.Database;
 import pro.trousev.jplay.Library;
@@ -39,7 +41,7 @@ public class ConsoleClient {
 	}
 	public static void main(String[] argv) throws SQLException, ClassNotFoundException, IOException 
 	{
-
+		
 		InputStreamReader inputStreamReader = new InputStreamReader (System.in);
 	    BufferedReader stdin = new BufferedReader (inputStreamReader);
 
@@ -79,22 +81,11 @@ public class ConsoleClient {
 				return queue;
 			}
 		};
+		ConsoleReader reader = new ConsoleReader();
 	    while(true)
 	    {
-	    	java.io.Console sys_console = System.console();
-	    	pro.trousev.jplay.Playlist focus = lib.focus();
-			/*if(focus == null)
-				System.out.print("<no playlist> # ");
-			else
-				System.out.print(focus.title()+" '"+focus.query()+"' ("+focus.contents().size()+")"+"# ");*/
-			String command_line ; 
-			if(sys_console != null)
-				command_line=  sys_console.readLine(prompt(iface));
-			else
-			{
-				System.out.print(prompt(iface));
-				command_line= stdin.readLine();
-			}
+	    	reader.setPrompt(prompt(iface));
+			String command_line = reader.readLine(); 
 
 			List<String> args = new ArrayList<String>();
 			for(String a: command_line.split(" "))
