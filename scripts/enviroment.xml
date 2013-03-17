@@ -1,0 +1,27 @@
+<project name="cleer-enviroment">
+    <target name="env-submodules">
+	<exec executable="git">
+            <arg value="submodule" />
+            <arg value="foreach" />
+            <arg value="git" />
+            <arg value="checkout" />
+            <arg value="master" />
+        </exec>
+	<exec executable="git">
+            <arg value="submodule" />
+            <arg value="foreach" />
+            <arg value="git" />
+            <arg value="pull" />
+        </exec>
+    </target>
+    <target name="env-jline" depends="env-submodules">
+        <exec executable="mvn" dir="submodules/jline2">
+            <arg value="install" />
+        </exec>
+    </target>
+    <target name="enviroment" depends="env-submodules,env-jline">
+    </target>
+    <target name="clean" >
+        <delete dir="tmp" />
+    </target>
+</project>

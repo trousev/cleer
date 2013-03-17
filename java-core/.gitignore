@@ -1,8 +1,0 @@
-*.class
-
-# Package Files #
-cleer-*.jar
-cleer.jar
-*.war
-*.ear
-bin/*

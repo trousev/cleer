@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project name="cleer">
+<project name="cleer-core">
     <path id="path.build.classpath">
-	<fileset dir="jars" includes="**/*.jar" />
-	<fileset dir="tmp/build/jars" includes="**/*.jar" />
+      <fileset dir="artifacts/core" includes="**/*.jar" />
+      <fileset dir="artifacts/${cleer.target}" includes="**/*.jar" />
+      <fileset dir="tmp/build/jars/core" includes="**/*.jar" />
+      <fileset dir="tmp/build/${cleer.target}" includes="**/*.jar" />
     </path>
-    <target name="desktop-compile">
+    
+    <target name="compile-platform-desktop">
 	<mkdir dir="tmp/build/bin" />
 	<mkdir dir="tmp/build/jars" />
 	<copy file="../submodules/jline2/target/jline-2.11-SNAPSHOT.jar" todir="tmp/build/jars" />
