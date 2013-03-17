@@ -11,14 +11,14 @@
         <mkdir dir="tmp/build/jars/${cleer.target}" />
         <mkdir dir="tmp/build/jars/core" />
         <copy file="submodules/jline2/target/jline-2.11-SNAPSHOT.jar" todir="tmp/build/jars/${cleer.target}" />
-        <javac includeAntRuntime="false" srcdir="src/core" destdir="tmp/build/bin/${cleer.target}" classpathref="path.build.classpath" />
+        <javac encoding="utf-8" includeAntRuntime="false" srcdir="src/core" destdir="tmp/build/bin/${cleer.target}" classpathref="path.build.classpath" />
         <path id="path.build.tmp.updated">
             <path refid="path.build.classpath"/>
             <fileset dir="src/core">
                 <include name="**/*.java"/>
             </fileset>
         </path>
-        <javac includeAntRuntime="false" srcdir="src/${cleer.target}" destdir="tmp/build/bin/${cleer.target}" classpathref="path.build.tmp.updated" />
+        <javac encoding="utf-8" includeAntRuntime="false" srcdir="src/${cleer.target}" destdir="tmp/build/bin/${cleer.target}" classpathref="path.build.tmp.updated" />
     </target>
 
     <target name="core-jar-platform-desktop" depends="core-compile-platform-desktop">
