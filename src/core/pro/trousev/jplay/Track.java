@@ -42,5 +42,4 @@ public interface Track {
 	
 	// Link
 	DatabaseObject linkedObject();
-	
 }

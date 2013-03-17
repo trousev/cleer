@@ -42,4 +42,13 @@
         <property name="cleer.target" value="desktop" />
         <antcall target="core-jar-platform-desktop" />
     </target>
+    
+    <target name="nsis">
+        <mkdir dir="tmp/artifacts/win32" />
+        <delete dir="tmp/package/win32" />
+        <mkdir dir="tmp/package/win32" />
+        <get skipexisting="true" src="http://cleer.cc.trousev.pro/artifacts/win32/jre.tar.gz" dest="tmp/artifacts/win32/jre.tar.gz"  />
+        <get skipexisting="true" src="${artifacts.win32.mplayer}" dest="tmp/artifacts/win32/mplayer.7z"  />
+        
+    </target>
 </project>

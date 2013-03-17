@@ -2,7 +2,4 @@
     <property file="build.properties" />
     <import file="scripts/enviroment.xml" />
     <import file="scripts/desktop.xml" />
-
-    <target name="test">
-    </target>
 </project>
