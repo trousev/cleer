@@ -1,6 +1,6 @@
 <project name="cleer-enviroment">
     <tstamp>
-      <format property="TIMESTAMP" pattern="yyyy-mm-dd" locale="en,UK"/>
+      <format property="TIMESTAMP" pattern="yyyy-MM-dd" locale="en,UK"/>
     </tstamp>
     <target name="env-submodules">
 	<exec executable="git">
