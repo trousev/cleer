@@ -23,7 +23,7 @@
 
     <target name="core-jar-platform-desktop" depends="core-compile-platform-desktop">
         <mkdir dir="tmp/product/${cleer.target}" />
-        <jar destfile="tmp/product/${cleer.target}/cleer-${cleer.target}.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="tmp/product/${cleer.target}/cleer-${cleer.target}-${cleer.version}-${TIMESTAMP}.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="pro.trousev.jplay.desktop.ConsoleClient"/>
                 <attribute name="Class-Path" value="."/>
@@ -34,6 +34,8 @@
             <zipgroupfileset dir="." excludes="META-INF/*.SF" includes="tmp/build/jars/core/*.jar" />
             <zipgroupfileset dir="." excludes="META-INF/*.SF" includes="tmp/build/jars/${cleer.target}/*.jar" />
         </jar>
+        <copy file="tmp/product/${cleer.target}/cleer-${cleer.target}-${cleer.version}-${TIMESTAMP}.jar" tofile="tmp/product/${cleer.target}/cleer-${cleer.target}-${cleer.version}.jar" />
+        <copy file="tmp/product/${cleer.target}/cleer-${cleer.target}-${cleer.version}-${TIMESTAMP}.jar" tofile="tmp/product/${cleer.target}/cleer-${cleer.target}.jar" />
     </target>
     
     <target name="desktop">

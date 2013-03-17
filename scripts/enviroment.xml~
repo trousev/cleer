@@ -14,7 +14,7 @@
             <arg value="pull" />
         </exec>
     </target>
-    <target name="env-jline">
+    <target name="env-jline" depends="env-submodules">
         <exec executable="mvn" dir="submodules/jline2">
             <arg value="install" />
         </exec>
