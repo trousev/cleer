@@ -1,9 +1,6 @@
 package pro.trousev.jplay.desktop;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +38,8 @@ public class ConsoleClient {
 	}
 	public static void main(String[] argv) throws SQLException, ClassNotFoundException, IOException 
 	{
-		
-		InputStreamReader inputStreamReader = new InputStreamReader (System.in);
-	    BufferedReader stdin = new BufferedReader (inputStreamReader);
+		//InputStreamReader inputStreamReader = new InputStreamReader (System.in);
+	    //BufferedReader stdin = new BufferedReader (inputStreamReader);
 
 	    final Console console = new AllCommands();
 	    String dbpath = System.getProperty("user.home") + "/.config/cleer/database.hsql";
@@ -94,7 +90,6 @@ public class ConsoleClient {
 			try {
 				console.invoke(command, args, System.out, iface);
 			} catch (pro.trousev.jplay.Console.CommandNotFoundException e) {
-				// TODO Auto-generated catch block
 				System.out.println(e.getMessage());
 			}
 			catch(Throwable t)

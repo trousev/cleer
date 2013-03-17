@@ -6,7 +6,6 @@ import java.util.Random;
 
 import pro.trousev.jplay.Player;
 import pro.trousev.jplay.Player.Error;
-import pro.trousev.jplay.Player.Reason;
 import pro.trousev.jplay.Player.SongState;
 import pro.trousev.jplay.Player.Status;
 import pro.trousev.jplay.Queue;
@@ -63,15 +62,14 @@ public class QueueImpl implements Queue {
 		}
 	}
 	Reactor reactor;
-	
-	
-	
+
 	public QueueImpl(Player player)
 	{
 		this.player = player;
 		queue = new ArrayList<Track>();
 		reactor = new Reactor(this.player, this);
 	}
+
 	@Override
 	public List<Track> queue() {
 		return queue;
@@ -188,7 +186,6 @@ public class QueueImpl implements Queue {
 	}
 	@Override
 	public void shuffle() {
-		// TODO Auto-generated method stub
 		Random r = new Random();
 		int nti = -1;
 		if(player.getStatus() == Status.Playing)

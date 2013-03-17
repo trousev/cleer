@@ -23,7 +23,15 @@ public class RatingManagement {
 		@Override
 		public boolean main(List<String> args, PrintStream stdout,
 				Interface iface) {
-			int rating = new Integer(args.get(0));
+			int rating ;
+			String rated = args.get(0);
+			if(rated.equals("*****")) rating = 5;
+			else if(rated.equals("****")) rating = 4;
+			else if(rated.equals("***")) rating = 3;
+			else if(rated.equals("**")) rating = 2;
+			else if(rated.equals("*")) rating = 1;
+			else if(rated.equals("none")) rating = 0;
+			else rating = new Integer(rated);
 			Track t = iface.player().now_playing();
 			t.set_user_rating(rating);
 			iface.library().update(t);

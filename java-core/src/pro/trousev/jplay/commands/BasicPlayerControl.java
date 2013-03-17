@@ -3,8 +3,6 @@ package pro.trousev.jplay.commands;
 import java.io.PrintStream;
 import java.util.List;
 
-import javax.sound.midi.Track;
-
 import pro.trousev.jplay.Player;
 import pro.trousev.jplay.Queue;
 import pro.trousev.jplay.commands.Command;

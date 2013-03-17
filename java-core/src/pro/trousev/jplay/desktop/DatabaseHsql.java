@@ -64,6 +64,7 @@ public class DatabaseHsql implements Database {
 					ResultSet set = _parent.link.prepareStatement(String.format("select value from %s where id='%s';",_section,_id)).executeQuery();
 					set.next();
 					_contents = set.getString(1);
+					set.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 					return null;
@@ -117,6 +118,7 @@ public class DatabaseHsql implements Database {
 					ResultSet set = _parent.link.prepareStatement(String.format("select search from %s where id='%s';",_section,_id)).executeQuery();
 					set.next();
 					_search = set.getString(1);
+					set.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 					return null;
@@ -160,12 +162,12 @@ public class DatabaseHsql implements Database {
 				qq = String.format("SELECT id, value FROM %s;",section);
 			else
 				qq = String.format("SELECT id, value FROM %s WHERE %s;",section,where);
-			ResultSet set = link.prepareStatement(qq)
-				.executeQuery();
+			ResultSet set = link.prepareStatement(qq).executeQuery();
 			while(set.next())
 			{
 				ans.add(new DatabaseObjectHsql(section,this, set.getString(1),set.getString(2)));
 			}
+			set.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;

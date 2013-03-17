@@ -65,7 +65,6 @@ public class PlayerDesk implements Player
 				is.close();
 				//es.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			_process.destroy();
@@ -76,12 +75,6 @@ public class PlayerDesk implements Player
 				killed = true;
 			}
 			_process.destroy();
-			/*try {
-				this.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
 		}
 	};
 	Subprocess subprocess;
@@ -162,14 +155,10 @@ public class PlayerDesk implements Player
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

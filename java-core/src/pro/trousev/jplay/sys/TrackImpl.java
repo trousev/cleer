@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -88,25 +87,21 @@ public class TrackImpl implements Track {
 
 	@Override
 	public int play_count() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int skip_count() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int repeat_count() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int auto_rating() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -153,44 +148,32 @@ public class TrackImpl implements Track {
 		} catch (FieldDataInvalidException e) {
 			e.printStackTrace();
 		} catch (CannotReadException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TagException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ReadOnlyFileException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvalidAudioFrameException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CannotWriteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void stat_played() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void stat_skipped() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void stat_repeated() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

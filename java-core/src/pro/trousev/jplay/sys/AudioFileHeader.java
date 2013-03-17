@@ -21,9 +21,6 @@ import org.jaudiotagger.tag.TagField;
 public class AudioFileHeader implements Serializable {
 
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7752453454217919971L;
 	// Metainfo
 	private String _artist;
