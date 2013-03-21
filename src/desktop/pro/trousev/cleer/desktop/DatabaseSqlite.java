@@ -14,7 +14,7 @@ public class DatabaseSqlite implements Database {
 	Connection link = null;
 	DatabaseSqlite(String path) throws SQLException, ClassNotFoundException
 	{
-		Class.forName("org.hsqldb.jdbcDriver");
+		//Class.forName("org.hsqldb.jdbcDriver");
 		Class.forName("org.sqlite.JDBC");
 		//link = DriverManager.getConnection(String.format("jdbc:hsqldb:file:%s;hsqldb.default_table_type=cached;hsqldb.script_format=3",path),"sa","");
 
@@ -208,6 +208,7 @@ public class DatabaseSqlite implements Database {
 	    {
 	    	return false;
 	    }
+	    
 	}
 	@Override
 	public boolean clear_section(String section) {

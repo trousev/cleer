@@ -25,7 +25,15 @@ public class Library extends Command {
 				"    library scan <folder>    -- scan/rescan selected folder\n" +
 				"    library scan             -- scan/rescan all library\n";
 	}
-
+	public String make_folder(String in)
+	{
+		if(in.startsWith("~"))
+		{
+			//System.out.println("Home: "+System.getProperty("user.home"));
+			in = in.replaceAll("^~", System.getProperty("user.home"));
+		}
+		return in;
+	}
 	@Override
 	public boolean main(List<String> args, final PrintStream stdout, Interface iface) {
 		String command;
@@ -50,7 +58,7 @@ public class Library extends Command {
 			String folder;
 			try
 			{
-				folder = args.remove(0);
+				folder = make_folder(args.remove(0));
 			}
 			catch (Exception e)
 			{
@@ -64,7 +72,7 @@ public class Library extends Command {
 			String folder;
 			try
 			{
-				folder = args.remove(0);
+				folder = make_folder(args.remove(0));
 			}
 			catch (Exception e)
 			{
@@ -78,7 +86,7 @@ public class Library extends Command {
 			String folder;
 			try
 			{
-				folder = args.remove(0);
+				folder = make_folder(args.remove(0));
 			}
 			catch (Exception e)
 			{
@@ -115,7 +123,6 @@ public class Library extends Command {
 			if(folder == null) iface.library().folder_scan(callback);
 			else iface.library().folder_scan(new File(folder), callback);
 		}
-		
 		return true;
 	}
 
