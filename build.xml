@@ -1,27 +1,5 @@
 <project name="cleer">
     <property file="build.properties" />
-    <target name="os" depends="if_windows, if_unix"/>
-
-    <target name="checkos">
-        <condition property="isWindows">
-	    <os family="windows" />
-	</condition>
-	<condition property="isLinux">
-	    <os family="unix" />
-	</condition>
-    </target>
-
-    <target name="if_windows" depends="checkos" if="isWindows">
-        <property file="build.properties.windows" />
-        <echo message="Host system: WINDOWS"/>
-    </target>
-
-    <target name="if_unix" depends="checkos" if="isLinux">
-	<property file="build.properties.windows.unix" />
-	<echo message="Host system: UNIX"/>
-    </target>
-
-    
     <import file="scripts/enviroment.xml" />
     <import file="scripts/desktop.xml" />
 </project>

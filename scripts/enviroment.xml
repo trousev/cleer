@@ -2,6 +2,27 @@
     <tstamp>
       <format property="TIMESTAMP" pattern="yyyy-MM-dd" locale="en,UK"/>
     </tstamp>
+    
+    <target name="os" depends="if_windows, if_unix"/>
+    <target name="checkos">
+        <condition property="isWindows">
+            <os family="windows" />
+        </condition>
+        <condition property="isLinux">
+            <os family="unix" />
+        </condition>
+    </target>
+
+    <target name="if_windows" depends="checkos" if="isWindows">
+        <property file="build.properties.windows" />
+        <echo message="Host system: WINDOWS"/>
+    </target>
+
+    <target name="if_unix" depends="checkos" if="isLinux">
+        <property file="build.properties.unix" />
+        <echo message="Host system: UNIX"/>
+    </target>
+
     <target name="env-submodules">
 	<exec executable="git">
             <arg value="submodule" />

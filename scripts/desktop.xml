@@ -25,7 +25,7 @@
         <mkdir dir="tmp/product/${cleer.target}" />
         <jar destfile="tmp/product/${cleer.target}/cleer-${cleer.target}-${cleer.version}-${TIMESTAMP}.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="pro.trousev.jplay.desktop.ConsoleClient"/>
+                <attribute name="Main-Class" value="pro.trousev.cleer.desktop.ConsoleClient"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="tmp/build/bin/${cleer.target}"/>
