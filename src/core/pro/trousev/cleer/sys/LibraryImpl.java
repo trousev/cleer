@@ -104,10 +104,12 @@ public class LibraryImpl implements Library {
 		try
 		{
 			String fh = Hash.hash(folder.getAbsolutePath());
+			_db.begin();
 			for(DatabaseObject dbo: _db.search("songs", "fh"+fh))
 				_db.remove("songs", dbo);
 			DatabaseObject obj = _db.search("folders", "fh"+Hash.hash(folder.getAbsolutePath())).get(0);
 			_db.remove("folders", obj);
+			_db.commit();
 		}
 		catch(Exception e)
 		{
