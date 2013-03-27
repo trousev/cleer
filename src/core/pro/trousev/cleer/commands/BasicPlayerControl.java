@@ -184,23 +184,38 @@ public class BasicPlayerControl {
 			int N = iface.queue().size();
 			List<pro.trousev.cleer.Track> tracks = iface.queue().queue();
 			int found = -1;
-			for(int i=s_index+1; i<N; i++)
+			if(N == 0)
 			{
-				if(tracks.get(i).generate_query().contains(args.get(0)))
-				{
-					found = i; 
-					break;
-				}
+				System.out.println("Queue is empty.");
+				return false;
 			}
-			if(found == -1)
+			if(args.size() == 0)
 			{
-				for(int i=0; i<N; i++)
+				System.out.println("Where to jump? Try jump #13 or jump MySong");
+				return false;
+			}
+			if(args.get(0).startsWith("#"))
+			{
+				iface.queue().seek(new Integer(args.get(0).replaceAll("#", "")) - iface.queue().playing_index());
+				return true;
+			}
+			for(int i=s_index+1; i!=s_index; i++)
+			{
+				if(i >= N) i=0;
+				boolean foundee = true;
+				for(String haystackee: args)
 				{
-					if(tracks.get(i).generate_query().contains(args.get(0)))
+					String qq = tracks.get(i).generate_query();
+					if(!qq.contains(haystackee))
 					{
-						found = i; 
+						foundee = false; 
 						break;
 					}
+				}
+				if(foundee)
+				{
+					found = i;
+					break;
 				}
 			}
 			if(found == -1)

@@ -43,9 +43,9 @@ public interface Database {
 		  Обновляет только содержимое
 		**/
 		boolean update_contents(String contents);
-                /**
-                  Обновляет только поисковой контекст.
-                **/
+        /**
+          Обновляет только поисковой контекст.
+        **/
 		boolean update_search(String search);
 	}
 	/**
