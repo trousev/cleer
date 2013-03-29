@@ -30,6 +30,10 @@
         </exec>
 	<exec executable="git">
             <arg value="submodule" />
+            <arg value="update" />
+        </exec>
+	<exec executable="git">
+            <arg value="submodule" />
             <arg value="foreach" />
             <arg value="git" />
             <arg value="checkout" />
