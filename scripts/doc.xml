@@ -1,0 +1,21 @@
+<project name="cleer-doc">
+<target name="javadoc">
+  <javadoc packagenames="pro.trousev.cleer.*"
+           sourcepath="src/core"
+           excludepackagenames="pro.trousev.cleer.tests.*"
+           defaultexcludes="yes"
+           destdir="tmp/javadoc"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="cleer javadoc"
+           charset="utf-8"
+           >
+    <doctitle><![CDATA[<h1>Cleer: Reference Documentation</h1>]]></doctitle>
+    <bottom><![CDATA[<i>Copyright &#169; 2012-2013 Alexander Trousevich. All Rights Reserved.</i>]]></bottom>
+    <tag name="todo" scope="all" description="To do:"/>
+    <group title="Основные интерфейсы" packages="pro.trousev.cleer"/>
+    <group title="Команды плеера" packages="pro.trousev.cleer.commands"/>
+  </javadoc>
+</target>
+</project>

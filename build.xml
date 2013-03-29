@@ -2,4 +2,5 @@
     <property file="build.properties" />
     <import file="scripts/enviroment.xml" />
     <import file="scripts/desktop.xml" />
+    <import file="scripts/doc.xml" />
 </project>
