@@ -205,7 +205,8 @@ public class BasicPlayerControl {
 				boolean foundee = true;
 				for(String haystackee: args)
 				{
-					String qq = tracks.get(i).generate_query();
+					String qq = tracks.get(i).generate_query().toLowerCase();
+					haystackee = haystackee.toLowerCase();
 					if(!qq.contains(haystackee))
 					{
 						foundee = false; 

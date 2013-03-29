@@ -9,6 +9,7 @@ import jline.console.ConsoleReader;
 
 import pro.trousev.cleer.Console;
 import pro.trousev.cleer.Database;
+import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Playlist;
@@ -36,7 +37,7 @@ public class ConsoleClient {
 		String sz = String.format("%d/%d",iface.queue().playing_index(), iface.queue().size());
 		return pl + " | " + sz + " " + np + " # ";
 	}
-	public static void main(String[] argv) throws SQLException, ClassNotFoundException, IOException 
+	public static void main(String[] argv) throws SQLException, ClassNotFoundException, IOException, DatabaseError 
 	{
 		//InputStreamReader inputStreamReader = new InputStreamReader (System.in);
 	    //BufferedReader stdin = new BufferedReader (inputStreamReader);

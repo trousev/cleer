@@ -2,8 +2,10 @@ package pro.trousev.cleer.desktop;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +89,7 @@ public class DatabaseSqlite implements Database {
 			return id()+": "+contents();
 		}
 		@Override
-		public boolean update(String contents, String search) {
+		public boolean update(String contents, String search) throws DatabaseError {
 			if(contents != null) contents = contents.replace("'", "''");
 			if(search != null) search = search.replace("'", "''");
 			if(search != null) search = search.toLowerCase();
@@ -99,24 +101,28 @@ public class DatabaseSqlite implements Database {
 			else 
 				query=String.format("update %s set value='%s' , search='%s' where id='%s'",_section,contents,  search,_id);
 			try {
-				if(_parent.link.prepareStatement(query).execute())
+				PreparedStatement st = _parent.link.prepareStatement(query);
+				st.execute();
+				if(st.getUpdateCount() == 1)
 				{
 					if(contents != null)
 						_contents = null;
+					if(search!= null)
+						_search = null;
+					return true;
 				}
-				return false;
+				else throw new DatabaseError("Statement returned not one updated row. Query: "+query+" UpdatedRows: "+st.getUpdateCount());
 			} catch (SQLException e) {
-				e.printStackTrace();
-				return false;
+				throw new DatabaseError(e);
 			}
 			
 		}
 		@Override
-		public boolean update_contents(String contents) {
+		public boolean update_contents(String contents) throws DatabaseError {
 			return update(contents, null);
 		}
 		@Override
-		public boolean update_search(String search) {
+		public boolean update_search(String search) throws DatabaseError {
 			return update(null,search);
 		}
 		@Override
@@ -138,15 +144,14 @@ public class DatabaseSqlite implements Database {
 		}
 	}
 	@Override
-	public DatabaseObject store(String section, String contents, String keywords) {
+	public DatabaseObject store(String section, String contents, String keywords) throws DatabaseError {
 		keywords = keywords.toLowerCase();
 		keywords = keywords.replace("'","''");
 		contents = contents.replace("'","''");
 		try {
 			link.prepareStatement(String.format("INSERT INTO %s(value,search) VALUES('%s','%s');",section,contents, keywords)).execute();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			throw new DatabaseError(e);
 		}
 		return null;
 	}

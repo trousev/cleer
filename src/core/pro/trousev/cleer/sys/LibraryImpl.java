@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import pro.trousev.cleer.Database;
+import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Track;
@@ -22,7 +23,7 @@ public class LibraryImpl implements Library {
 		return p;
 	}
 	
-	public LibraryImpl(Database db)
+	public LibraryImpl(Database db) throws DatabaseError
 	{
 		_db = db;
 		_db.declare_section("folders");
@@ -33,9 +34,15 @@ public class LibraryImpl implements Library {
 	public List<File> folders() 
 	{
 		List<File> ans = new ArrayList<File>();
-		for(DatabaseObject obj: _db.search("folders", "folder:"))
-		{
-			ans.add(new File(obj.contents()));
+		try {
+			for(DatabaseObject obj: _db.search("folders", "folder:"))
+			{
+				ans.add(new File(obj.contents()));
+			}
+		} catch (DatabaseError e) {
+			// TODO Make some re-throws here too.
+			e.printStackTrace();
+			return null;
 		}
 		return ans;
 	}
@@ -49,7 +56,13 @@ public class LibraryImpl implements Library {
 		}
 		catch(Exception e)
 		{
-			_db.store("folders", folder.getAbsolutePath(), "folder: "+folder.getAbsolutePath()+" fh"+Hash.hash(folder.getAbsolutePath())); 
+			try {
+				_db.store("folders", folder.getAbsolutePath(), "folder: "+folder.getAbsolutePath()+" fh"+Hash.hash(folder.getAbsolutePath()));
+			} catch (DatabaseError e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				return false;
+			} 
 			return true;
 		}
 	}
@@ -80,21 +93,27 @@ public class LibraryImpl implements Library {
 		int n = all_files.size();
 		int i=0;
 		String fh = Hash.hash(folder.getAbsolutePath());
-		_db.begin();
-		for(DatabaseObject dbo: _db.search("songs", "fh"+fh))
-			_db.remove("songs", dbo);
-		for(File f: all_files)
-		{
-			callback.progress(i++, n);
-			try {
-				Track t= new TrackImpl(f);
-				_db.store("songs", t.serialize(), t.generate_query() + " fh"+fh);
-			} 
-			catch (Exception e) {
-				callback.message("Skipping "+f.getAbsolutePath()+": "+e.getMessage());
+		try {
+			_db.begin();
+			for(DatabaseObject dbo: _db.search("songs", "fh"+fh))
+				_db.remove("songs", dbo);
+			for(File f: all_files)
+			{
+				callback.progress(i++, n);
+				try {
+					Track t= new TrackImpl(f);
+					_db.store("songs", t.serialize(), t.generate_query() + " fh"+fh);
+				} 
+				catch (Exception e) {
+					callback.message("Skipping "+f.getAbsolutePath()+": "+e.getMessage());
+				}
 			}
+			_db.commit();
+		} catch (DatabaseError e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
 		}
-		_db.commit();
 		callback.finished();
 		return false;
 	}
@@ -121,9 +140,15 @@ public class LibraryImpl implements Library {
 
 	@Override
 	public boolean folder_scan( FolderScanCallback callback) {
-		for(DatabaseObject dbo: _db.search("folders", "folder:"))
-			folder_scan(new File(dbo.contents()), callback);
-		return false;
+		try {
+			for(DatabaseObject dbo: _db.search("folders", "folder:"))
+				folder_scan(new File(dbo.contents()), callback);
+			return true;
+		} catch (DatabaseError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 	@Override
 	public Playlist search(String query) {
@@ -143,28 +168,50 @@ public class LibraryImpl implements Library {
 		catch(IndexOutOfBoundsException e)
 		{
 			return null;
+		} catch (DatabaseError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
 	}
 	@Override
 	public List<Playlist> playlists()
 	{
 		List<Playlist> ans = new ArrayList<Playlist>();
-		for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl")))
-			ans.add(playlistFromDatabase(dbo));
+		try {
+			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl")))
+				ans.add(playlistFromDatabase(dbo));
+		} catch (DatabaseError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		return ans;
 	}
 	public List<String> playlist_names()
 	{
 		List<String> ans = new ArrayList<String>();
-		for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl")))
-			ans.add(playlistFromDatabase(dbo).title());
+		try {
+			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl")))
+				ans.add(playlistFromDatabase(dbo).title());
+		} catch (DatabaseError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		return ans;
 	}
 	
 	@Override
 	public boolean playlist_remove(String name) {
-		for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash(name)))
-			_db.remove("playlists", dbo);
+		try {
+			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash(name)))
+				_db.remove("playlists", dbo);
+		} catch (DatabaseError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 
@@ -185,7 +232,13 @@ public class LibraryImpl implements Library {
 		//FIXME: This is a BUG! Folder Information is lost!
 		
 		String fh = dbo.search().replaceAll(".*fh", "");
-		dbo.update_search(t.generate_query()+" fh"+fh);
+		try {
+			dbo.update_search(t.generate_query()+" fh"+fh);
+		} catch (DatabaseError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 		//System.out.println(dbo.search());
 		return true;
 	}

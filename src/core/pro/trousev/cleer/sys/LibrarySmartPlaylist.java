@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.trousev.cleer.Database;
+import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Track;
 import pro.trousev.cleer.Database.DatabaseObject;
@@ -66,11 +67,17 @@ public class LibrarySmartPlaylist implements Playlist, Serializable{
 	public boolean save(String name) {
 		_contents = null;
 		_title = name;
-		for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash(name)))
-		{
-			_db.remove("playlists", dbo);
+		try {
+			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash(name)))
+			{
+				_db.remove("playlists", dbo);
+			}
+			_db.store("playlists",Tools.Serialize(this), Tools.playlist_hash(name));
+		} catch (DatabaseError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
 		}
-		_db.store("playlists",Tools.Serialize(this), Tools.playlist_hash(name));
 		return true;
 	}
 
