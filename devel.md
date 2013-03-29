@@ -19,3 +19,14 @@ Setting up windows development enviroment
  * Move to cleer root folder (cd ../..)
  * Invoke 'and desktop'. 
  * You can find compiled jar in tmp/product/desktop folder
+
+Setting up linux (ubuntu) development enviroment
+------------------------------------------------
+
+    sudo apt-get install mvn ant openjdk-7-jdk   # Maybe, openjdk-6-jdk in old versions
+    git clone <repository>
+    cd cleer
+    ant enviroment
+    ant desktop
+    
+ After it, You're done. Open ide/eclipse-desktop in Eclipse or continue hacking code in command line, building new jar with `ant desktop` command.
