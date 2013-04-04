@@ -132,6 +132,7 @@ public class LibraryImpl implements Library {
 		}
 		catch(Exception e)
 		{
+			//TODO: re-throw exception, don't block it!
 			System.out.println(e.getMessage());
 			return false;
 		}
@@ -239,7 +240,6 @@ public class LibraryImpl implements Library {
 			e.printStackTrace();
 			return false;
 		}
-		//System.out.println(dbo.search());
 		return true;
 	}
 }

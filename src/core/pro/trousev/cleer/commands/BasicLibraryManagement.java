@@ -3,6 +3,8 @@ package pro.trousev.cleer.commands;
 import java.io.PrintStream;
 import java.util.List;
 
+import pro.trousev.cleer.Console.CommandNotFoundException;
+import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Track;
@@ -38,10 +40,7 @@ public class BasicLibraryManagement {
 				return false;
 			}
 			Playlist ans = iface.library().search(query);
-			for(Track t: ans.contents())
-			{
-				System.out.println(t.toString());
-			}
+			iface.output().printTrackList(ans, -1, null);
 			return true;
 		}
 	}
@@ -62,6 +61,12 @@ public class BasicLibraryManagement {
 		public boolean main(List<String> args, PrintStream stdout,
 				Interface iface) {
 			iface.queue().shuffle();
+			try {
+				iface.console().invoke("queue", null, stdout, iface);
+			} catch (CommandNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return true;
 		}
 		
@@ -95,7 +100,15 @@ public class BasicLibraryManagement {
 		public String help(boolean is_short) { return "Enqueue current playlist"; }
 		public boolean main(List<String> args, PrintStream stdout, Interface iface)
 		{
-			iface.queue().enqueue(iface.library().focus().contents(), Queue.EnqueueMode.Immidiaely);
+			iface.queue().enqueue(iface.library().focus().contents(), Queue.EnqueueMode.AfterCurrent);
+			try {
+				if(iface.player().getStatus() != Status.Playing)
+					iface.console().invoke("play", null, stdout, iface);
+				iface.console().invoke("queue", null, stdout, iface);
+			} catch (CommandNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return true;
 		}
 	}

@@ -27,7 +27,7 @@ public class QueueImpl implements Queue {
 		}
 		@Override
 		public void started(Player sender, Track track) {
-			System.out.println("\nNow playing: "+track);
+			//System.out.println("\nNow playing: "+track);
 		}
 
 		@Override

@@ -29,7 +29,6 @@ public class Library extends Command {
 	{
 		if(in.startsWith("~"))
 		{
-			//System.out.println("Home: "+System.getProperty("user.home"));
 			in = in.replaceAll("^~", System.getProperty("user.home"));
 		}
 		return in;

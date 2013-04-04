@@ -1,8 +1,11 @@
 package pro.trousev.cleer.commands;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 
+import pro.trousev.cleer.Console.CommandNotFoundException;
+import pro.trousev.cleer.ConsoleOutput.Type;
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Player.Status;
@@ -30,7 +33,17 @@ public class BasicPlayerControl {
 				stdout.println("Already at end. No next song.");
 				return false;
 			}
-			return iface.queue().next();
+			if(iface.queue().next())
+			{
+				try {
+					iface.console().invoke("queue", new ArrayList<String>(), stdout, iface);
+				} catch (CommandNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return true;
+			}
+			return false;
 		}
 	}
 	public static class ListPlaylist extends Command
@@ -47,23 +60,8 @@ public class BasicPlayerControl {
 		public boolean main(List<String> args, PrintStream stdout,
 				Interface iface) {
 			Queue q = iface.queue();
-			int i=0;
 			int pi = q.playing_index();
-			int songs_prev = 20;
-			int songs_next = 20;
-			for(pro.trousev.cleer.Track t: q.queue())
-			{
-				if(i+songs_prev < pi) continue;
-				if(i-songs_next > pi) continue;
-
-				if(i == pi)
-					System.out.print(" ==> ");
-				else 
-					System.out.print("     ");
-				System.out.println(t.toString());
-				i++;
-			}
-			System.out.println("Number of tracks: "+q.queue().size());
+			iface.output().printTrackList(q.queue(), pi, null);
 			return true;
 		}
 	}
@@ -186,17 +184,30 @@ public class BasicPlayerControl {
 			int found = -1;
 			if(N == 0)
 			{
-				System.out.println("Queue is empty.");
+				iface.output().printMessage("Queue is empty", Type.MessageTypeError, null);
 				return false;
 			}
 			if(args.size() == 0)
 			{
-				System.out.println("Where to jump? Try jump #13 or jump MySong");
+				iface.output().printMessage("No arguments provided", Type.MessageTypeError, null);
 				return false;
 			}
-			if(args.get(0).startsWith("#"))
+			if(args.get(0).startsWith("#") || args.get(0).startsWith("+") || args.get(0).startsWith("-"))
 			{
-				iface.queue().seek(new Integer(args.get(0).replaceAll("#", "")) - iface.queue().playing_index());
+				int delta;
+				if(args.get(0).startsWith("#"))
+					delta = new Integer(args.get(0).replaceAll("#", "")) - iface.queue().playing_index();
+				else
+					delta = new Integer(args.get(0).replaceAll("\\+", ""));
+				if(iface.queue().seek(delta))
+				{
+					try {
+						iface.console().invoke("queue", null, stdout, iface);
+					} catch (CommandNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				return true;
 			}
 			for(int i=s_index+1; i!=s_index; i++)
@@ -221,11 +232,20 @@ public class BasicPlayerControl {
 			}
 			if(found == -1)
 			{
-				System.out.println("Can't find anything.");
+				iface.output().printMessage("No search results", Type.MessageTypeError, null);
 				return false;
 			}
-			iface.queue().seek(found - iface.queue().playing_index());
-			return true;
+			if(iface.queue().seek(found - iface.queue().playing_index()))
+			{
+				try {
+					iface.console().invoke("queue", null, stdout, iface);
+				} catch (CommandNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return true;
+			}
+			return false;
 		}
 	}
 }

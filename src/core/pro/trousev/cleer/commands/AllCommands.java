@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.trousev.cleer.Console;
+import pro.trousev.cleer.ConsoleOutput;
 import pro.trousev.cleer.Plugin;
 import pro.trousev.cleer.Plugin.Command;
 import pro.trousev.cleer.Plugin.Interface;
@@ -74,4 +75,5 @@ public class AllCommands implements Console
 			throw new CommandNotFoundException("No such command: "+command);
 		cmd.main(args, writer, iface);
 	}
+
 }

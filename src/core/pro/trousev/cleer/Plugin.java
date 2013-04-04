@@ -12,6 +12,7 @@ public interface Plugin {
 		Console console();
 		Player player();
 		Queue queue();
+		ConsoleOutput output();
 	}
 	public interface Command extends Comparable<Plugin.Command>
 	{
