@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.trousev.cleer.Console;
-import pro.trousev.cleer.ConsoleOutput;
 import pro.trousev.cleer.Plugin;
 import pro.trousev.cleer.Plugin.Command;
 import pro.trousev.cleer.Plugin.Interface;

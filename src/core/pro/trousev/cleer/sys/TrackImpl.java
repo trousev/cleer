@@ -94,7 +94,8 @@ public class TrackImpl implements Track {
 	public int skip_count() {
 		return 0;
 	}
-
+	
+	
 	@Override
 	public int repeat_count() {
 		return 0;
@@ -183,12 +184,12 @@ public class TrackImpl implements Track {
 	}
 	@Override
 	public String generate_query() {
-		String query = String.format("title:%s artist:%s album:%s", title(), artist(), album());
+		String query = String.format("title:%s artist:%s album:%s year:%s rating:%d", title(), artist(), album(), year(), user_rating());
 		
 		query += " file:"+_header.getFilename();
 		
 		for(String tag: tags())
-			query += "tag:"+tag;
+			query += " tag:"+tag;
 		for(String tag: tags())
 			query += " "+tag;
 		

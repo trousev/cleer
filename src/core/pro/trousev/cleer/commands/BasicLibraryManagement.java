@@ -7,7 +7,6 @@ import pro.trousev.cleer.Console.CommandNotFoundException;
 import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Queue;
-import pro.trousev.cleer.Track;
 import pro.trousev.cleer.Plugin.Interface;
 import pro.trousev.cleer.sys.Tools;
 

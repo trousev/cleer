@@ -7,6 +7,7 @@ import java.util.List;
 
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
+import pro.trousev.cleer.Database.SearchLanguage;
 import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Track;
@@ -35,7 +36,7 @@ public class LibraryImpl implements Library {
 	{
 		List<File> ans = new ArrayList<File>();
 		try {
-			for(DatabaseObject obj: _db.search("folders", "folder:"))
+			for(DatabaseObject obj: _db.search("folders", "folder:",SearchLanguage.SearchSqlLike))
 			{
 				ans.add(new File(obj.contents()));
 			}
@@ -51,7 +52,7 @@ public class LibraryImpl implements Library {
 	public boolean folder_add(File folder) {
 		try
 		{
-			_db.search("folders", "fh"+Hash.hash(folder.getAbsolutePath())).get(0);
+			_db.search("folders", "fh"+Hash.hash(folder.getAbsolutePath()),SearchLanguage.SearchSqlLike).get(0);
 			return false;
 		}
 		catch(Exception e)
@@ -95,7 +96,7 @@ public class LibraryImpl implements Library {
 		String fh = Hash.hash(folder.getAbsolutePath());
 		try {
 			_db.begin();
-			for(DatabaseObject dbo: _db.search("songs", "fh"+fh))
+			for(DatabaseObject dbo: _db.search("songs", "fh"+fh,SearchLanguage.SearchSqlLike))
 				_db.remove("songs", dbo);
 			for(File f: all_files)
 			{
@@ -124,9 +125,9 @@ public class LibraryImpl implements Library {
 		{
 			String fh = Hash.hash(folder.getAbsolutePath());
 			_db.begin();
-			for(DatabaseObject dbo: _db.search("songs", "fh"+fh))
+			for(DatabaseObject dbo: _db.search("songs", "fh"+fh,SearchLanguage.SearchSqlLike))
 				_db.remove("songs", dbo);
-			DatabaseObject obj = _db.search("folders", "fh"+Hash.hash(folder.getAbsolutePath())).get(0);
+			DatabaseObject obj = _db.search("folders", "fh"+Hash.hash(folder.getAbsolutePath()),SearchLanguage.SearchSqlLike).get(0);
 			_db.remove("folders", obj);
 			_db.commit();
 		}
@@ -142,7 +143,7 @@ public class LibraryImpl implements Library {
 	@Override
 	public boolean folder_scan( FolderScanCallback callback) {
 		try {
-			for(DatabaseObject dbo: _db.search("folders", "folder:"))
+			for(DatabaseObject dbo: _db.search("folders", "folder:",SearchLanguage.SearchSqlLike))
 				folder_scan(new File(dbo.contents()), callback);
 			return true;
 		} catch (DatabaseError e) {
@@ -163,7 +164,7 @@ public class LibraryImpl implements Library {
 	{
 		try
 		{
-			DatabaseObject dbo = _db.search("playlists", Tools.playlist_hash(name)).get(0);
+			DatabaseObject dbo = _db.search("playlists", Tools.playlist_hash(name),SearchLanguage.SearchSqlLike).get(0);
 			return playlistFromDatabase(dbo);
 		}
 		catch(IndexOutOfBoundsException e)
@@ -180,7 +181,7 @@ public class LibraryImpl implements Library {
 	{
 		List<Playlist> ans = new ArrayList<Playlist>();
 		try {
-			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl")))
+			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl"), SearchLanguage.SearchSqlLike))
 				ans.add(playlistFromDatabase(dbo));
 		} catch (DatabaseError e) {
 			// TODO Auto-generated catch block
@@ -193,7 +194,7 @@ public class LibraryImpl implements Library {
 	{
 		List<String> ans = new ArrayList<String>();
 		try {
-			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl")))
+			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl"), SearchLanguage.SearchSqlLike))
 				ans.add(playlistFromDatabase(dbo).title());
 		} catch (DatabaseError e) {
 			// TODO Auto-generated catch block
@@ -206,7 +207,7 @@ public class LibraryImpl implements Library {
 	@Override
 	public boolean playlist_remove(String name) {
 		try {
-			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash(name)))
+			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash(name), SearchLanguage.SearchSqlLike))
 				_db.remove("playlists", dbo);
 		} catch (DatabaseError e) {
 			// TODO Auto-generated catch block

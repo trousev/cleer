@@ -4,7 +4,12 @@ import java.io.File;
 import java.io.PrintStream;
 import java.util.List;
 
+
+import pro.trousev.cleer.Database.DatabaseError;
+import pro.trousev.cleer.Database.DatabaseObject;
+import pro.trousev.cleer.Database.SearchLanguage;
 import pro.trousev.cleer.Plugin.Interface;
+import pro.trousev.cleer.sys.TrackImpl;
 
 public class Library extends Command {
 
@@ -23,6 +28,7 @@ public class Library extends Command {
 				"    library add <folder>     -- add new folder to library\n" +
 				"    library remove <folder>  -- remove folder from library\n" +
 				"    library scan <folder>    -- scan/rescan selected folder\n" +
+				"    library refresh          -- refresh search query on all library (w/o fs scanning)\n" +
 				"    library scan             -- scan/rescan all library\n";
 	}
 	public String make_folder(String in)
@@ -79,6 +85,25 @@ public class Library extends Command {
 				return false;
 			}
 			iface.library().folder_remove(new File(folder));
+		}
+		if(command.equals("refresh"))
+		{
+			try {
+				iface.storage().begin();
+				for (DatabaseObject dbo: iface.storage().search("songs", "",SearchLanguage.SearchDirectMatch) )
+				{
+					TrackImpl t = new TrackImpl(dbo);
+					System.out.println(t.generate_query());
+					dbo.update_search(t.generate_query());
+				}
+				iface.storage().commit();
+			} catch (DatabaseError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		if(command.equals("scan"))
 		{

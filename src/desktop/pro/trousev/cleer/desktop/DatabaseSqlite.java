@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,36 +156,8 @@ public class DatabaseSqlite implements Database {
 	}
 
 	@Override
-	public List<DatabaseObject> search(String section, String query) {
-		String[] keywords = query.split(" ");
-		String where = null;
-		List<DatabaseObject> ans = new ArrayList<Database.DatabaseObject>();
-		for(String word : keywords)
-		{
-			word = word.replace("'", "''");
-			word = word.toLowerCase();
-			String clause = String.format("search LIKE '%%%s%%'",word);
-			if(where == null)
-				where = clause;
-			else where += " AND "+clause;
-		}
-		try {
-			String qq; 
-			if(where == null)
-				qq = String.format("SELECT id, value FROM %s;",section);
-			else
-				qq = String.format("SELECT id, value FROM %s WHERE %s;",section,where);
-			ResultSet set = link.prepareStatement(qq).executeQuery();
-			while(set.next())
-			{
-				ans.add(new DatabaseObjectHsql(section,this, set.getString(1),set.getString(2)));
-			}
-			set.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return ans;
+	public List<DatabaseObject> search(String section, String query) throws DatabaseError {
+		return search(section, query, SearchLanguage.SearchSqlLike);
 	}
 
 	@Override
@@ -254,6 +225,92 @@ public class DatabaseSqlite implements Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+	private List<DatabaseObject> _p_search(String section, String where)
+			throws DatabaseError, SQLException 
+	{
+		List<DatabaseObject> ans = new ArrayList<Database.DatabaseObject>();
+		String qq; 
+		if(where == null)
+			qq = String.format("SELECT id, value FROM %s;",section);
+		else
+			qq = String.format("SELECT id, value FROM %s WHERE %s;",section,where);
+		ResultSet set = link.prepareStatement(qq).executeQuery();
+		while(set.next())
+		{
+			ans.add(new DatabaseObjectHsql(section,this, set.getString(1),set.getString(2)));
+		}
+		set.close();
+		return ans;
+
+	}
+	private String _language_match(String query)
+	{
+		return String.format("search LIKE '%%%s%%'", query);
+	}
+	private String _language_like(String query)
+	{
+		String[] keywords = query.split(" ");
+		String where = null;
+		for(String word : keywords)
+		{
+			word = word.replace("'", "''");
+			word = word.toLowerCase();
+			String clause = String.format("search LIKE '%%%s%%'",word);
+			if(where == null)
+				where = clause;
+			else where += " AND "+clause;
+		}
+		return where;
+	}
+	private String _language_pyplay(String query)
+	{
+		query = query.replaceAll("\\@", "artist:");
+		query = query.replaceAll("\\$", "album:");
+		query = query.replaceAll("\\!", "title:");
+		query = query.replaceAll("\\^", "genre:");
+		query = query.replaceAll("N\\/R", "rating:0");
+		query = query.replaceAll("\\{0\\}", "rating:0");
+		query = query.replaceAll("\\{1\\}", "rating:1");
+		query = query.replaceAll("\\{2\\}", "rating:2");
+		query = query.replaceAll("\\{3\\}", "rating:3");
+		query = query.replaceAll("\\{4\\}", "rating:4");
+		query = query.replaceAll("\\{5\\}", "rating:5");
+		String where = "";
+		for(String or_list: query.split(" "))
+		{
+			or_list = or_list.trim();
+			if(or_list.isEmpty()) continue;
+			String or_clause = "";
+			for(String item: or_list.split(","))
+			{
+				if(!or_clause.isEmpty())
+					or_clause += " OR ";
+				or_clause += String.format("search LIKE '%%%s%%'",item);
+			}
+			if(or_clause.isEmpty()) continue;
+			if(!where.isEmpty())
+				where += " AND ";
+			where += String.format(" ( %s ) ", or_clause);
+		}
+		return where;
+	}
+	@Override
+	public List<DatabaseObject> search(String section, String query, SearchLanguage language) 
+			throws DatabaseError 
+	{
+		String where = "";
+		if(language == SearchLanguage.SearchDirectMatch)
+			where = _language_match(query);
+		if(language == SearchLanguage.SearchSqlLike)
+			where = _language_like(query);
+		if(language == SearchLanguage.SearchPyplay)
+			where = _language_pyplay(query);
+		try {
+			return _p_search(section, where);
+		} catch (SQLException e) {
+			throw new DatabaseError(e); 
 		}
 	}
 	

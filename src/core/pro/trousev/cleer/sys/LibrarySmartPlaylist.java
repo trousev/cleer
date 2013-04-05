@@ -6,6 +6,7 @@ import java.util.List;
 
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
+import pro.trousev.cleer.Database.SearchLanguage;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Track;
 import pro.trousev.cleer.Database.DatabaseObject;
@@ -40,7 +41,7 @@ public class LibrarySmartPlaylist implements Playlist, Serializable{
 		try
 		{
 			_contents = new ArrayList<Track>();
-			for(DatabaseObject dbo: _db.search("songs", _query))
+			for(DatabaseObject dbo: _db.search("songs", _query, SearchLanguage.SearchPyplay))
 				_contents.add(new TrackImpl(dbo));
 			return _contents;
 		}
@@ -68,7 +69,7 @@ public class LibrarySmartPlaylist implements Playlist, Serializable{
 		_contents = null;
 		_title = name;
 		try {
-			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash(name)))
+			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash(name), SearchLanguage.SearchSqlLike))
 			{
 				_db.remove("playlists", dbo);
 			}

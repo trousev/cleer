@@ -16,6 +16,12 @@ import java.util.List;
 
 **/
 public interface Database {
+	enum SearchLanguage
+	{
+		SearchDirectMatch
+		, SearchSqlLike
+		, SearchPyplay
+	}
 	/**
 	    DatabaseObject -- интерфейс, представляющий один объект Database.
 	**/
@@ -30,7 +36,7 @@ public interface Database {
 		**/
 		String contents();
 		/**
-		  Поисковой контекст
+		  Поисковой контекст.
 		**/
 		String search();
 		/**
@@ -83,11 +89,22 @@ public interface Database {
 	**/
 	public DatabaseObject store(String section, String contents, String keywords) throws DatabaseError;
 	/**
+	  DEPRECATED. Используйте search(section, query, language) вместо этого метода.
+
 	  Производит поиск всех объектов в секции, соответствующих заданному запросу. 
 	  Алгоритм поиска не формализован, но должен быть умным, эвристичным и т.п.
 	  Налагаются дополнительные требования на алгоритм поиска, за подробностями на trousev@yandex.ru
 	**/
+	@Deprecated
 	public List<DatabaseObject> search(String section, String query) throws DatabaseError;
+	/**
+	  DEPRECATED. Используйте search(section, query, language) вместо этого метода.
+
+	  Производит поиск всех объектов в секции, соответствующих заданному запросу. 
+	  Алгоритм поиска не формализован, но должен быть умным, эвристичным и т.п.
+	  Налагаются дополнительные требования на алгоритм поиска, за подробностями на trousev@yandex.ru
+	**/
+	public List<DatabaseObject> search(String section, String query, SearchLanguage language) throws DatabaseError;
 	/**
 	  Уничтожает выбранный DatabaseObject
 	**/

@@ -11,7 +11,6 @@ import jline.console.ConsoleReader;
 import pro.trousev.cleer.Console;
 import pro.trousev.cleer.ConsoleOutput;
 import pro.trousev.cleer.Database;
-import pro.trousev.cleer.ConsoleOutput.Callback;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Player;
@@ -85,7 +84,6 @@ public class ConsoleClient {
 			public ConsoleOutput output() {
 				return new ConsoleOutput() {
 
-					public int console_width = 120;
 					@Override
 					public void printMessage(String message, Type messageType,
 							Callback dismissAction) {
@@ -142,6 +140,7 @@ public class ConsoleClient {
 							no++;
 							if(selected_track>=0 && no > (selected_track+20)) continue;
 							if(selected_track>=0 && no < (selected_track-20)) continue;
+							if(selected_track<0 && no > 200) continue;
 							String rating_str = "N/R";
 							if(t.user_rating() > 0)
 							{
