@@ -93,8 +93,8 @@ public class Library extends Command {
 				for (DatabaseObject dbo: iface.storage().search("songs", "",SearchLanguage.SearchDirectMatch) )
 				{
 					TrackImpl t = new TrackImpl(dbo);
-					System.out.println(t.generate_query());
-					dbo.update_search(t.generate_query());
+					System.out.println(t.getSearchQuery());
+					dbo.update_search(t.getSearchQuery());
 				}
 				iface.storage().commit();
 			} catch (DatabaseError e) {

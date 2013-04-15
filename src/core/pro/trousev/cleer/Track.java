@@ -6,40 +6,34 @@ import java.util.List;
 import pro.trousev.cleer.Database.DatabaseObject;
 
 /**
- * Эта штуковина репрезентует один музыкальный трек коллекции. 
+ * Эта штуковина репрезентует один музыкальный трек коллекции, связанный с тем или иным объектом ФС
  * @author doctor
  *
  */
 public interface Track {
 	// Meta
-	public String artist();
-	public String album();
-	public String title();
-	public String year();
-	public String sequence_number();
-	public String lyrics();
-	public List<String> tags();
-	public int user_rating();
+	public String[] getAllTagNames();
+	public String getTagValue(String name) throws NoSuchTagException;
+	public void setTagValue(String name, String value) throws NoSuchTagException;
+	public void incrementTagValue(String name) throws NoSuchTagException;
 	public File filename();
-	// Statistics
-	public int play_count();
-	public int skip_count();
-	public int repeat_count();
-	
-	// Reporting
-	public int auto_rating();
-	
+	public boolean tagIsWriteable(String name) throws NoSuchTagException;
+	public boolean tagIsNumeric(String name) throws NoSuchTagException;
+
 	// Save & restore
 	String serialize();
 	boolean deserialize(String contents);
-	String generate_query();
-	
-	// Modifications
-	void set_user_rating(int rating);
-	void stat_played();
-	void stat_skipped();
-	void stat_repeated();
+	String getSearchQuery();
 	
 	// Link
 	DatabaseObject linkedObject();
+
+	/// Exceptions
+	public static class NoSuchTagException extends Exception
+	{
+		private static final long serialVersionUID = -3294597277551186761L;
+		public NoSuchTagException(String tagName) {
+			super(String.format("Cannot find tag: ",tagName));
+		}
+	}
 }

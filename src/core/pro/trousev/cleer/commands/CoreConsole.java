@@ -11,9 +11,9 @@ import pro.trousev.cleer.Plugin.Interface;
 
 
 
-public class AllCommands implements Console 
+public class CoreConsole implements Console 
 {
-	public AllCommands()
+	public CoreConsole()
 	{
 		register( new Exit() );
 		register(new Help());
@@ -35,9 +35,6 @@ public class AllCommands implements Console
 	}
 	static class CommandNotFoundException extends Console.CommandNotFoundException
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1657397048309882125L;
 
 		public CommandNotFoundException(String message) {

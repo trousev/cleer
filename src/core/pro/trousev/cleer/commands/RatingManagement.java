@@ -5,6 +5,7 @@ import java.util.List;
 
 import pro.trousev.cleer.Track;
 import pro.trousev.cleer.Plugin.Interface;
+import pro.trousev.cleer.Track.NoSuchTagException;
 
 public class RatingManagement {
 	public static class Rate extends Command
@@ -33,7 +34,12 @@ public class RatingManagement {
 			else if(rated.equals("none")) rating = 0;
 			else rating = new Integer(rated);
 			Track t = iface.player().now_playing();
-			t.set_user_rating(rating);
+			try {
+				t.setTagValue("rating", String.format("%d", rating));
+			} catch (NoSuchTagException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			iface.library().update(t);
 			return true;
 		}

@@ -16,4 +16,5 @@ public interface Console {
 	List<Plugin.Command> commands();
 	Plugin.Command command(String name);
 	void invoke(String command, List<String> args, PrintStream writer, Interface iface) throws CommandNotFoundException;
+	public void register(Plugin.Command cmd);
 }

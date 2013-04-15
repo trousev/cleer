@@ -19,12 +19,13 @@ import pro.trousev.cleer.Plugin;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Track;
 import pro.trousev.cleer.Plugin.Interface;
-import pro.trousev.cleer.commands.AllCommands;
+import pro.trousev.cleer.Track.NoSuchTagException;
+import pro.trousev.cleer.commands.CoreConsole;
 import pro.trousev.cleer.sys.LibraryImpl;
 import pro.trousev.cleer.sys.QueueImpl;
 
 public class ConsoleClient {
-	static String prompt(Plugin.Interface iface)
+	static String prompt(Plugin.Interface iface) throws NoSuchTagException
 	{
 		String pl = "[no playlist]";
 		Playlist focus = iface.library().focus();
@@ -34,17 +35,18 @@ public class ConsoleClient {
 		String np = "[No Song]";
 		Track t = iface.queue().playing_track();
 		if(t != null)
-			np = t.title();
+			np = t.getTagValue("title");
 		
 		String sz = String.format("%d/%d",iface.queue().playing_index(), iface.queue().size());
 		return pl + " | " + sz + " " + np + " # ";
 	}
-	public static void main(String[] argv) throws SQLException, ClassNotFoundException, IOException, DatabaseError 
+	public static void main(String[] argv) throws SQLException, ClassNotFoundException, IOException, DatabaseError, NoSuchTagException 
 	{
 		//InputStreamReader inputStreamReader = new InputStreamReader (System.in);
 	    //BufferedReader stdin = new BufferedReader (inputStreamReader);
 
-	    final Console console = new AllCommands();
+	    final Console console = new CoreConsole();
+	    
 	    String dbpath = System.getProperty("user.home") + "/.config/cleer/database.sqlite";
 	    
 	    final Database db = new DatabaseSqlite(dbpath);
@@ -133,46 +135,64 @@ public class ConsoleClient {
 					public void printTrackList(List<Track> tracks,
 							int selected_track, Callback songSelectAction) {
 						
-						List<String[]> matrix = new ArrayList<String[]>();
-						int no=-1;
-						for(Track t: tracks)
+						try
 						{
-							no++;
-							if(selected_track>=0 && no > (selected_track+20)) continue;
-							if(selected_track>=0 && no < (selected_track-20)) continue;
-							if(selected_track<0 && no > 200) continue;
-							String rating_str = "N/R";
-							if(t.user_rating() > 0)
+							List<String[]> matrix = new ArrayList<String[]>();
+							int no=-1;
+							for(Track t: tracks)
 							{
-								char[] array = new char[t.user_rating()];
-								Arrays.fill(array, '*');
-								rating_str = new String(array);
+								no++;
+								if(selected_track>=0 && no > (selected_track+20)) continue;
+								if(selected_track>=0 && no < (selected_track-20)) continue;
+								if(selected_track<0 && no > 200) continue;
+								String rating_str = "N/R";
+								int t_rating;
+								try
+								{
+									t_rating = new Integer(t.getTagValue("rating"));
+								}
+								catch (Exception e)
+								{
+									t_rating = 0;
+								}
+								if(t_rating > 0)
+								{
+									char[] array = new char[t_rating];
+									Arrays.fill(array, '*');
+									rating_str = new String(array);
+								}
+								
+								String[] arr ;
+								if(selected_track >= 0)
+								{
+									String[] _arr = {(selected_track == no ? "===>":"    "), rating_str, t.getTagValue("title"), t.getTagValue("artist"), t.getTagValue("album")};
+									arr = _arr;
+								}
+								else
+								{
+									String[] _arr = {rating_str, t.getTagValue("title"), t.getTagValue("artist"), t.getTagValue("album")};
+									arr = _arr;
+								}
+								//System.out.println(t.toString());
+								matrix.add(arr);
 							}
-							
-							String[] arr ;
+							int col_count = 4;
+							int[] limits = {5,40,20,20};
 							if(selected_track >= 0)
 							{
-								String[] _arr = {(selected_track == no ? "===>":"    "), rating_str, t.title(), t.artist(), t.album()};
-								arr = _arr;
+								int[] _limits = {5,5,40,20,20};
+								limits = _limits;
+								col_count++;
 							}
-							else
-							{
-								String[] _arr = {rating_str, t.title(), t.artist(), t.album()};
-								arr = _arr;
-							}
-							//System.out.println(t.toString());
-							matrix.add(arr);
+							System.out.println(StringSetPrinter(col_count,limits, matrix));
+							System.out.println("Size: "+tracks.size());						
 						}
-						int col_count = 4;
-						int[] limits = {5,40,20,20};
-						if(selected_track >= 0)
+						catch (NoSuchTagException e)
 						{
-							int[] _limits = {5,5,40,20,20};
-							limits = _limits;
-							col_count++;
+							e.printStackTrace();
+							
 						}
-						System.out.println(StringSetPrinter(col_count,limits, matrix));
-						System.out.println("Size: "+tracks.size());
+
 					}
 
 					@Override

@@ -103,9 +103,10 @@ public class LibraryImpl implements Library {
 				callback.progress(i++, n);
 				try {
 					Track t= new TrackImpl(f);
-					_db.store("songs", t.serialize(), t.generate_query() + " fh"+fh);
+					_db.store("songs", t.serialize(), t.getSearchQuery() + " fh"+fh);
 				} 
 				catch (Exception e) {
+					e.printStackTrace();
 					callback.message("Skipping "+f.getAbsolutePath()+": "+e.getMessage());
 				}
 			}
@@ -235,7 +236,7 @@ public class LibraryImpl implements Library {
 		
 		String fh = dbo.search().replaceAll(".*fh", "");
 		try {
-			dbo.update_search(t.generate_query()+" fh"+fh);
+			dbo.update_search(t.getSearchQuery()+" fh"+fh);
 		} catch (DatabaseError e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
