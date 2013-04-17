@@ -8,7 +8,7 @@ import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Database.SearchLanguage;
 import pro.trousev.cleer.Playlist;
-import pro.trousev.cleer.Track;
+import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Database.DatabaseObject;
 
 public class LibrarySmartPlaylist implements Playlist, Serializable{
@@ -17,7 +17,7 @@ public class LibrarySmartPlaylist implements Playlist, Serializable{
 	
 	String _title = null;
 	String _query;
-	transient List<Track> _contents = null;
+	transient List<Item> _contents = null;
 	transient Database _db;
 	LibrarySmartPlaylist(Database storage, String title, String query)
 	{
@@ -35,12 +35,12 @@ public class LibrarySmartPlaylist implements Playlist, Serializable{
 	}
 
 	@Override
-	public List<Track> contents() {
+	public List<Item> contents() {
 		if(_contents != null)
 			return _contents;
 		try
 		{
-			_contents = new ArrayList<Track>();
+			_contents = new ArrayList<Item>();
 			for(DatabaseObject dbo: _db.search("songs", _query, SearchLanguage.SearchPyplay))
 				_contents.add(new TrackImpl(dbo));
 			return _contents;

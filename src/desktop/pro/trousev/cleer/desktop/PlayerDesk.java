@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import pro.trousev.cleer.Player;
-import pro.trousev.cleer.Track;
+import pro.trousev.cleer.Item;
 
 public class PlayerDesk implements Player
 {
@@ -80,9 +80,9 @@ public class PlayerDesk implements Player
 	Subprocess subprocess;
 	SongState current_state;
 	Status current_status = Status.Closed;
-	Track track;
+	Item track;
 	@Override
-	public void open(Track track, SongState state) {
+	public void open(Item track, SongState state) {
 		close();
 		String[] args = new String[2];
 		args[0] = "mplayer";
@@ -162,7 +162,7 @@ public class PlayerDesk implements Player
 	}
 
 	@Override
-	public Track now_playing() {
+	public Item now_playing() {
 		return track;
 	}
 

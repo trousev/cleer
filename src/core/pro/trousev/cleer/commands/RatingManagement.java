@@ -3,9 +3,9 @@ package pro.trousev.cleer.commands;
 import java.io.PrintStream;
 import java.util.List;
 
-import pro.trousev.cleer.Track;
+import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Plugin.Interface;
-import pro.trousev.cleer.Track.NoSuchTagException;
+import pro.trousev.cleer.Item.NoSuchTagException;
 
 public class RatingManagement {
 	public static class Rate extends Command
@@ -33,7 +33,7 @@ public class RatingManagement {
 			else if(rated.equals("*")) rating = 1;
 			else if(rated.equals("none")) rating = 0;
 			else rating = new Integer(rated);
-			Track t = iface.player().now_playing();
+			Item t = iface.player().now_playing();
 			try {
 				t.setTagValue("rating", String.format("%d", rating));
 			} catch (NoSuchTagException e) {

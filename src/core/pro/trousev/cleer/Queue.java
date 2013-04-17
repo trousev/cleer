@@ -2,7 +2,7 @@ package pro.trousev.cleer;
 
 import java.util.List;
 
-import pro.trousev.cleer.Track;
+import pro.trousev.cleer.Item;
 public interface Queue {
 	/**
 	 * Тип добавления в очередь.
@@ -31,7 +31,7 @@ public interface Queue {
 	/**
 	 * @return current playback queue
 	 */
-	List<Track> queue();
+	List<Item> queue();
 	/**
 	 * @return size of current queue
 	 */
@@ -43,7 +43,7 @@ public interface Queue {
 	/**
 	 * @return now playing track
 	 */
-	Track playing_track();
+	Item playing_track();
 
 	/**
 	 * Clears current queue
@@ -54,18 +54,18 @@ public interface Queue {
 	 * @param tracks list of tracks
 	 * @param mode EnqueueMode object
 	 */
-	public void enqueue(List<Track> tracks,EnqueueMode mode);
+	public void enqueue(List<Item> tracks,EnqueueMode mode);
 	/**
 	 * Adds new song to current queue
 	 * @param track track to add
 	 * @param mode EnqueueMode object
 	 */
-	public void enqueue(Track track,EnqueueMode mode);
+	public void enqueue(Item track,EnqueueMode mode);
 	/**
 	 * Adds new song to current queue and start it's playback immidiately
 	 * @param track track to add
 	 */
-	public void enqueue(Track track);
+	public void enqueue(Item track);
 	
 	/**
 	 * Returns songState, which should be eaten by Player to fit queue

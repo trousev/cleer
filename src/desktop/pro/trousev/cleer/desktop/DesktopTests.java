@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Library;
 import pro.trousev.cleer.sys.LibraryImpl;
+import pro.trousev.cleer.sys.TrackImpl;
 
 public class DesktopTests {
 
@@ -54,7 +55,7 @@ public class DesktopTests {
 	 */
 	public static void main(String[] args) throws Exception {
 		Database d = new DatabaseSqlite("/tmp/hsql/database.hsql");
-		Library l = new LibraryImpl(d);
+		Library l = new LibraryImpl(d, TrackImpl.Factory);
 		Library.FolderScanCallback cb = new Library.FolderScanCallback() {
 			
 			@Override

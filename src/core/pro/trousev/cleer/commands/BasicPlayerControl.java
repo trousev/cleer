@@ -180,7 +180,7 @@ public class BasicPlayerControl {
 			if(iface.player().getStatus() == Status.Playing)
 				s_index = iface.queue().playing_index();
 			int N = iface.queue().size();
-			List<pro.trousev.cleer.Track> tracks = iface.queue().queue();
+			List<pro.trousev.cleer.Item> tracks = iface.queue().queue();
 			int found = -1;
 			if(N == 0)
 			{

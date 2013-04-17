@@ -6,25 +6,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldDataInvalidException;
-import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.TagException;
 
 import pro.trousev.cleer.Database;
-import pro.trousev.cleer.Track;
+import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Database.DatabaseObject;
 
-public class TrackImpl implements Track {
+public class TrackImpl implements Item {
 	DatabaseObject _link = null;
 	File _filename;
 	//FIXME: make statistics
@@ -186,5 +180,31 @@ public class TrackImpl implements Track {
 		//FIXME: make statistics
 		return ;
 	}
-	
+	private static class __Factory implements Item.Factory
+	{
+
+		@Override
+		public Item createTrack(File filename) {
+			try {
+				return new TrackImpl(filename);
+			} catch (CannotReadException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TagException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ReadOnlyFileException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidAudioFrameException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	public final static __Factory Factory = new __Factory();
 }
