@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import jline.console.ConsoleReader;
+import jline.console.completer.StringsCompleter;
 
 import pro.trousev.cleer.Console;
 import pro.trousev.cleer.ConsoleOutput;
@@ -16,6 +17,7 @@ import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Plugin;
+import pro.trousev.cleer.Plugin.Command;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Plugin.Interface;
@@ -206,6 +208,12 @@ public class ConsoleClient {
 			}
 		};
 		ConsoleReader reader = new ConsoleReader();
+		List<String> allCommandList = new ArrayList<String>();
+		for(Command c: console.commands())
+		{
+			allCommandList.add(c.name());
+		}
+		reader.addCompleter(new StringsCompleter(allCommandList));
 	    while(true)
 	    {
 	    	reader.setPrompt(prompt(iface));
