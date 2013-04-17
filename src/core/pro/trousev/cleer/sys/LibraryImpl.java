@@ -10,13 +10,14 @@ import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Database.SearchLanguage;
 import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Playlist;
-import pro.trousev.cleer.Track;
+import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Database.DatabaseObject;
 
 public class LibraryImpl implements Library {
 
 	final Database _db;
 	String _focus = "default";
+	Item.Factory _item_factory;
 	private LibrarySmartPlaylist playlistFromDatabase(DatabaseObject dbo)
 	{
 		LibrarySmartPlaylist p = Tools.Deserialize(dbo.contents());
@@ -24,8 +25,9 @@ public class LibraryImpl implements Library {
 		return p;
 	}
 	
-	public LibraryImpl(Database db) throws DatabaseError
+	public LibraryImpl(Database db, Item.Factory item_factory) throws DatabaseError
 	{
+		_item_factory = item_factory;
 		_db = db;
 		_db.declare_section("folders");
 		_db.declare_section("songs");
@@ -102,7 +104,7 @@ public class LibraryImpl implements Library {
 			{
 				callback.progress(i++, n);
 				try {
-					Track t= new TrackImpl(f);
+					Item t= _item_factory.createTrack(f);
 					_db.store("songs", t.serialize(), t.getSearchQuery() + " fh"+fh);
 				} 
 				catch (Exception e) {
@@ -230,7 +232,7 @@ public class LibraryImpl implements Library {
 	}
 
 	@Override
-	public boolean update(Track t) {
+	public boolean update(Item t) {
 		DatabaseObject dbo = t.linkedObject();
 		//FIXME: This is a BUG! Folder Information is lost!
 		

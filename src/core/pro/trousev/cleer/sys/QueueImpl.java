@@ -6,7 +6,7 @@ import java.util.Random;
 
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Queue;
-import pro.trousev.cleer.Track;
+import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Player.Error;
 import pro.trousev.cleer.Player.SongState;
 import pro.trousev.cleer.Player.Status;
@@ -14,7 +14,7 @@ import pro.trousev.cleer.Player.Status;
 public class QueueImpl implements Queue {
 
 	private Player player;
-	private List<Track> queue = null;
+	private List<Item> queue = null;
 	private int current = 0;
 	private static class Reactor implements Player.SongState
 	{
@@ -26,12 +26,12 @@ public class QueueImpl implements Queue {
 			queue = q;
 		}
 		@Override
-		public void started(Player sender, Track track) {
+		public void started(Player sender, Item track) {
 			//System.out.println("\nNow playing: "+track);
 		}
 
 		@Override
-		public void finished(Player sender, Track track,  Player.Reason reason) {
+		public void finished(Player sender, Item track,  Player.Reason reason) {
 			// System.out.println("Finished playing, reason: "+reason);
 			if(reason == Player.Reason.EndOfTrack)
 			{
@@ -47,12 +47,12 @@ public class QueueImpl implements Queue {
 		}
 
 		@Override
-		public void paused(Player sender, Track track) {
+		public void paused(Player sender, Item track) {
 			
 		}
 
 		@Override
-		public void resumed(Player sender, Track track) {
+		public void resumed(Player sender, Item track) {
 			
 		}
 
@@ -66,12 +66,12 @@ public class QueueImpl implements Queue {
 	public QueueImpl(Player player)
 	{
 		this.player = player;
-		queue = new ArrayList<Track>();
+		queue = new ArrayList<Item>();
 		reactor = new Reactor(this.player, this);
 	}
 
 	@Override
-	public List<Track> queue() {
+	public List<Item> queue() {
 		return queue;
 	}
 
@@ -86,7 +86,7 @@ public class QueueImpl implements Queue {
 	}
 
 	@Override
-	public Track playing_track() {
+	public Item playing_track() {
 		try
 		{
 			return queue.get(current);
@@ -106,7 +106,7 @@ public class QueueImpl implements Queue {
 	}
 
 	@Override
-	public void enqueue(List<Track> tracks, EnqueueMode mode) {
+	public void enqueue(List<Item> tracks, EnqueueMode mode) {
 		if(mode == EnqueueMode.AfterAll)
 		{
 			queue.addAll(tracks);
@@ -136,14 +136,14 @@ public class QueueImpl implements Queue {
 	}
 
 	@Override
-	public void enqueue(Track track, EnqueueMode mode) {
-		List<Track> l = new ArrayList<Track>();
+	public void enqueue(Item track, EnqueueMode mode) {
+		List<Item> l = new ArrayList<Item>();
 		l.add(track);
 		enqueue(l, mode);
 	}
 
 	@Override
-	public void enqueue(Track track) {
+	public void enqueue(Item track) {
 		enqueue(track, EnqueueMode.Immidiaely);
 	}
 	@Override
@@ -200,8 +200,8 @@ public class QueueImpl implements Queue {
 			int second = r.nextInt(N);
 			if(first == second) continue;
 			if (first == nti || second == nti) continue;
-			Track F = queue.get(first);
-			Track S = queue.get(second);
+			Item F = queue.get(first);
+			Item S = queue.get(second);
 			queue.set(first, S);
 			queue.set(second, F);
 		}

@@ -17,12 +17,13 @@ import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Plugin;
 import pro.trousev.cleer.Queue;
-import pro.trousev.cleer.Track;
+import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Plugin.Interface;
-import pro.trousev.cleer.Track.NoSuchTagException;
+import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.commands.CoreConsole;
 import pro.trousev.cleer.sys.LibraryImpl;
 import pro.trousev.cleer.sys.QueueImpl;
+import pro.trousev.cleer.sys.TrackImpl;
 
 public class ConsoleClient {
 	static String prompt(Plugin.Interface iface) throws NoSuchTagException
@@ -33,7 +34,7 @@ public class ConsoleClient {
 			pl = focus.title()+" '"+focus.query()+"' ("+focus.contents().size()+")";
 		
 		String np = "[No Song]";
-		Track t = iface.queue().playing_track();
+		Item t = iface.queue().playing_track();
 		if(t != null)
 			np = t.getTagValue("title");
 		
@@ -51,7 +52,7 @@ public class ConsoleClient {
 	    
 	    final Database db = new DatabaseSqlite(dbpath);
 	    
-		final Library lib = new LibraryImpl(db);
+		final Library lib = new LibraryImpl(db,TrackImpl.Factory);
 	    final Player player = new PlayerDesk();
 	    final Queue queue = new QueueImpl(player);
 
@@ -132,14 +133,14 @@ public class ConsoleClient {
 						return ans;
 					}
 					@Override
-					public void printTrackList(List<Track> tracks,
+					public void printTrackList(List<Item> tracks,
 							int selected_track, Callback songSelectAction) {
 						
 						try
 						{
 							List<String[]> matrix = new ArrayList<String[]>();
 							int no=-1;
-							for(Track t: tracks)
+							for(Item t: tracks)
 							{
 								no++;
 								if(selected_track>=0 && no > (selected_track+20)) continue;

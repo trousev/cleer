@@ -23,7 +23,7 @@ public interface Playlist {
 	 * Содержимое плейлиста. Может быть ленивым.
 	 * @return
 	 */
-	List<Track> contents();
+	List<Item> contents();
 	
 	/**
 	 *  Возвращает тип плейлиста

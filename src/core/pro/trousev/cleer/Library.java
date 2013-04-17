@@ -34,5 +34,5 @@ public interface Library {
 	public boolean playlist_remove(String name);
 	
 	// On-the-fly update API
-	public boolean update(Track t);
+	public boolean update(Item t);
 }

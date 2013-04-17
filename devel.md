@@ -1,6 +1,15 @@
 Development guide
 =================
 
+Full dependency list for development and deployment
+---------------------------------------------------
+
+ * Java JDK 1.6 or later, http://openjdk.java.net/
+ * Git SCM, http://git-scm.org
+ * Apache Ant, http://ant.apache.org
+ * Apache Maven, http://maven.apache.org/
+ * 
+
 Setting up windows development enviroment
 -----------------------------------------
 
@@ -23,7 +32,7 @@ Setting up windows development enviroment
 Setting up linux (ubuntu) development enviroment
 ------------------------------------------------
 
-    sudo apt-get install mvn ant openjdk-7-jdk   # Maybe, openjdk-6-jdk in old versions
+    sudo apt-get install mvn ant openjdk-7-jdk p7zip-full  # Maybe, openjdk-6-jdk in old versions
     git clone <repository>
     cd cleer
     ant enviroment

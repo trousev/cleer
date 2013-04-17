@@ -1,16 +1,15 @@
 package pro.trousev.cleer;
 
 import java.io.File;
-import java.util.List;
 
 import pro.trousev.cleer.Database.DatabaseObject;
 
 /**
  * Эта штуковина репрезентует один музыкальный трек коллекции, связанный с тем или иным объектом ФС
- * @author doctor
+ * @author Alexander Trousevich
  *
  */
-public interface Track {
+public interface Item {
 	// Meta
 	public String[] getAllTagNames();
 	public String getTagValue(String name) throws NoSuchTagException;
@@ -35,5 +34,10 @@ public interface Track {
 		public NoSuchTagException(String tagName) {
 			super(String.format("Cannot find tag: ",tagName));
 		}
+	}
+	/// Factory
+	public interface Factory
+	{
+		Item createTrack(File filename);
 	}
 }

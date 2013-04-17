@@ -1,4 +1,9 @@
 package pro.trousev.cleer.sys;
+/**
+    Thanks to: http://stackoverflow.com/questions/469695/decode-base64-data-in-java
+    (c) GeorgeK@StackOverflow
+    This code does not attach any license information and considered Public Domain.
+**/
 
 public class Base64 {
 
