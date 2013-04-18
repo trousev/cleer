@@ -28,6 +28,7 @@ import pro.trousev.cleer.sys.QueueImpl;
 import pro.trousev.cleer.sys.TrackImpl;
 
 public class ConsoleClient {
+	
 	static String prompt(Plugin.Interface iface) throws NoSuchTagException
 	{
 		String pl = "[no playlist]";
@@ -207,6 +208,11 @@ public class ConsoleClient {
 				};
 			}
 		};
+		
+		
+		
+		
+		
 		ConsoleReader reader = new ConsoleReader();
 		List<String> allCommandList = new ArrayList<String>();
 		for(Command c: console.commands())
