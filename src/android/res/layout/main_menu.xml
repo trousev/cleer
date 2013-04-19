@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/compositions_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Compositions" />
+
+    <Button
+        android:id="@+id/queue_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Queue" />
+
+    <Button
+        android:id="@+id/lists_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lists" />
+
+    <Button
+        android:id="@+id/genres_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Genres" />
+
+    <Button
+        android:id="@+id/artists_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Artists" />
+
+    <Button
+        android:id="@+id/albums_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Albums" />
+
+    <Button
+        android:id="@+id/files_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Files" />
+
+    <Button
+        android:id="@+id/equalizer_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Equalizer" />
+
+    <Button
+        android:id="@+id/exit_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onExit"
+        android:text="Exit" />
+
+</LinearLayout>

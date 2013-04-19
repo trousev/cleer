@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Queue"
+        android:layout_weight="1"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/prev_comp_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical" 
+        android:text="Prev" 
+        android:layout_weight="1"
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/play_pause_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical" 
+        android:text="Play" 
+        android:layout_weight="1"
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/next_comp_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:layout_gravity="center_vertical" 
+        android:layout_weight="1"
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/main_menu_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Menu" 
+        android:layout_weight="1"
+        android:textSize="12sp"/>
+
+    
+</LinearLayout>
