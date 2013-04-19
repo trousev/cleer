@@ -1,9 +1,9 @@
-package pro.trousev.cleer.test.android;
+package pro.trousev.cleer.userInterface;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import pro.trousev.cleer.test.android.R;
+import pro.trousev.cleer.userInterface.R;
 public class MainActivity extends Activity
 {
     /** Called when the activity is first created. */
