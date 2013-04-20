@@ -16,8 +16,10 @@ public class MainActivity extends FragmentActivity{
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        playBar = new PlayBar();
-        mainMenu = new MainMenu();
+        final PlayBar pb = new PlayBar();
+        final MainMenu mm = new MainMenu();
+        playBar=pb;
+        mainMenu=mm;
         fTrans=getSupportFragmentManager().beginTransaction();
         fTrans.add(R.id.play_bar, playBar).commit();
         fTrans=getSupportFragmentManager().beginTransaction();

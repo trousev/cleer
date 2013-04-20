@@ -11,15 +11,6 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_weight="1">
-
-
-        <Button
-            android:id="@+id/on_exit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onExit"
-            android:text="Exit program"
-            android:layout_gravity="center" />
     </FrameLayout>
 
     <FrameLayout
