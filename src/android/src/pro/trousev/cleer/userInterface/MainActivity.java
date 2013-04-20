@@ -78,6 +78,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			ListOfCompositions listOfCompositions = new ListOfCompositions();
 			getSupportFragmentManager().beginTransaction().replace(R.id.work_space, listOfCompositions).commit();
 			break;
+		case R.id.main_menu_btn:
+			getSupportFragmentManager().beginTransaction().replace(R.id.work_space, mainMenu).commit();
+			break;
 		default:
 			break;
 		}
