@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class MainMenu extends Fragment {
-	
-	
+	private MainActivity root;
+	public MainMenu(MainActivity mainActivity){
+		root=mainActivity;
+	}
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.main_menu, null);
+		View view = inflater.inflate(R.layout.main_menu, null, false);
 		return view;
 	}
 }

@@ -4,6 +4,7 @@
     android:orientation="horizontal" >
 
     <Button
+        android:id="@+id/queue_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Queue"

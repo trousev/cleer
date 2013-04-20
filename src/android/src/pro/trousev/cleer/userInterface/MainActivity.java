@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import pro.trousev.cleer.CoreItems;
 import pro.trousev.cleer.Plugin;
-import pro.trousev.cleer.Plugin.Interface;
 import pro.trousev.cleer.Console;
 import pro.trousev.cleer.ConsoleOutput;
 import pro.trousev.cleer.Database;
@@ -14,20 +13,20 @@ import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Queue;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import pro.trousev.cleer.userInterface.R;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements OnClickListener{
 	private FragmentTransaction fTrans;
 	private Fragment playBar, mainMenu;
-
 	/** Called when the activity is first created. */
 	@Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        final PlayBar pb = new PlayBar();
-        final MainMenu mm = new MainMenu();
+        final PlayBar pb = new PlayBar(this);
+        final MainMenu mm = new MainMenu(this);
         playBar=pb;
         mainMenu=mm;
         fTrans=getSupportFragmentManager().beginTransaction();
@@ -72,6 +71,9 @@ public class MainActivity extends FragmentActivity {
 			}
 	    });
     }
+	public void onClick(View view){
+		
+	}
 
 	public void onExit(View sender) {
 		System.exit(0);
