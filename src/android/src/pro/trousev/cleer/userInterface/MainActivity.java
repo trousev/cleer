@@ -72,7 +72,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    });
     }
 	public void onClick(View view){
-		
+		int id=view.getId();
+		switch(id){
+		case R.id.queue_btn:
+			ListOfCompositions listOfCompositions = new ListOfCompositions();
+			getSupportFragmentManager().beginTransaction().replace(R.id.work_space, listOfCompositions).commit();
+			break;
+		default:
+			break;
+		}
 	}
 
 	public void onExit(View sender) {
