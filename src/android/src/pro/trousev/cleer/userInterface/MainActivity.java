@@ -1,9 +1,12 @@
 package pro.trousev.cleer.userInterface;
 
+import java.util.List;
+
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import pro.trousev.cleer.CoreItems;
+import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Plugin;
 import pro.trousev.cleer.Console;
 import pro.trousev.cleer.ConsoleOutput;
@@ -16,35 +19,35 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import pro.trousev.cleer.userInterface.R;
 
-public class MainActivity extends FragmentActivity implements OnClickListener{
+public class MainActivity extends FragmentActivity implements OnClickListener {
 	private FragmentTransaction fTrans;
 	private Fragment playBar, mainMenu;
+
 	/** Called when the activity is first created. */
 	@Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        final PlayBar pb = new PlayBar(this);
-        final MainMenu mm = new MainMenu(this);
-        playBar=pb;
-        mainMenu=mm;
-        fTrans=getSupportFragmentManager().beginTransaction();
-        fTrans.add(R.id.play_bar, playBar).commit();
-        fTrans=getSupportFragmentManager().beginTransaction();
-        fTrans.add(R.id.work_space, mainMenu).commit();
-        // TODO set implementations here
-        final Database db = null;
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		final PlayBar pb = new PlayBar();
+		final MainMenu mm = new MainMenu();
+		playBar = pb;
+		mainMenu = mm;
+		fTrans = getSupportFragmentManager().beginTransaction();
+		fTrans.add(R.id.play_bar, playBar);
+		fTrans.add(R.id.work_space, mainMenu);
+		fTrans.commit();
+		// TODO set implementations here
+		final Database db = null;
 		final Library lib = null;
-	    final Player player = null;
-	    final Queue queue = null;
-	    CoreItems.setCoreItems(new Plugin.Interface() {
-			
+		final Player player = null;
+		final Queue queue = null;
+		CoreItems.setCoreItems(new Plugin.Interface() {
+
 			@Override
 			public Database storage() {
 				return db;
 			}
-			
+
 			@Override
 			public Library library() {
 				return lib;
@@ -66,23 +69,46 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			}
 
 			@Override
-			public ConsoleOutput output(){
+			public ConsoleOutput output() {
 				return null;
 			}
-	    });
-    }
-	public void onClick(View view){
-		int id=view.getId();
-		switch(id){
+		});
+	}
+	public void setEqualizer(){
+		
+	}
+	public void setListOfCompositions(List<Item> list) {
+		ListOfCompositions listOfCompositions = new ListOfCompositions();
+		fTrans = getSupportFragmentManager().beginTransaction();
+		fTrans.replace(R.id.work_space, listOfCompositions);
+		fTrans.addToBackStack(null);
+		fTrans.commit();
+	}
+
+	public void setListOfRequests(List<String> list) {
+		ListOfRequests listOfRequests = new ListOfRequests();
+		fTrans = getSupportFragmentManager().beginTransaction();
+		fTrans.replace(R.id.work_space, listOfRequests);
+		fTrans.addToBackStack(null);
+		fTrans.commit();
+	}
+	public void setMainMenu(){
+		fTrans = getSupportFragmentManager().beginTransaction();
+		fTrans.replace(R.id.work_space, mainMenu);
+		fTrans.addToBackStack(null);
+		fTrans.commit();
+	}
+	public void onClick(View view) {
+		int id = view.getId();
+		switch (id) {
 		case R.id.queue_btn:
-			ListOfCompositions listOfCompositions = new ListOfCompositions();
-			getSupportFragmentManager().beginTransaction().replace(R.id.work_space, listOfCompositions).commit();
+			setListOfCompositions(null);
 			break;
 		case R.id.main_menu_btn:
-			getSupportFragmentManager().beginTransaction().replace(R.id.work_space, mainMenu).commit();
+			setMainMenu();
 			break;
 		default:
-			break;
+			break;	
 		}
 	}
 

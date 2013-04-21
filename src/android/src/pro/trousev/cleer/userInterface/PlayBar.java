@@ -11,11 +11,11 @@ import android.widget.Button;
 public class PlayBar extends Fragment implements OnClickListener{
 	private Button playPauseBtn, prevCompBtn, nextCompBtn, queueBtn, mainMenuBtn;
 	private MainActivity root;
-	public PlayBar(MainActivity mainActivity){
-		root = mainActivity;
+	public PlayBar(){
 	}
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.play_bar, null, false);
+		root = (MainActivity) getActivity();
 		playPauseBtn= (Button) view.findViewById(R.id.play_pause_btn);
 		prevCompBtn= (Button) view.findViewById(R.id.prev_comp_btn);
 		nextCompBtn= (Button) view.findViewById(R.id.next_comp_btn);

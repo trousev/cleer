@@ -1,5 +1,9 @@
 package pro.trousev.cleer.userInterface;
 
+import java.util.List;
+
+import pro.trousev.cleer.Item;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,12 +13,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class MainMenu extends Fragment implements OnClickListener {
-	private MainActivity root;
-	public MainMenu(MainActivity mainActivity){
-		root=mainActivity;
+	MainActivity root;
+	public MainMenu(){
 	}
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.main_menu, null, false);
+		root=(MainActivity) getActivity();
 		Button listsBtn = (Button) view.findViewById(R.id.lists_btn);
 		Button compositionsBtn = (Button) view.findViewById(R.id.compositions_btn);
 		Button artistsBtn = (Button) view.findViewById(R.id.artists_btn);
@@ -33,9 +37,33 @@ public class MainMenu extends Fragment implements OnClickListener {
 		equalizerBtn.setOnClickListener(this);
 		return view;
 	}
+	
 	@Override
-	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
-		
+	public void onClick(View view) {
+		int id = view.getId();
+		switch (id) {
+		case R.id.compositions_btn:
+			root.setListOfCompositions(null);
+			break;
+		case R.id.lists_btn:
+			root.setListOfRequests(null);
+			break;
+		case R.id.genres_btn:
+			root.setListOfRequests(null);
+			break;
+		case R.id.artists_btn:
+			root.setListOfRequests(null);
+			break;
+		case R.id.albums_btn:
+			root.setListOfRequests(null);
+			break;
+		case R.id.files_btn:
+			break;
+		case R.id.equalizer_btn:
+			root.setEqualizer();
+			break;
+		default:
+			break;	
+		}
 	}
 }
