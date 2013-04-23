@@ -9,7 +9,7 @@ public interface Player  {
 	}
 	enum Status
 	{
-		Closed,Stopped,Playing,Paused,Processing
+		Closed, Stopped, Playing, Paused, Processing, Error
 	}
 	enum Reason
 	{

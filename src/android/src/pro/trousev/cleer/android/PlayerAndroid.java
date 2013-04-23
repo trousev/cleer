@@ -7,15 +7,20 @@ import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Player.PlayerException;
 
 //TODO think about callback
-public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener {
-	private MediaPlayer mediaPlayer = null;
-	private Item currentTrack = null;
-	private Status currentStatus = Status.Closed;
-	private Boolean prepared = false;
-	SongState state = null;
+//TODO make Service for it (where?)
+//TODO make state errors in PlayerException
+//TODO think about headset hot removal not in this file
+//TODO think how to implement volume up/down buttons using this interface
+//TODO make non-silent exit on asynchronous error
+public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+	private static MediaPlayer mediaPlayer = null;
+	private static Item currentTrack = null;
+	private static Status currentStatus = Status.Closed;
+	private static Boolean prepared = false;
+	private static SongState state = null;
 	
 	@Override
-	public void open(Item track, SongState state) throws PlayerException{
+	public void open(Item track, SongState state) throws PlayerException {
 		currentTrack = track;
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -23,11 +28,9 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener {
 		try {
 			mediaPlayer.setDataSource(t);
 			currentStatus = Status.Stopped;
+			mediaPlayer.setOnPreparedListener(this);
 		} catch (Exception e) {
-			mediaPlayer.release();
-			currentStatus = Status.Closed;
-			currentTrack = null;
-			mediaPlayer = null;
+			close();
 			throw new PlayerException(e.getMessage());
 		} finally {
 			prepared = false;
@@ -37,9 +40,10 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener {
 	@Override
 	public void close() {
 		mediaPlayer.release();
-		prepared = false;
-		currentStatus = Status.Closed;
 		mediaPlayer = null;
+		currentTrack = null;
+		currentStatus = Status.Closed;
+		prepared = false;
 	}
 
 	@Override
@@ -86,6 +90,13 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener {
 		prepared = true;
 		mediaPlayer.start();
 		currentStatus = Status.Playing;
+	}
+	
+	@Override
+	public boolean onError(MediaPlayer mp, int what, int extra) {
+		close();
+		currentStatus = Status.Error;
+		return false;
 	}
 
 }
