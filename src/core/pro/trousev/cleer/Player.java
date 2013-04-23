@@ -10,7 +10,7 @@ public interface Player  {
 	}
 	enum Status
 	{
-		Closed,Stopped,Playing,Paused
+		Closed,Stopped,Playing,Paused,Processing
 	}
 	enum Reason
 	{

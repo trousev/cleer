@@ -5,12 +5,12 @@ import android.media.MediaPlayer;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Player;
 
-//TODO make asynchronous playback
 //TODO think about callback
-public class PlayerAndroid implements Player {
+public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener {
 	private MediaPlayer mediaPlayer = null;
 	private Item currentTrack = null;
 	private Status currentStatus = Status.Closed;
+	private Boolean prepared = false;
 	SongState state = null;
 	
 	public static class PlayerException extends Exception {
@@ -34,27 +34,37 @@ public class PlayerAndroid implements Player {
 		} catch (Exception e) {
 			mediaPlayer.release();
 			currentStatus = Status.Closed;
+			currentTrack = null;
 			mediaPlayer = null;
 			throw new PlayerException(e.getMessage());
+		} finally {
+			prepared = false;
 		}
 	}
 
 	@Override
 	public void close() {
 		mediaPlayer.release();
+		prepared = false;
 		currentStatus = Status.Closed;
 		mediaPlayer = null;
 	}
 
 	@Override
 	public void play() {
-		mediaPlayer.start();
-		currentStatus = Status.Playing;
+		if (prepared) {
+			mediaPlayer.start();
+			currentStatus = Status.Playing;
+		} else {
+			currentStatus = Status.Processing;
+			mediaPlayer.prepareAsync();
+		}
 	}
 
 	@Override
 	public void stop(Reason reason) {
 		mediaPlayer.stop();
+		prepared = false;
 		currentStatus = Status.Stopped;
 	}
 
@@ -66,8 +76,7 @@ public class PlayerAndroid implements Player {
 
 	@Override
 	public void resume() {
-		mediaPlayer.start();
-		currentStatus = Status.Playing;
+		this.play();
 	}
 
 	@Override
@@ -78,6 +87,13 @@ public class PlayerAndroid implements Player {
 	@Override
 	public Status getStatus() {
 		return currentStatus;
+	}
+
+	@Override
+	public void onPrepared(MediaPlayer mp) {
+		prepared = true;
+		mediaPlayer.start();
+		currentStatus = Status.Playing;
 	}
 
 }
