@@ -17,8 +17,8 @@ public class ListOfRequests extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_list_item_1, data);
+		ListOfRequestsAdapter adapter = new ListOfRequestsAdapter(getActivity(),
+				R.layout.list_of_reqv_element, data);
 		setListAdapter(adapter);
 	}
 }

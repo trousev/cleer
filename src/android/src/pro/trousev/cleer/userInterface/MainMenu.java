@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import pro.trousev.cleer.userInterface.R;
+
 
 public class MainMenu extends Fragment implements OnClickListener {
 	MainActivity root;

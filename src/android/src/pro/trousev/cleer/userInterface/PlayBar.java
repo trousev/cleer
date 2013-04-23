@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import pro.trousev.cleer.userInterface.R;
 
 public class PlayBar extends Fragment implements OnClickListener{
 	private Button playPauseBtn, prevCompBtn, nextCompBtn, queueBtn, mainMenuBtn;

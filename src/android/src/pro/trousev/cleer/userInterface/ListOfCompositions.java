@@ -17,8 +17,8 @@ public class ListOfCompositions extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_list_item_1, data);
+		ListOfCompAdapter adapter = new ListOfCompAdapter(getActivity(),
+				R.layout.list_of_comp_element, data);
 		setListAdapter(adapter);
 	}
 }
