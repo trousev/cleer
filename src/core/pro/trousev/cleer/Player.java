@@ -1,5 +1,7 @@
 package pro.trousev.cleer;
 
+import pro.trousev.cleer.android.PlayerAndroid.PlayerException;
+
 public interface Player  {
 	
 	enum Error
@@ -44,7 +46,7 @@ public interface Player  {
 		void destroyed(Player sender);
 	}
 	
-	public void open(Item track, SongState state);
+	public void open(Item track, SongState state) throws PlayerException;
 	public void close();
 
 	public void play();
