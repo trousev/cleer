@@ -103,6 +103,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 	@Override
 	public boolean onError(MediaPlayer mp, int what, int extra) {
 		close();
+		currentStatus = Status.Error;
 		return false;
 	}
 
