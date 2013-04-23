@@ -21,4 +21,11 @@ public class ListOfRequests extends ListFragment {
 				R.layout.list_of_reqv_element, data);
 		setListAdapter(adapter);
 	}
+	@Override
+	public void onListItemClick(ListView listView, View view, int position, long id){
+		//getting here object that we got from lib
+		listView.getItemAtPosition(position);
+		//TODO get information from that object and give request to library
+		((MainActivity)getActivity()).setListOfCompositions(null);
+	}
 }

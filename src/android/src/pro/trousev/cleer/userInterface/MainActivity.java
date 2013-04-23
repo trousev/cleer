@@ -5,6 +5,7 @@ import java.util.List;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import pro.trousev.cleer.CoreItems;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Plugin;
@@ -22,7 +23,7 @@ import pro.trousev.cleer.userInterface.R;
 public class MainActivity extends FragmentActivity implements OnClickListener {
 	private FragmentTransaction fTrans;
 	private Fragment playBar, mainMenu;
-
+	private FragmentManager fragmentManager;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		final MainMenu mm = new MainMenu();
 		playBar = pb;
 		mainMenu = mm;
-		fTrans = getSupportFragmentManager().beginTransaction();
+		fragmentManager = getSupportFragmentManager();
+		fTrans = fragmentManager.beginTransaction();
 		fTrans.add(R.id.play_bar, playBar);
 		fTrans.add(R.id.work_space, mainMenu);
 		fTrans.commit();
@@ -77,9 +79,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void setEqualizer(){
 		
 	}
+	public void clearBackStack() {
+	    while (fragmentManager.getBackStackEntryCount() != 0) {
+	        fragmentManager.popBackStackImmediate();
+	    }
+	}
 	public void setListOfCompositions(List<Item> list) {
-		ListOfCompositions listOfCompositions = new ListOfCompositions();
-		fTrans = getSupportFragmentManager().beginTransaction();
+		ListOfCompositions listOfCompositions = new ListOfCompositions(list);
+		fTrans = fragmentManager.beginTransaction();
 		fTrans.replace(R.id.work_space, listOfCompositions);
 		fTrans.addToBackStack(null);
 		fTrans.commit();
@@ -87,13 +94,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	public void setListOfRequests(List<String> list) {
 		ListOfRequests listOfRequests = new ListOfRequests();
-		fTrans = getSupportFragmentManager().beginTransaction();
+		fTrans = fragmentManager.beginTransaction();
 		fTrans.replace(R.id.work_space, listOfRequests);
 		fTrans.addToBackStack(null);
 		fTrans.commit();
 	}
 	public void setMainMenu(){
-		fTrans = getSupportFragmentManager().beginTransaction();
+		fTrans = fragmentManager.beginTransaction();
 		fTrans.replace(R.id.work_space, mainMenu);
 		fTrans.addToBackStack(null);
 		fTrans.commit();
@@ -106,6 +113,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 		case R.id.main_menu_btn:
 			setMainMenu();
+			clearBackStack();
 			break;
 		default:
 			break;	
