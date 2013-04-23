@@ -1,6 +1,5 @@
 package pro.trousev.cleer;
 
-import pro.trousev.cleer.android.PlayerAndroid.PlayerException;
 
 public interface Player  {
 	
@@ -57,4 +56,12 @@ public interface Player  {
 	public Item now_playing();
 	Status getStatus();
 	
+	
+	public static class PlayerException extends Exception {
+		private static final long serialVersionUID = -23891433149501L; //user defined
+		
+		public PlayerException (String reason) {
+			super(String.format("Player exception: ", reason));
+		}
+	}
 }

@@ -4,6 +4,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Player;
+import pro.trousev.cleer.Player.PlayerException;
 
 //TODO think about callback
 public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener {
@@ -12,15 +13,6 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener {
 	private Status currentStatus = Status.Closed;
 	private Boolean prepared = false;
 	SongState state = null;
-	
-	public static class PlayerException extends Exception {
-		private static final long serialVersionUID = -23891433149501L; //user defined
-		
-		public PlayerException (String reason) {
-			super(String.format("Player exception: ", reason));
-		}
-		
-	}
 	
 	@Override
 	public void open(Item track, SongState state) throws PlayerException{

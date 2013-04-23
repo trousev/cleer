@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import pro.trousev.cleer.Player;
+import pro.trousev.cleer.Player.PlayerException;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Player.Error;
@@ -125,7 +126,12 @@ public class QueueImpl implements Queue {
 			else
 				queue.addAll(tracks);
 			player.stop(Player.Reason.UserBreak);
-			player.open(playing_track(), reactor);
+			try {
+				player.open(playing_track(), reactor);
+			} catch (PlayerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			player.play();
 		}
 		if(mode == EnqueueMode.ReplaceAll)
@@ -180,7 +186,12 @@ public class QueueImpl implements Queue {
 		if(current >= size()) return false;
 		if(current <0 ) return false;
 		player.stop(Player.Reason.UserBreak);
-		player.open(playing_track(), reactor);
+		try {
+			player.open(playing_track(), reactor);
+		} catch (PlayerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		player.play();
 		return true;
 	}
