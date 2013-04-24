@@ -5,7 +5,7 @@ public interface Player  {
 	
 	enum Error
 	{
-		FileNotFound
+		NoError,FileNotFound
 	}
 	enum Status
 	{
@@ -15,37 +15,16 @@ public interface Player  {
 	{
 		UserBreak, EndOfTrack, PlayerError, SystemBreak
 	}
-	public interface SongState
+	public static class PlayerChangeEvent implements Messaging.Message
 	{
-		/**
-		 * Вызывается после того, как песня начала играть.
-		 */
-		void started(Player sender, Item track);
-		/**
-		 * Вызывается после того, как песна закончила играть
-		 * @param reason Строковый комментарий, посвященный ошибке, если таковая была. Может быть null
-		 */
-		void finished(Player sender, Item track, Reason reason);
-		/**
-		 * Вызывается, если произошла какая-то ошибка
-		 * @param errorMessage
-		 */
-		void error(Player sender, Error errorCode, String errorMessage);
-		/**
-		 * Вызывается, если песню приостановили
-		 */
-		void paused(Player sender, Item track);
-		/**
-		 * Вызывается, если песню продолжили играть
-		 */
-		void resumed(Player sender, Item track);
-		/**
-		 * Вызывается, если песня уничтожилась и плеер ее больше не играет
-		 */
-		void destroyed(Player sender);
+		public Player sender;
+		public Item track;
+		public Reason reason;
+		public Status status;
+		public Error error;
 	}
 	
-	public void open(Item track, SongState state) throws PlayerException;
+	public void open(Item track) throws PlayerException;
 	public void close();
 
 	public void play();
