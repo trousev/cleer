@@ -68,10 +68,6 @@ public interface Queue {
 	public void enqueue(Item track);
 	
 	/**
-	 * Returns songState, which should be eaten by Player to fit queue
-	 */
-	public Player.SongState queue_song_state();
-	/**
 	 * Stops current song and plays next one.
 	 * @return true is all OK, false else
 	 */

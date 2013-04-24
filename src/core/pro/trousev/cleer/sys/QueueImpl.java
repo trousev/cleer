@@ -1,15 +1,18 @@
-package pro.trousev.cleer.sys;
 
+package pro.trousev.cleer.sys;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Player;
+import pro.trousev.cleer.Messaging.Message;
+import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.PlayerException;
+import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.Player.Reason;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Item;
-import pro.trousev.cleer.Player.Error;
-import pro.trousev.cleer.Player.SongState;
 import pro.trousev.cleer.Player.Status;
 
 public class QueueImpl implements Queue {
@@ -17,58 +20,22 @@ public class QueueImpl implements Queue {
 	private Player player;
 	private List<Item> queue = null;
 	private int current = 0;
-	private static class Reactor implements Player.SongState
-	{
-		//Player player;
-		QueueImpl queue;
-		Reactor(Player pl, QueueImpl q)
-		{
-			//player = pl;
-			queue = q;
-		}
-		@Override
-		public void started(Player sender, Item track) {
-			//System.out.println("\nNow playing: "+track);
-		}
-
-		@Override
-		public void finished(Player sender, Item track,  Player.Reason reason) {
-			// System.out.println("Finished playing, reason: "+reason);
-			if(reason == Player.Reason.EndOfTrack)
-			{
-				//System.out.println("Playing next song...");
-				queue.next();
-			}
-		}
-
-		@Override
-		public void error(Player sender, Error errorCode, String errorMessage) {
-			
-			
-		}
-
-		@Override
-		public void paused(Player sender, Item track) {
-			
-		}
-
-		@Override
-		public void resumed(Player sender, Item track) {
-			
-		}
-
-		@Override
-		public void destroyed(Player sender) {
-			
-		}
-	}
-	Reactor reactor;
 
 	public QueueImpl(Player player)
 	{
 		this.player = player;
 		queue = new ArrayList<Item>();
-		reactor = new Reactor(this.player, this);
+		Messaging.subscribe(Player.PlayerChangeEvent.class, new Event() {
+			
+			@Override
+			public void messageReceived(Message message) {
+				PlayerChangeEvent ev = (PlayerChangeEvent) message;
+				if(ev.status == Status.Stopped && ev.reason == Reason.EndOfTrack && ev.error == null)
+				{
+					next();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -127,7 +94,7 @@ public class QueueImpl implements Queue {
 				queue.addAll(tracks);
 			player.stop(Player.Reason.UserBreak);
 			try {
-				player.open(playing_track(), reactor);
+				player.open(playing_track());
 			} catch (PlayerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -151,10 +118,6 @@ public class QueueImpl implements Queue {
 	@Override
 	public void enqueue(Item track) {
 		enqueue(track, EnqueueMode.Immidiaely);
-	}
-	@Override
-	public SongState queue_song_state() {
-		return reactor;
 	}
 	
 	@Override 
@@ -187,7 +150,7 @@ public class QueueImpl implements Queue {
 		if(current <0 ) return false;
 		player.stop(Player.Reason.UserBreak);
 		try {
-			player.open(playing_track(), reactor);
+			player.open(playing_track());
 		} catch (PlayerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

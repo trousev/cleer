@@ -3,6 +3,7 @@ package pro.trousev.cleer.desktop;
 import java.io.IOException;
 import java.io.InputStream;
 
+import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Item;
 
@@ -78,18 +79,17 @@ public class PlayerDesk implements Player
 		}
 	};
 	Subprocess subprocess;
-	SongState current_state;
+	PlayerChangeEvent playerChangeEvent = new PlayerChangeEvent();
 	Status current_status = Status.Closed;
 	Item track;
 	@Override
-	public void open(Item track, SongState state) {
+	public void open(Item track) {
 		close();
 		String[] args = new String[2];
 		args[0] = "mplayer";
 		if(track == null)
 			return ;
 		args[1] = track.filename().getAbsolutePath();
-		current_state = state;
 		this.track = track;
 		subprocess = new Subprocess(args, new SubprocessDelegate() {
 			
@@ -128,18 +128,23 @@ public class PlayerDesk implements Player
 		stop(Reason.UserBreak);
 		track = null;
 		subprocess = null;
-		current_state = null;
 		current_status = Status.Closed;
 	}
 
 	@Override
 	public void play() {
-		if(subprocess == null || current_state == null)
+		if(subprocess == null)
 			return ;
 		if(current_status == Status.Playing || current_status == Status.Paused)
 			stop(Reason.UserBreak);
 		subprocess.start();
-		current_state.started(this,track);
+		
+		playerChangeEvent.error = null;
+		playerChangeEvent.reason = null;
+		playerChangeEvent.sender = this;
+		playerChangeEvent.status = Status.Playing;
+		playerChangeEvent.track = track;
+		Messaging.fire(playerChangeEvent);
 		current_status = Status.Playing;
 	}
 
@@ -150,7 +155,12 @@ public class PlayerDesk implements Player
 			return ;
 		subprocess.kill();
 		current_status = Status.Stopped;
-		current_state.finished(this,track,reason);
+		playerChangeEvent.error = null;
+		playerChangeEvent.reason = reason;
+		playerChangeEvent.sender = this;
+		playerChangeEvent.status = Status.Stopped;
+		playerChangeEvent.track = track;
+		Messaging.fire(playerChangeEvent);
 	}
 
 	@Override

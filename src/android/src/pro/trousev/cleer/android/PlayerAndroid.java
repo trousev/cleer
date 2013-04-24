@@ -3,6 +3,7 @@ package pro.trousev.cleer.android;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Player;
 
 //TODO think about callback
@@ -11,15 +12,17 @@ import pro.trousev.cleer.Player;
 //TODO think about headset hot removal not in this file
 //TODO think how to implement volume up/down buttons using this interface
 //TODO make non-silent exit on asynchronous error
+//TODO: Implement more status-change messages via Messaging.fire(...). 
+
 public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
 	private static MediaPlayer mediaPlayer = null;
 	private static Item currentTrack = null;
 	private static Status currentStatus = Status.Closed;
 	private static Boolean prepared = false;
-	private static SongState state = null;
+	private static PlayerChangeEvent changeEvent = new PlayerChangeEvent(); 
 	
 	@Override
-	public void open(Item track, SongState state) throws PlayerException {
+	public void open(Item track) throws PlayerException {
 		currentTrack = track;
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -38,6 +41,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 
 	@Override
 	public void close() {
+		
 		mediaPlayer.release();
 		mediaPlayer = null;
 		currentTrack = null;
@@ -54,6 +58,12 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 			currentStatus = Status.Processing;
 			mediaPlayer.prepareAsync();
 		}
+		changeEvent.error = null;
+		changeEvent.reason = null;
+		changeEvent.sender = this;
+		changeEvent.status = currentStatus;
+		changeEvent.track = currentTrack;
+		Messaging.fire(changeEvent);
 	}
 
 	@Override
@@ -61,6 +71,12 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 		mediaPlayer.stop();
 		prepared = false;
 		currentStatus = Status.Stopped;
+		changeEvent.error = null;
+		changeEvent.reason = null;	// FILL THIS PLEASE!
+		changeEvent.sender = this;
+		changeEvent.status = currentStatus;
+		changeEvent.track = currentTrack;
+		Messaging.fire(changeEvent);
 	}
 
 	@Override
