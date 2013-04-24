@@ -1,41 +1,4 @@
-/**
-Класс Messaging, позволяющий посылать и получать сообщения.
 
-Использование состоит из двух use-case-ов:
-
-1. Посылка сообщения.
-
-Для этого надо создать объект-сообщение, который и будет посылаться. Это должна быть имплементация Messaging.Event
-
-    class MyEvent implements Messaging.Event
-    {
-        public String message;
-    }
-
-После этого внутри кода можно слать объекты подобного типа:
-
-MyEvent event = new MyEvent ;
-event.message = "Hello, World!";
-Messaging.fire(event);
-
-Обратите внимание -- _кому_ слать сообщение -- не указано. Каждый класс сам решает, что он хочет получать.
-
-2. Получение сообщений.
-
-Для того, чтобы получать сообщения, класс должен (в конструкторе, например) _подписаться_ на определенный тип сообщений. Для этого следует использовать
-
-    Messaging.subscribe(MyEvent.class, new Event() {
-        @Override
-        public void messageReceived(Message message) {
-            MyEvent sender =  (MyEvent) message;
-            System.out.println(sender.message);
-        }
-    });
-
-
-Сообщение будет получено всеми подписавшимися классами.
-
- */
 package pro.trousev.cleer.sys;
 import java.util.ArrayList;
 import java.util.List;
