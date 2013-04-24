@@ -4,7 +4,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Player;
-import pro.trousev.cleer.Player.PlayerException;
 
 //TODO think about callback
 //TODO make Service for it (where?)
