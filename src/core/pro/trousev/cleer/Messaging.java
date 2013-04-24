@@ -35,7 +35,8 @@ Messaging.fire(event);
 
 Сообщение будет получено всеми подписавшимися классами.
 
- */package pro.trousev.cleer;
+ */
+package pro.trousev.cleer;
 
 import java.util.ArrayList;
 import java.util.List;
