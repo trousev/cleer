@@ -51,7 +51,12 @@
             <arg value="install" />
         </exec>
     </target>
-    <target name="enviroment" depends="env-submodules,env-jline">
+    <target name="env-tjws">
+	<mkdir dir="tmp/artifacts/desktop" />
+	<get skipexisting="true" src="http://sourceforge.net/projects/tjws/files/latest/download?source=files" dest="tmp/artifacts/desktop/tjws.zip" />
+	<unzip src="tmp/artifacts/desktop/tjws.zip" dest="tmp/artifacts/desktop/tjws" />
+    </target>
+    <target name="enviroment" depends="env-submodules,env-jline,env-tjws">
     </target>
     <target name="clean" >
         <delete dir="tmp" />
