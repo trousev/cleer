@@ -98,8 +98,6 @@ public interface Database {
 	@Deprecated
 	public List<DatabaseObject> search(String section, String query) throws DatabaseError;
 	/**
-	  DEPRECATED. Используйте search(section, query, language) вместо этого метода.
-
 	  Производит поиск всех объектов в секции, соответствующих заданному запросу. 
 	  Алгоритм поиска не формализован, но должен быть умным, эвристичным и т.п.
 	  Налагаются дополнительные требования на алгоритм поиска, за подробностями на trousev@yandex.ru
