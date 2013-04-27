@@ -7,11 +7,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import pro.trousev.cleer.userInterface.R;
+import pro.trousev.cleer.android.userInterface.R;
 
+final int IS_PLAYING = 2;
 public class PlayBar extends Fragment implements OnClickListener{
 	private Button playPauseBtn, prevCompBtn, nextCompBtn, queueBtn, mainMenuBtn;
 	private MainActivity root;
+	private int status;
+	final int IS_PLAYING = 1;
+	final int IS_PAUSED = 0;
 	public PlayBar(){
 	}
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {

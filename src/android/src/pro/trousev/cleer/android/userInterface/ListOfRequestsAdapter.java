@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import pro.trousev.cleer.android.userInterface.R;
 
 public class ListOfRequestsAdapter extends ArrayAdapter<String> {
 

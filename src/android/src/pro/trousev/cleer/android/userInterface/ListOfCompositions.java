@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
+import pro.trousev.cleer.android.userInterface.R;
+
 
 public class ListOfCompositions extends ListFragment {
 	String data[] = new String[] { "one", "two", "three", "four", "one", "two",

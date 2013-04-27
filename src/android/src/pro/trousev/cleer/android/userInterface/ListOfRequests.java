@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import pro.trousev.cleer.android.userInterface.R;
 
 public class ListOfRequests extends ListFragment {
 	String data[] = new String[] { "one", "two", "three", "four", "one", "two",

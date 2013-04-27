@@ -47,22 +47,11 @@
             android:text="Albums" />
 
         <Button
-            android:id="@+id/files_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Files" />
-
-        <Button
-            android:id="@+id/equalizer_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Equalizer" />
-
-        <Button
             android:id="@+id/exit_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onExit"
             android:text="Exit" />
     </LinearLayout>
+
 </ScrollView>
