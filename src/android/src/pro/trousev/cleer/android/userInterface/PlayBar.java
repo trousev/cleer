@@ -1,4 +1,4 @@
-package pro.trousev.cleer.userInterface;
+package pro.trousev.cleer.android.userInterface;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

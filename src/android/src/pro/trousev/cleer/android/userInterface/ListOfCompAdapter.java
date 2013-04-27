@@ -1,4 +1,4 @@
-package pro.trousev.cleer.userInterface;
+package pro.trousev.cleer.android.userInterface;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package pro.trousev.cleer.android;
+package pro.trousev.cleer.android.service;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;

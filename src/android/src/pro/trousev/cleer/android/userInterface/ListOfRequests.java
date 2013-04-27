@@ -1,4 +1,4 @@
-package pro.trousev.cleer.userInterface;
+package pro.trousev.cleer.android.userInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
