@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import pro.trousev.cleer.android.userInterface.R;
 
-final int IS_PLAYING = 2;
+
 public class PlayBar extends Fragment implements OnClickListener{
 	private Button playPauseBtn, prevCompBtn, nextCompBtn, queueBtn, mainMenuBtn;
 	private MainActivity root;
