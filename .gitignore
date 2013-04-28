@@ -6,3 +6,4 @@ tmp/*
 .gitattributes
 *.d
 .gitignore
+.metadata/*
