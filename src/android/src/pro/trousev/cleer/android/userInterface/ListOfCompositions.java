@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
-import pro.trousev.cleer.android.userInterface.R;
 
 
 public class ListOfCompositions extends ListFragment {
@@ -19,8 +18,7 @@ public class ListOfCompositions extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ListOfCompAdapter adapter = new ListOfCompAdapter(getActivity(),
-				R.layout.list_of_comp_element, data);
+		ListOfCompAdapter adapter = new ListOfCompAdapter(getActivity(), data);
 		setListAdapter(adapter);
 	}
 	@Override

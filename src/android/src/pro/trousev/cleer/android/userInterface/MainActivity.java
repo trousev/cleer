@@ -2,22 +2,16 @@ package pro.trousev.cleer.android.userInterface;
 
 import java.util.List;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentManager;
 import pro.trousev.cleer.Item;
-import pro.trousev.cleer.Plugin;
-import pro.trousev.cleer.Console;
-import pro.trousev.cleer.ConsoleOutput;
-import pro.trousev.cleer.Database;
-import pro.trousev.cleer.Library;
-import pro.trousev.cleer.Player;
-import pro.trousev.cleer.Queue;
+import pro.trousev.cleer.android.service.AndroidCleerService;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
-import pro.trousev.cleer.android.userInterface.R;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
 	private FragmentTransaction fTrans;
@@ -37,6 +31,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		fTrans.add(R.id.play_bar, playBar);
 		fTrans.add(R.id.work_space, mainMenu);
 		fTrans.commit();
+		startService(new Intent(this, AndroidCleerService.class));
 		// TODO set implementations here
 		// TODO initialize Service
 	}
@@ -75,14 +70,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 		case R.id.main_menu_btn:
 			setMainMenu();
+			stopService(new Intent(this, AndroidCleerService.class));
 			clearBackStack();
+			break;
+		case R.id.exit_btn:
+			stopService(new Intent(this, AndroidCleerService.class));
+			System.exit(0);
 			break;
 		default:
 			break;	
 		}
 	}
 
-	public void onExit(View sender) {
-		System.exit(0);
-	}
 }

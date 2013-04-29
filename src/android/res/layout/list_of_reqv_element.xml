@@ -1,12 +1,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/reqv_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25dp" />
-
+        android:textSize="22dp" />
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:textSize="16dp" />
+    
+	
 </LinearLayout>

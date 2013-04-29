@@ -50,7 +50,7 @@
             android:id="@+id/exit_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onExit"
+            android:onClick="onClick"
             android:text="Exit" />
     </LinearLayout>
 
