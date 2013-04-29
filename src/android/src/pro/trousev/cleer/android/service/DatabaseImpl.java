@@ -2,10 +2,36 @@ package pro.trousev.cleer.android.service;
 
 import java.util.List;
 
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.database.DatabaseErrorHandler;
+
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 
 public class DatabaseImpl implements Database{
+	SQLiteDatabase db;
+	
+	public DatabaseImpl (String path) {
+		DatabaseErrorHandler errorHandler = null;
+		String str = null;
+		SQLiteDatabase.CursorFactory factory = null;
+		
+		this.db = SQLiteDatabase.openOrCreateDatabase (str, factory, errorHandler);
+		
+		
+	}
 	
 	public class DatabaseObject implements Database.DatabaseObject {
 		private String id = null;
@@ -37,20 +63,30 @@ public class DatabaseImpl implements Database{
 		/**
 				Содержимое объекта
 		 **/
-		public String contents() {
+		public String contents()  {
 			
-			if (this.contents == null)
+			if(this.contents == null)
 			{
-				// TODO try-catch of something ? 
+				try {
+					// переменные для query
+				    String[] columns = {"value"};
+				    String selection = "id = " + this.id;
+				    // курсор
+				    Cursor c = db.query("sections", columns, selection, null, null, null, null);
+				    this.contents = c.getColumnName(0);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return null;
+				}
 			}
-			return null;
+			return this.contents;
 			
 		}
 		/**
 				Поисковой контекст.
 		 **/
 		public String search() {
-			return null;
+			return this.search;
 			
 		}
 		/**
@@ -60,21 +96,67 @@ public class DatabaseImpl implements Database{
 		 * @throws DatabaseError 
 		 **/
 		public boolean update(String contents, String search) throws DatabaseError {
-			return false;
+			ContentValues cv = new ContentValues();
+		    cv.put("value", contents);
+		    cv.put("search", search);
+		    		    
+			if (contents == null || search == null) {
+				return false;
+			} 
+				try {
+					int updCount = db.update("sections", cv, "id = " + this.id, new String[] { id });
+				}
+				//TODO поменять название ошибки на соответствующее
+				catch (SQLException e) {
+					e.printStackTrace();
+					return false;
+				}
+				
+			return true;
 			
 		}
 		/**
 				Обновляет только содержимое
 		 **/
 		public boolean update_contents(String contents) throws DatabaseError {
-			return false;
+			ContentValues cv = new ContentValues();
+		    cv.put("value", contents);
+		    		    
+			if (contents == null) {
+				return false;
+			} 
+				try {
+					int updCount = db.update("sections", cv, "id = " + this.id, new String[] { id });
+				}
+				//TODO поменять название ошибки на соответствующее
+				catch (SQLException e) {
+					e.printStackTrace();
+					return false;
+				}
+				
+			return true;
 			
 		}
 		/**
 				Обновляет только поисковой контекст.
 		 **/
 		public boolean update_search(String search) throws DatabaseError {
-			return false;
+			ContentValues cv = new ContentValues();
+		    cv.put("search", search);
+		    		    
+			if (search == null) {
+				return true;
+			} 
+				try {
+					int updCount = db.update("sections", cv, "id = " + this.id, new String[] { id });
+				}
+				//TODO поменять название ошибки на соответствующее
+				catch (SQLException e) {
+					e.printStackTrace();
+					return false;
+				}
+				
+			return true;
 			
 		}
 	}
@@ -144,4 +226,7 @@ public class DatabaseImpl implements Database{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+
+	
 }
