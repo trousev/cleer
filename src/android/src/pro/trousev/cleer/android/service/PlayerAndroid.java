@@ -2,9 +2,11 @@ package pro.trousev.cleer.android.service;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.util.Log;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Player;
+import pro.trousev.cleer.android.Constants;
 
 //TODO think about callback
 //TODO make Service for it (where?)
@@ -32,7 +34,9 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 			mediaPlayer.setDataSource(t);
 			currentStatus = Status.Stopped;
 			mediaPlayer.setOnPreparedListener(this);
+			Log.d(Constants.LOG_TAG, "Player is created");
 		} catch (Exception e) {
+			Log.e(Constants.LOG_TAG, "Unable to create MediaPlayer()");
 			close();
 			throw new PlayerException(e.getMessage());
 		} finally {
@@ -48,6 +52,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 		currentTrack = null;
 		currentStatus = Status.Closed;
 		prepared = false;
+		Log.d(Constants.LOG_TAG, "Player stopped");
 	}
 
 	@Override
@@ -65,6 +70,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 		changeEvent.status = currentStatus;
 		changeEvent.track = currentTrack;
 		Messaging.fire(changeEvent);
+		Log.d(Constants.LOG_TAG, "Player is playing");
 	}
 
 	@Override
@@ -78,12 +84,14 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 		changeEvent.status = currentStatus;
 		changeEvent.track = currentTrack;
 		Messaging.fire(changeEvent);
+		Log.d(Constants.LOG_TAG, "Player is stopped");
 	}
 
 	@Override
 	public void pause() {
 		mediaPlayer.pause();
 		currentStatus = Status.Paused;
+		Log.d(Constants.LOG_TAG, "Player is paused");
 	}
 
 	@Override
@@ -106,6 +114,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 		prepared = true;
 		mediaPlayer.start();
 		currentStatus = Status.Playing;
+		Log.d(Constants.LOG_TAG, "Player is prepared");
 	}
 	
 	@Override
