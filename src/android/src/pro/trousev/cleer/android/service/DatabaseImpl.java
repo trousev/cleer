@@ -101,7 +101,7 @@ public class DatabaseImpl implements Database{
 		    cv.put("search", search);
 		    		    
 			if (contents == null || search == null) {
-				return false;
+				return true;
 			} 
 				try {
 					int updCount = db.update("sections", cv, "id = " + this.id, new String[] { id });
@@ -123,7 +123,7 @@ public class DatabaseImpl implements Database{
 		    cv.put("value", contents);
 		    		    
 			if (contents == null) {
-				return false;
+				return true;
 			} 
 				try {
 					int updCount = db.update("sections", cv, "id = " + this.id, new String[] { id });
@@ -163,20 +163,40 @@ public class DatabaseImpl implements Database{
 
 	@Override
 	public boolean declare_section(String section) throws DatabaseError {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			db.execSQL("create table " + section + "("
+				+ "id integer primary key autoincrement," + "value text,"
+				+ "search text"+ "keywords text" + ");");
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public boolean clear_section(String section) throws DatabaseError {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			db.delete(section, null, null);
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public pro.trousev.cleer.Database.DatabaseObject store(String section,
 			String contents, String keywords) throws DatabaseError {
-		// TODO Auto-generated method stub
+		try {
+			db.execSQL("insert into" + section + "(value, keywords) values (" + contents + ", " + keywords + ");");
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 		return null;
 	}
 
@@ -205,7 +225,7 @@ public class DatabaseImpl implements Database{
 
 	@Override
 	public void close() throws DatabaseError {
-		// TODO Auto-generated method stub
+		db.close();
 		
 	}
 
