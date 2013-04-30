@@ -1,0 +1,7 @@
+
+To debug project on device
+cd ./src/android
+ant run-debug
+
+String to start Chrome application using "adb shell"
+am start -a android.intent.action.MAIN -n com.android.chrome/com.google.android.apps.chrome.Main
