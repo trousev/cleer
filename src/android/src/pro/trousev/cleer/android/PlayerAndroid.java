@@ -12,7 +12,8 @@ import pro.trousev.cleer.Player;
 //TODO think about headset hot removal not in this file
 //TODO think how to implement volume up/down buttons using this interface
 //TODO make non-silent exit on asynchronous error
-//TODO: Implement more status-change messages via Messaging.fire(...). 
+//TODO: Implement more status-change messages via Messaging.fire(...).
+//TODO If you encounter problem with slow preparing you should make prepare in open.
 
 public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
 	private static MediaPlayer mediaPlayer = null;
