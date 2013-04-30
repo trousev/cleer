@@ -27,7 +27,9 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 	@Override
 	public void open(Item track) throws PlayerException {
 		currentTrack = track;
-		mediaPlayer = new MediaPlayer();
+		if (mediaPlayer != null) {
+			mediaPlayer = new MediaPlayer();
+		}
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		String t = currentTrack.filename().toString();
 		try {
