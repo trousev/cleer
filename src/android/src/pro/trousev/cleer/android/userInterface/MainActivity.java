@@ -3,13 +3,16 @@ package pro.trousev.cleer.android.userInterface;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.AndroidCleerService;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -17,6 +20,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private FragmentTransaction fTrans;
 	private Fragment playBar, mainMenu;
 	private FragmentManager fragmentManager;
+	private ServiceConnection serviceConnection;
+	private boolean bound;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,16 +76,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 		case R.id.main_menu_btn:
 			setMainMenu();
-			stopService(new Intent(this, AndroidCleerService.class));
 			clearBackStack();
 			break;
 		case R.id.exit_btn:
 			stopService(new Intent(this, AndroidCleerService.class));
-			System.exit(0);
+			this.finish();
 			break;
 		default:
 			break;	
 		}
 	}
-
+	@Override
+	public void onDestroy(){
+		Log.d(Constants.LOG_TAG, "MainActivity.onDestoy()");
+		super.onDestroy();
+	}
 }
