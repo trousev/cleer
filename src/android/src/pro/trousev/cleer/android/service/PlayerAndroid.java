@@ -17,7 +17,7 @@ import pro.trousev.cleer.android.Constants;
 //TODO: Implement more status-change messages via Messaging.fire(...).
 //TODO If you encounter problem with slow preparing you should make prepare in open.
 
-public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 	private static MediaPlayer mediaPlayer = null;
 	private static Item currentTrack = null;
 	private static Status currentStatus = Status.Closed;
@@ -34,6 +34,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 			mediaPlayer.setDataSource(t);
 			currentStatus = Status.Stopped;
 			mediaPlayer.setOnPreparedListener(this);
+			mediaPlayer.setOnCompletionListener(this);
 			Log.d(Constants.LOG_TAG, "Player is created");
 		} catch (Exception e) {
 			Log.e(Constants.LOG_TAG, "Unable to create MediaPlayer()");
@@ -121,7 +122,13 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 	public boolean onError(MediaPlayer mp, int what, int extra) {
 		close();
 		currentStatus = Status.Error;
+		Log.e(Constants.LOG_TAG, "Error from media plaer");
 		return false;
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mp) {
+		stop(null);
 	}
 
 }
