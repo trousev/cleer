@@ -40,19 +40,19 @@ public class PlayBar extends Fragment implements OnClickListener {
 		playPauseBtn.setOnClickListener(this);
 		prevCompBtn.setOnClickListener(this);
 		nextCompBtn.setOnClickListener(this);
-		
+
 		Messaging.subscribe(Player.PlayerChangeEvent.class, new Event() {
 			@Override
 			public void messageReceived(Message message) {
 				PlayerChangeEvent ev = (PlayerChangeEvent) message;
 				if (ev.status == Status.Playing) {
 					changeStatus(IS_PLAYING);
-				}else{
+				} else {
 					changeStatus(IS_PAUSED);
 				}
 			}
 		});
-		
+
 		return view;
 	}
 
@@ -72,17 +72,26 @@ public class PlayBar extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
-		// TODO Auto-generated method stub
 		int id = view.getId();
 		switch (id) {
 		case R.id.play_pause_btn:
 			if (status == IS_PLAYING) {
 				// TODO say to pause
-				changeStatus(IS_PAUSED);
+				((MainActivity) getActivity()).service.pause();
+				changeStatus(IS_PAUSED); // костыль
 			} else if (status == IS_PAUSED) {
 				// TODO say to play
-				changeStatus(IS_PLAYING);
+				((MainActivity) getActivity()).service.play();
+				changeStatus(IS_PLAYING); // костыль
 			}
+			break;
+		case R.id.next_comp_btn:
+			((MainActivity) getActivity()).service.next();
+			break;
+		case R.id.prev_comp_btn:
+			((MainActivity) getActivity()).service.prev();
+			break;
+		default:
 			break;
 		}
 	}

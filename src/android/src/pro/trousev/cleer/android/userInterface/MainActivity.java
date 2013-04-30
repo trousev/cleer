@@ -23,6 +23,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private Fragment playBar, mainMenu;
 	private FragmentManager fragmentManager;
 	private ServiceConnection serviceConnection;
+	AndroidCleerService service;
 	private boolean bound;
 	Intent intent;
 
@@ -40,11 +41,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		fTrans.add(R.id.play_bar, playBar);
 		fTrans.add(R.id.work_space, mainMenu);
 		fTrans.commit();
+		
 		intent = new Intent(
 				"pro.trousev.cleer.android.service.AndroidCleerService");
+		
 		serviceConnection = new ServiceConnection() {
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder binder) {
+				service = ((AndroidCleerService.CleerBinder)binder).getService();
 				Log.d(Constants.LOG_TAG, "MainActivity onServiceConnected");
 				bound = true;
 			}
