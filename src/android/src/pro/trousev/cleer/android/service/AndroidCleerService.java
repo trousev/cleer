@@ -6,6 +6,7 @@ import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.sys.QueueImpl;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -24,13 +25,13 @@ public class AndroidCleerService extends Service {
 	  }
 
 	  public void onDestroy() {
-	    super.onDestroy();
-	    Log.d(Constants.LOG_TAG, "Service.onDestroy()");
-	  }
+		  Log.d(Constants.LOG_TAG, "Service.onDestroy()");
+		  super.onDestroy();
+	    }
 
 	  public IBinder onBind(Intent intent) {
 	    Log.d(Constants.LOG_TAG, "Service.onBind()");
-	    return null;
+	    return new Binder();
 	  }
 	  
 }

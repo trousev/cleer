@@ -11,6 +11,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="pro.trousev.cleer.android.service.AndroidCleerService"></service>
+        <service android:name="pro.trousev.cleer.android.service.AndroidCleerService">
+            <intent-filter>
+                <action android:name="pro.trousev.cleer.android.service.AndroidCleerService"></action>
+            </intent-filter>
+        </service>
+        
     </application>
 </manifest>
