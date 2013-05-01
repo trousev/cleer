@@ -79,8 +79,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		fTrans.commit();
 	}
 
-	public void setListOfRequests(List<String> list) {
-		ListOfRequests listOfRequests = new ListOfRequests();
+	public void setListOfRequests(List<Item> item, String firstTagName, String secondTagName) {
+		ListOfRequests listOfRequests = new ListOfRequests(item, firstTagName, secondTagName);
 		fTrans = fragmentManager.beginTransaction();
 		fTrans.replace(R.id.work_space, listOfRequests);
 		fTrans.addToBackStack(null);

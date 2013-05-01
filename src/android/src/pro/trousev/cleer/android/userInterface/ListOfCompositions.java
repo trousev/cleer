@@ -19,9 +19,9 @@ public class ListOfCompositions extends ListFragment {
 	final int PLAY = 1;
 	final int ADD_TO_QUEUE = 2;
 	final int ADD_TO_LIST = 3;
-
-	public ListOfCompositions(List<Item> list) {
-
+	List<Item> list;
+	public ListOfCompositions(List<Item> arg) {
+		list = arg;
 	}
 
 	@Override
@@ -60,7 +60,9 @@ public class ListOfCompositions extends ListFragment {
 			long id) {
 		// TODO send this list to the queue, start playing from the selected
 		// item
+		
 		Log.d(Constants.LOG_TAG, "onListItemClick()");
+		((MainActivity)getActivity()).service.setToQueue(null, position);
 	}
 
 }

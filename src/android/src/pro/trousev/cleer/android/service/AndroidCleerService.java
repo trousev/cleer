@@ -40,11 +40,23 @@ public class AndroidCleerService extends Service {
 	public void prev() {
 		Log.d(Constants.LOG_TAG, "Service.prev()");
 	}
-	//ƒобавление трека в пользовательский список
+	//adds songs at the end of queue
+	public void addToQueue(List<Item> tracks){
+		
+	}
+	//clear queue, set list<item> in it, start playing song with current index
+	public void setToQueue(List<Item> tracks, int index){
+		Log.d(Constants.LOG_TAG, "Service.setToQueue");
+	}
+	//returns songs from the queue
+	public List<Item> getQueueItems(){
+		return null;
+	}
+	//add item into the user playlist
 	public void addItemToList(Item item, Playlist playlist){
 		
 	}
-	
+	//create new user playlist
 	public void createNewList(String name){
 		// ¬ нашей реализации вообще такой метод нужен?
 	}
@@ -52,27 +64,32 @@ public class AndroidCleerService extends Service {
 	public List<Playlist> getPlaylists(){
 		return null;
 	}
-	//ѕо запросу возвращает список треков, удоблетвор€ющих запросу
+	//ѕо запросу возвращает список треков, удовлетвор€ющих запросу
 	public List<Item> getListOfTracks(String searchQuery){
 		//TODO  акой аргумент сюда передавать?
 		return null;
 	}
 	//¬озвращает все возможные значени€ определенного тега
 	public List<Item> getListOfTagValues(String tagName){
-		// Case of Album is special!
+		
 		return null;
 	}
+	// return all albums with information about artist
+	// album == item
+	public List<Item> getListOfAlbums(){
+		return null;
+	}
+	
+	
 	// This method is called every time UI starts
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(Constants.LOG_TAG, "Service.onStartCommand()");
 		return super.onStartCommand(intent, flags, startId);
 	}
-
 	public void onDestroy() {
 		Log.d(Constants.LOG_TAG, "Service.onDestroy()");
 		super.onDestroy();
 	}
-
 	public IBinder onBind(Intent intent) {
 		Log.d(Constants.LOG_TAG, "Service.onBind()");
 		return new CleerBinder();

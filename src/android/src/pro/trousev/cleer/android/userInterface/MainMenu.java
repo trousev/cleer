@@ -1,5 +1,8 @@
 package pro.trousev.cleer.android.userInterface;
 
+import java.util.List;
+
+import pro.trousev.cleer.Item;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,21 +37,27 @@ public class MainMenu extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();
+		List<Item> list;
 		switch (id) {
 		case R.id.compositions_btn:
-			root.setListOfCompositions(null);
+			list = root.service.getListOfTracks(null);
+			root.setListOfCompositions(list);
 			break;
 		case R.id.lists_btn:
-			root.setListOfRequests(null);
+			//TODO What to do here?
+			root.setListOfRequests(null, null, null);
 			break;
 		case R.id.genres_btn:
-			root.setListOfRequests(null);
+			list = root.service.getListOfTagValues("genre");
+			root.setListOfRequests(list, "genre", "number");
 			break;
 		case R.id.artists_btn:
-			root.setListOfRequests(null);
+			list = root.service.getListOfTagValues("artist");
+			root.setListOfRequests(list, "artist", "number");
 			break;
 		case R.id.albums_btn:
-			root.setListOfRequests(null);
+			list = root.service.getListOfAlbums();
+			root.setListOfRequests(list, null, null);
 			break;
 		default:
 			break;	
