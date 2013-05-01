@@ -59,6 +59,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				bound = false;
 			}
 		};
+		startService(intent);
 		bindService(intent, serviceConnection, BIND_AUTO_CREATE);
 		// TODO set implementations here
 		// TODO initialize Service

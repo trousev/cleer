@@ -62,7 +62,7 @@ public class AndroidCleerService extends Service {
 		// Case of Album is special!
 		return null;
 	}
-	
+	// This method is called every time UI starts
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(Constants.LOG_TAG, "Service.onStartCommand()");
 		return super.onStartCommand(intent, flags, startId);
@@ -77,5 +77,11 @@ public class AndroidCleerService extends Service {
 		Log.d(Constants.LOG_TAG, "Service.onBind()");
 		return new CleerBinder();
 	}
-
+	public boolean onUnbind(Intent intent) {
+		Log.d(Constants.LOG_TAG, "Service.onUnbind()");
+		return true; // значение true позволяет фиксировать переподключение UI к интерфейсу
+	}
+	public void onRebind(Intent intent){
+		Log.d(Constants.LOG_TAG, "Service.onRebind()");
+	}
 }
