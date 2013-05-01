@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ListOfCompAdapter extends ArrayAdapter<String> {
+public class ListOfCompAdapter extends ArrayAdapter<String>{
 
 	public ListOfCompAdapter(Context context, String[] strings) {
 		super(context, R.layout.list_of_comp_element, strings);
