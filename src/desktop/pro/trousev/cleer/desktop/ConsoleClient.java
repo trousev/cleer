@@ -35,7 +35,6 @@ public class ConsoleClient {
 		Playlist focus = iface.library().focus();
 		if(focus != null)
 			pl = focus.title()+" '"+focus.query()+"' ("+focus.contents().size()+")";
-		
 		String np = "[No Song]";
 		Item t = iface.queue().playing_track();
 		if(t != null)
@@ -65,27 +64,22 @@ public class ConsoleClient {
 			public Database storage() {
 				return db;
 			}
-			
 			@Override
 			public Library library() {
 				return lib;
 			}
-
 			@Override
 			public Console console() {
 				return console;
 			}
-
 			@Override
 			public Player player() {
 				return player;
 			}
-
 			@Override
 			public Queue queue() {
 				return queue;
 			}
-
 			@Override
 			public ConsoleOutput output() {
 				return new ConsoleOutput() {
@@ -208,17 +202,13 @@ public class ConsoleClient {
 				};
 			}
 		};
-		
-		
-		
-		
-		
 		ConsoleReader reader = new ConsoleReader();
 		List<String> allCommandList = new ArrayList<String>();
 		for(Command c: console.commands())
 		{
 			allCommandList.add(c.name());
 		}
+		
 		reader.addCompleter(new StringsCompleter(allCommandList));
 	    while(true)
 	    {

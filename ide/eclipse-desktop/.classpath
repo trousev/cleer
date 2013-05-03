@@ -6,5 +6,5 @@
 	<classpathentry kind="lib" path="../../artifacts/core/jaudiotagger-2.0.4-20111207.115108-15.jar"/>
 	<classpathentry kind="lib" path="../../submodules/jline2/target/jline-2.11-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/home/doctor/Dropbox/Tech/cleer/artifacts/desktop/sqlite-jdbc-3.7.2.jar"/>
-	<classpathentry kind="output" path="CLEER_TEMP/eclipse/desktop/bin"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

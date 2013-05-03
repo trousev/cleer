@@ -145,6 +145,7 @@ public class TrackImpl implements Item {
 		}
 		for(int i=0; i<rating; i++)
 			query += "*";
+		query += String.format(" rating:%d",rating);
 		return query;
 	}
 	@Override
@@ -209,4 +210,14 @@ public class TrackImpl implements Item {
 		}
 	}
 	public final static __Factory Factory = new __Factory();
+	@Override
+	public boolean addTag(String name, String value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean removeTag(String name, String value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

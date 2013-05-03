@@ -18,6 +18,9 @@ public interface Item {
 	public File filename();
 	public boolean tagIsWriteable(String name) throws NoSuchTagException;
 	public boolean tagIsNumeric(String name) throws NoSuchTagException;
+	
+	public boolean addTag(String name, String value);
+	public boolean removeTag(String name, String value);
 
 	// Save & restore
 	String serialize();

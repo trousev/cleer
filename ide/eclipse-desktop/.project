@@ -16,11 +16,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>CLEER_TEMP</name>
-			<type>2</type>
-			<locationURI>CLEER_TEMP</locationURI>
-		</link>
-		<link>
 			<name>core</name>
 			<type>2</type>
 			<locationURI>CLEER_SOURCE/core</locationURI>
@@ -37,8 +32,8 @@
 			<value>$%7BPARENT-2-PROJECT_LOC%7D/src</value>
 		</variable>
 		<variable>
-			<name>CLEER_TEMP</name>
-			<value>$%7BPARENT-2-PROJECT_LOC%7D/tmp</value>
+			<name>CLEER_ROOT</name>
+			<value>$%7BPARENT-2-PROJECT_LOC%7D</value>
 		</variable>
 	</variableList>
 </projectDescription>

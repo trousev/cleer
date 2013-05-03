@@ -2,6 +2,11 @@
     <tstamp>
       <format property="TIMESTAMP" pattern="yyyy-MM-dd" locale="en,UK"/>
     </tstamp>
+    <exec executable="git" outputproperty="REVISION">
+	<arg value="rev-list" /> 
+	<arg value="master" /> 
+	<arg value="--count" /> 
+    </exec>
     
     <target name="os" depends="if_windows, if_unix"/>
     <target name="checkos">
@@ -51,7 +56,16 @@
             <arg value="install" />
         </exec>
     </target>
-    <target name="enviroment" depends="env-submodules,env-jline">
+    <target name="env-tjws">
+	<mkdir dir="tmp/artifacts/desktop" />
+	<get skipexisting="true" src="http://sourceforge.net/projects/tjws/files/latest/download?source=files" dest="tmp/artifacts/desktop/tjws.zip" />
+	<unzip src="tmp/artifacts/desktop/tjws.zip" dest="tmp/artifacts/desktop/tjws" />
+	<mkdir dir="tmp/build/jars/desktop" />
+	<copy todir="tmp/build/jars/desktop" >
+	    <fileset dir="tmp/artifacts/desktop/tjws/WebServer/lib" includes="*.jar" />
+	</copy>
+    </target>
+    <target name="enviroment" depends="env-submodules,env-jline,env-tjws">
     </target>
     <target name="clean" >
         <delete dir="tmp" />

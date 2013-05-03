@@ -2,6 +2,7 @@ package pro.trousev.cleer;
 
 import java.util.List;
 
+
 /**
  * Database -- Интерфейс, предоставляющий функционал произвольного хранилища.
  * 
@@ -14,8 +15,11 @@ import java.util.List;
  * Поисковой контекст -- это строка-список ключевых слов, разделенных пробелом.
  **/
 public interface Database {
-	enum SearchLanguage {
-		SearchDirectMatch, SearchSqlLike, SearchPyplay
+	enum SearchLanguage
+	{
+		SearchDirectMatch
+		, SearchSqlLike
+		, SearchPyplay
 	}
 
 	/**
@@ -113,11 +117,7 @@ public interface Database {
 	@Deprecated
 	public List<DatabaseObject> search(String section, String query)
 			throws DatabaseError;
-
 	/**
-	 * DEPRECATED. Используйте search(section, query, language) вместо этого
-	 * метода.
-	 * 
 	 * Производит поиск всех объектов в секции, соответствующих заданному
 	 * запросу. Алгоритм поиска не формализован, но должен быть умным,
 	 * эвристичным и т.п. Налагаются дополнительные требования на алгоритм
@@ -125,7 +125,6 @@ public interface Database {
 	 **/
 	public List<DatabaseObject> search(String section, String query,
 			SearchLanguage language) throws DatabaseError;
-
 	/**
 	 * Уничтожает выбранный DatabaseObject
 	 **/
