@@ -22,7 +22,8 @@ public class TrackImpl implements Item {
 	DatabaseObject _link = null;
 	File _filename;
 	//FIXME: make statistics
-	//TODO: add tag genre
+	//TODO: add tag "genre"
+	//TODO: add service tag "type" 
 	private static final String[] _all_tags = {"album", "artist", "title", "year", "number", "lyrics", "rating", "stat_player", "stat_repeated", "stat_skipped"};
 	private Map<String, String> _tags;
 	public TrackImpl(Database.DatabaseObject dataObject) throws Exception
