@@ -143,6 +143,7 @@ public class TrackImpl implements Item {
 		}
 		for(int i=0; i<rating; i++)
 			query += "*";
+		query += String.format(" rating:%d",rating);
 		return query;
 	}
 	@Override

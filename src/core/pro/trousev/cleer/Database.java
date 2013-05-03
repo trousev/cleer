@@ -28,7 +28,7 @@ public interface Database {
 	public interface DatabaseObject
 	{
 		/**
-                  Идентификатор
+          Идентификатор
 		**/
 		String id();
 		/**
