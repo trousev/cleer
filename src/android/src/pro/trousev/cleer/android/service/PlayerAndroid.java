@@ -1,11 +1,12 @@
-package pro.trousev.cleer.android;
+package pro.trousev.cleer.android.service;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.util.Log;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Player;
-import pro.trousev.cleer.Player.PlayerException;
+import pro.trousev.cleer.android.Constants;
 
 //TODO think about callback
 //TODO make Service for it (where?)
@@ -13,9 +14,10 @@ import pro.trousev.cleer.Player.PlayerException;
 //TODO think about headset hot removal not in this file
 //TODO think how to implement volume up/down buttons using this interface
 //TODO make non-silent exit on asynchronous error
-//TODO: Implement more status-change messages via Messaging.fire(...). 
+//TODO: Implement more status-change messages via Messaging.fire(...).
+//TODO If you encounter problem with slow preparing you should make prepare in open.
 
-public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 	private static MediaPlayer mediaPlayer = null;
 	private static Item currentTrack = null;
 	private static Status currentStatus = Status.Closed;
@@ -25,14 +27,19 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 	@Override
 	public void open(Item track) throws PlayerException {
 		currentTrack = track;
-		mediaPlayer = new MediaPlayer();
+		if (mediaPlayer != null) {
+			mediaPlayer = new MediaPlayer();
+		}
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		String t = currentTrack.filename().toString();
 		try {
 			mediaPlayer.setDataSource(t);
 			currentStatus = Status.Stopped;
 			mediaPlayer.setOnPreparedListener(this);
+			mediaPlayer.setOnCompletionListener(this);
+			Log.d(Constants.LOG_TAG, "Player is created");
 		} catch (Exception e) {
+			Log.e(Constants.LOG_TAG, "Unable to create MediaPlayer()");
 			close();
 			throw new PlayerException(e.getMessage());
 		} finally {
@@ -48,6 +55,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 		currentTrack = null;
 		currentStatus = Status.Closed;
 		prepared = false;
+		Log.d(Constants.LOG_TAG, "Player stopped");
 	}
 
 	@Override
@@ -65,6 +73,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 		changeEvent.status = currentStatus;
 		changeEvent.track = currentTrack;
 		Messaging.fire(changeEvent);
+		Log.d(Constants.LOG_TAG, "Player is playing");
 	}
 
 	@Override
@@ -78,12 +87,14 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 		changeEvent.status = currentStatus;
 		changeEvent.track = currentTrack;
 		Messaging.fire(changeEvent);
+		Log.d(Constants.LOG_TAG, "Player is stopped");
 	}
 
 	@Override
 	public void pause() {
 		mediaPlayer.pause();
 		currentStatus = Status.Paused;
+		Log.d(Constants.LOG_TAG, "Player is paused");
 	}
 
 	@Override
@@ -106,13 +117,20 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener, Me
 		prepared = true;
 		mediaPlayer.start();
 		currentStatus = Status.Playing;
+		Log.d(Constants.LOG_TAG, "Player is prepared");
 	}
 	
 	@Override
 	public boolean onError(MediaPlayer mp, int what, int extra) {
 		close();
 		currentStatus = Status.Error;
+		Log.e(Constants.LOG_TAG, "Error from media plaer");
 		return false;
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mp) {
+		stop(null);
 	}
 
 }

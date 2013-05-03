@@ -1,9 +1,8 @@
-package pro.trousev.cleer.userInterface;
+package pro.trousev.cleer.android.userInterface;
 
 import java.util.List;
 
 import pro.trousev.cleer.Item;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import pro.trousev.cleer.userInterface.R;
 
 
 public class MainMenu extends Fragment implements OnClickListener {
@@ -27,42 +25,39 @@ public class MainMenu extends Fragment implements OnClickListener {
 		Button queueBtn = (Button) view.findViewById(R.id.queue_btn);
 		Button genresBtn = (Button) view.findViewById(R.id.genres_btn);
 		Button albumsBtn = (Button) view.findViewById(R.id.albums_btn);
-		Button filesBtn = (Button) view.findViewById(R.id.files_btn);
-		Button equalizerBtn = (Button) view.findViewById(R.id.equalizer_btn);
 		listsBtn.setOnClickListener(this);
 		compositionsBtn.setOnClickListener(this);
 		artistsBtn.setOnClickListener(this);
 		queueBtn.setOnClickListener(root);
 		genresBtn.setOnClickListener(this);
 		albumsBtn.setOnClickListener(this);
-		filesBtn.setOnClickListener(this);
-		equalizerBtn.setOnClickListener(this);
 		return view;
 	}
 	
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();
+		List<Item> list;
 		switch (id) {
 		case R.id.compositions_btn:
-			root.setListOfCompositions(null);
+			list = root.service.getListOfTracks(null);
+			root.setListOfCompositions(list);
 			break;
 		case R.id.lists_btn:
-			root.setListOfRequests(null);
+			//TODO What to do here?
+			root.setListOfRequests(null, null, null);
 			break;
 		case R.id.genres_btn:
-			root.setListOfRequests(null);
+			list = root.service.getListOfTagValues("genre");
+			root.setListOfRequests(list, "genre", "number");
 			break;
 		case R.id.artists_btn:
-			root.setListOfRequests(null);
+			list = root.service.getListOfTagValues("artist");
+			root.setListOfRequests(list, "artist", "number");
 			break;
 		case R.id.albums_btn:
-			root.setListOfRequests(null);
-			break;
-		case R.id.files_btn:
-			break;
-		case R.id.equalizer_btn:
-			root.setEqualizer();
+			list = root.service.getListOfAlbums();
+			root.setListOfRequests(list, null, null);
 			break;
 		default:
 			break;	
