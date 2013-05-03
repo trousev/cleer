@@ -117,13 +117,6 @@ public interface Database {
 	@Deprecated
 	public List<DatabaseObject> search(String section, String query)
 			throws DatabaseError;
-
-	  Производит поиск всех объектов в секции, соответствующих заданному запросу. 
-	  Алгоритм поиска не формализован, но должен быть умным, эвристичным и т.п.
-	  Налагаются дополнительные требования на алгоритм поиска, за подробностями на trousev@yandex.ru
-	**/
-	@Deprecated
-	public List<DatabaseObject> search(String section, String query) throws DatabaseError;
 	/**
 	 * Производит поиск всех объектов в секции, соответствующих заданному
 	 * запросу. Алгоритм поиска не формализован, но должен быть умным,
@@ -132,12 +125,6 @@ public interface Database {
 	 **/
 	public List<DatabaseObject> search(String section, String query,
 			SearchLanguage language) throws DatabaseError;
-
-	  Производит поиск всех объектов в секции, соответствующих заданному запросу. 
-	  Алгоритм поиска не формализован, но должен быть умным, эвристичным и т.п.
-	  Налагаются дополнительные требования на алгоритм поиска, за подробностями на trousev@yandex.ru
-	**/
-	public List<DatabaseObject> search(String section, String query, SearchLanguage language) throws DatabaseError;
 	/**
 	 * Уничтожает выбранный DatabaseObject
 	 **/
