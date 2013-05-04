@@ -4,6 +4,7 @@ import java.util.List;
 
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.Playlist;
 
 public interface AndroidMessages {
 	enum TypeOfResult {
@@ -25,8 +26,7 @@ public interface AndroidMessages {
 	}
 
 	public static class ServiceTaskMessage implements Messaging.Message {
-		public List<Item> list;
-		public String playlistTitle;
+		public Playlist playlist;
 		public Action action;
 		// could we find Playlist with only its' title?
 	}
