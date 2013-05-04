@@ -7,16 +7,16 @@
 
 Для этого надо создать объект-сообщение, который и будет посылаться. Это должна быть имплементация Messaging.Event
 
-    class MyEvent implements Messaging.Event
+    class MyMessage implements Messaging.Message
     {
         public String message;
     }
 
 После этого внутри кода можно слать объекты подобного типа:
 
-MyEvent event = new MyEvent ;
-event.message = "Hello, World!";
-Messaging.fire(event);
+MyEvent message = new MyMessage;
+message.message = "Hello, World!";
+Messaging.fire(message);
 
 Обратите внимание -- _кому_ слать сообщение -- не указано. Каждый класс сам решает, что он хочет получать.
 
@@ -24,11 +24,10 @@ Messaging.fire(event);
 
 Для того, чтобы получать сообщения, класс должен (в конструкторе, например) _подписаться_ на определенный тип сообщений. Для этого следует использовать
 
-    Messaging.subscribe(MyEvent.class, new Event() {
+    Messaging.subscribe(MyMessage.class, new Event() {
         @Override
         public void messageReceived(Message message) {
-            MyEvent sender =  (MyEvent) message;
-            System.out.println(sender.message);
+            System.out.println(message.message);
         }
     });
 
