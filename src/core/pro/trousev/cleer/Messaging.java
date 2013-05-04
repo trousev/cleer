@@ -59,7 +59,7 @@ public class Messaging {
 
 		private final Message m;
 
-		RespondTask(Event e, Message m) {
+		public RespondTask(Event e, Message m) {
 			this.e = e;
 			this.m = m;
 		}
