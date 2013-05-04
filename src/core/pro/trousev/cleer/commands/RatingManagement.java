@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Item.Tag.ReadOnlyTagException;
 import pro.trousev.cleer.Plugin.Interface;
 import pro.trousev.cleer.Item.NoSuchTagException;
 
@@ -35,8 +36,11 @@ public class RatingManagement {
 			else rating = new Integer(rated);
 			Item t = iface.player().now_playing();
 			try {
-				t.setTagValue("rating", String.format("%d", rating));
+				t.tag("rating").setValue(String.format("%d", rating));
 			} catch (NoSuchTagException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ReadOnlyTagException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
