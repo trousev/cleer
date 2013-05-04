@@ -3,6 +3,11 @@ package pro.trousev.cleer.android.userInterface;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.Messaging.Event;
+import pro.trousev.cleer.Messaging.Message;
+import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
+import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.AndroidCleerService;
@@ -28,8 +33,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private boolean bound;
 	private Intent intent;
 	public ServiceTaskMessage taskMessage = new ServiceTaskMessage();
+	public ServiceRequestMessage requestMessage = new ServiceRequestMessage();
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,14 +48,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		fTrans.add(R.id.play_bar, playBar);
 		fTrans.add(R.id.work_space, mainMenu);
 		fTrans.commit();
-		
+
 		intent = new Intent(
 				"pro.trousev.cleer.android.service.AndroidCleerService");
-		
+
 		serviceConnection = new ServiceConnection() {
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder binder) {
-				service = ((AndroidCleerService.CleerBinder)binder).getService();
+				service = ((AndroidCleerService.CleerBinder) binder)
+						.getService();
 				Log.d(Constants.LOG_TAG, "MainActivity onServiceConnected");
 				bound = true;
 			}
@@ -61,17 +67,46 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				bound = false;
 			}
 		};
-		new Thread(new Runnable(){
-		public void run() {
-			// TODO Auto-generated method stub
-			startService(intent);
-		}
-		}
-		).run();
+		new Thread(new Runnable() {
+			public void run() {
+				startService(intent);
+			}
+		}).run();
 
 		bindService(intent, serviceConnection, 0);
-		// TODO set implementations here
-		// TODO initialize Service
+		
+		Messaging.subscribe(ServiceRespondMessage.class, new Event(){
+			@Override
+			public void messageReceived(Message message){
+				ServiceRespondMessage respondMessage = (ServiceRespondMessage) message;
+				switch(respondMessage.typeOfContent){
+				case Compositions:
+					setListOfCompositions(respondMessage.list);
+					break;
+				case Albums:
+					setListOfRequests(respondMessage.list, "Album", "Artist");
+					break;
+				case Playlists:
+					//TODO decide how do we want show that
+					break;
+				case Playlist:
+					
+					break;
+				case Genres:
+					setListOfRequests(respondMessage.list, "Genre", "Number");
+					break;
+				case Artists:
+					setListOfRequests(respondMessage.list, "Artist", "Number");
+					break;
+				case Queue:
+					setListOfCompositions(respondMessage.list);
+					break;
+				}
+			}
+		});
+
+	
+	
 	}
 
 	public void clearBackStack() {
@@ -88,8 +123,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		fTrans.commit();
 	}
 
-	public void setListOfRequests(List<Item> item, String firstTagName, String secondTagName) {
-		ListOfRequests listOfRequests = new ListOfRequests(item, firstTagName, secondTagName);
+	public void setListOfRequests(List<Item> item, String firstTagName,
+			String secondTagName) {
+		ListOfRequests listOfRequests = new ListOfRequests(item, firstTagName,
+				secondTagName);
 		fTrans = fragmentManager.beginTransaction();
 		fTrans.replace(R.id.work_space, listOfRequests);
 		fTrans.addToBackStack(null);
@@ -114,10 +151,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			clearBackStack();
 			break;
 		case R.id.exit_btn:
-			if(bound)
+			if (bound)
 				unbindService(serviceConnection);
 			stopService(new Intent(this, AndroidCleerService.class));
-			bound=false;
+			bound = false;
 			this.finish();
 			break;
 		default:
@@ -127,7 +164,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	@Override
 	public void onDestroy() {
-		if(bound)
+		if (bound)
 			unbindService(serviceConnection);
 		Log.d(Constants.LOG_TAG, "MainActivity.onDestoy()");
 		super.onDestroy();

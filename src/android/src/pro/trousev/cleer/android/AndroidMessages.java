@@ -27,6 +27,8 @@ public interface AndroidMessages {
 
 	public static class ServiceTaskMessage implements Messaging.Message {
 		public Playlist playlist;
+		public List<Item> list;
+		public int position;
 		public Action action;
 		// could we find Playlist with only its' title?
 	}

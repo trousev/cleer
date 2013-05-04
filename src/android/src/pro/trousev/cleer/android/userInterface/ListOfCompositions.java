@@ -3,6 +3,9 @@ package pro.trousev.cleer.android.userInterface;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.android.AndroidMessages.Action;
+import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.Constants;
 import android.app.Activity;
 import android.os.Bundle;
@@ -17,9 +20,6 @@ import android.widget.ListView;
 public class ListOfCompositions extends ListFragment {
 	String data[] = new String[] { "one", "two", "three", "four", "one", "two",
 			"three", "four", "one", "two", "three", "four" };
-	final int PLAY = 1;
-	final int ADD_TO_QUEUE = 2;
-	final int ADD_TO_LIST = 3;
 	List<Item> list;
 
 	public ListOfCompositions(List<Item> arg) {
@@ -59,11 +59,12 @@ public class ListOfCompositions extends ListFragment {
 	@Override
 	public void onListItemClick(ListView listView, View view, int position,
 			long id) {
-		// TODO send this list to the queue, start playing from the selected
-		// item
-
+		ServiceTaskMessage message = ((MainActivity) getActivity()).taskMessage;
+		message.action = Action.setToQueue;
+		message.list=list;
+		message.position = position;
+		Messaging.fire(message);
 		Log.d(Constants.LOG_TAG, "onListItemClick()");
-		((MainActivity) getActivity()).service.setToQueue(null, position);
 	}
 
 }

@@ -18,13 +18,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.util.Log;
 
 public class AndroidCleerService extends Service {
 	private static ServiceRespondMessage respondMessage = new ServiceRespondMessage();
 
-	// Binder позвол€ет получить ссылку в активити на сервис
+	// Binder allow us get Service.this from the Activity
 	public class CleerBinder extends Binder {
 		public AndroidCleerService getService() {
 			return AndroidCleerService.this;
@@ -42,20 +41,27 @@ public class AndroidCleerService extends Service {
 				if (mes.type == TypeOfResult.Compositions);
 				switch (mes.type){
 				case Compositions:
+					respondMessage.typeOfContent=TypeOfResult.Compositions;
 					break;
 				case Queue:
+					respondMessage.typeOfContent=TypeOfResult.Queue;
 					break;
 				case Albums:
+					respondMessage.typeOfContent=TypeOfResult.Albums;
 					break;
 				case Genres:
+					respondMessage.typeOfContent=TypeOfResult.Genres;
 					break;
 				case Artists:
+					respondMessage.typeOfContent=TypeOfResult.Artists;
 					break;
 				case Playlists:
+					respondMessage.typeOfContent=TypeOfResult.Playlists;
 					break;
 				case Playlist:
 					break;
 				}
+				Messaging.fire(respondMessage);
 			}
 		});
 		Messaging.subscribe(AndroidMessages.ServiceTaskMessage.class, new Messaging.Event(){
@@ -66,7 +72,6 @@ public class AndroidCleerService extends Service {
 				ServiceTaskMessage mes =  (ServiceTaskMessage) message;
 				switch (mes.action){
 				case Play:
-					SystemClock.sleep(1500);
 					play();
 					break;
 				case Pause:
@@ -130,18 +135,17 @@ public class AndroidCleerService extends Service {
 	}
 	//create new user playlist
 	public void createNewList(String name){
-		// ¬ нашей реализации вообще такой метод нужен?
+		// Do we need that method?
 	}
-	//¬озвращает список пользовательских плейлистов
+	//returns list of user playlists
 	public List<Playlist> getPlaylists(){
 		return null;
 	}
-	//ѕо запросу возвращает список треков, удовлетвор€ющих запросу
+	//returns list of Items from database, which suit to the searchQuery
 	public List<Item> getListOfTracks(String searchQuery){
-		//TODO  акой аргумент сюда передавать?
 		return null;
 	}
-	//¬озвращает все возможные значени€ определенного тега
+	//Returns list of items with all represented values of some tag tagName
 	public List<Item> getListOfTagValues(String tagName){
 		
 		return null;
@@ -168,7 +172,7 @@ public class AndroidCleerService extends Service {
 	}
 	public boolean onUnbind(Intent intent) {
 		Log.d(Constants.LOG_TAG, "Service.onUnbind()");
-		return true; // значение true позвол€ет фиксировать переподключение UI к интерфейсу
+		return true; //for onServiceConnected
 	}
 	public void onRebind(Intent intent){
 		Log.d(Constants.LOG_TAG, "Service.onRebind()");

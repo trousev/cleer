@@ -3,6 +3,9 @@ package pro.trousev.cleer.android.userInterface;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
+import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -37,27 +40,28 @@ public class MainMenu extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();
-		List<Item> list;
+		ServiceRequestMessage message = root.requestMessage;
 		switch (id) {
 		case R.id.compositions_btn:
-			list = root.service.getListOfTracks(null);
-			root.setListOfCompositions(list);
+			message.type=TypeOfResult.Compositions;
+			message.searchQuery = null;
+			Messaging.fire(message);
 			break;
 		case R.id.lists_btn:
-			//TODO What to do here?
-			root.setListOfRequests(null, null, null);
+			message.type=TypeOfResult.Playlists;
+			Messaging.fire(message);
 			break;
 		case R.id.genres_btn:
-			list = root.service.getListOfTagValues("genre");
-			root.setListOfRequests(list, "genre", "number");
+			message.type=TypeOfResult.Genres;
+			Messaging.fire(message);
 			break;
 		case R.id.artists_btn:
-			list = root.service.getListOfTagValues("artist");
-			root.setListOfRequests(list, "artist", "number");
+			message.type=TypeOfResult.Artists;
+			Messaging.fire(message);
 			break;
 		case R.id.albums_btn:
-			list = root.service.getListOfAlbums();
-			root.setListOfRequests(list, null, null);
+			message.type=TypeOfResult.Albums;
+			Messaging.fire(message);
 			break;
 		default:
 			break;	

@@ -21,9 +21,9 @@ public class PlayBar extends Fragment implements OnClickListener {
 	private Button playPauseBtn, prevCompBtn, nextCompBtn, queueBtn,
 			mainMenuBtn;
 	private MainActivity root;
-	final int IS_PLAYING = 1;
-	final int IS_PAUSED = 0;
-	private int status = IS_PAUSED;
+	final int PLAYING = 1;
+	final int NOT_PLAYING = 0;
+	private int status = NOT_PLAYING;
 	
 	public PlayBar() {
 	}
@@ -48,9 +48,9 @@ public class PlayBar extends Fragment implements OnClickListener {
 			public void messageReceived(Message message) {
 				PlayerChangeEvent ev = (PlayerChangeEvent) message;
 				if (ev.status == Status.Playing) {
-					changeStatus(IS_PLAYING);
+					changeStatus(PLAYING);
 				} else {
-					changeStatus(IS_PAUSED);
+					changeStatus(NOT_PLAYING);
 				}
 				Log.d(Constants.LOG_TAG, "PlayBar.messageREceived()");
 			}
@@ -63,10 +63,10 @@ public class PlayBar extends Fragment implements OnClickListener {
 		status = newStatus;
 		String string = null;
 		switch (status) {
-		case IS_PLAYING:
+		case PLAYING:
 			string = "pause";
 			break;
-		case IS_PAUSED:
+		case NOT_PLAYING:
 			string = "play";
 			break;
 		}
@@ -79,21 +79,21 @@ public class PlayBar extends Fragment implements OnClickListener {
 		Log.d(Constants.LOG_TAG, "status = " + status);
 		switch (id) {
 		case R.id.play_pause_btn:
-			if (status == IS_PLAYING) {
-				// TODO say to pause
+			if (status == PLAYING) {
 				root.taskMessage.action=Action.Pause;
 				Messaging.fire(root.taskMessage);
-			} else if (status == IS_PAUSED) {
-				// TODO say to play
+			} else if (status == NOT_PLAYING) {
 				root.taskMessage.action=Action.Play;
 				Messaging.fire(root.taskMessage);
 			}
 			break;
 		case R.id.next_comp_btn:
-			((MainActivity) getActivity()).service.next();
+				root.taskMessage.action=Action.Next;
+				Messaging.fire(root.taskMessage);
 			break;
 		case R.id.prev_comp_btn:
-			((MainActivity) getActivity()).service.prev();
+			root.taskMessage.action=Action.Previous;
+			Messaging.fire(root.taskMessage);
 			break;
 		default:
 			break;
