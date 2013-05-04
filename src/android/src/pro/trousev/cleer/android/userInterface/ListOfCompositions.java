@@ -10,6 +10,7 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ListView;
 
@@ -20,6 +21,7 @@ public class ListOfCompositions extends ListFragment {
 	final int ADD_TO_QUEUE = 2;
 	final int ADD_TO_LIST = 3;
 	List<Item> list;
+
 	public ListOfCompositions(List<Item> arg) {
 		list = arg;
 	}
@@ -50,9 +52,8 @@ public class ListOfCompositions extends ListFragment {
 			ContextMenuInfo menuInfo) {
 		Log.d(Constants.LOG_TAG, "ListOfComp.onCreateCotextMenu()");
 		super.onCreateContextMenu(menu, view, menuInfo);
-		menu.add(0, PLAY, 0, "Play");
-		menu.add(0, ADD_TO_QUEUE, 0, "Add to queue");
-		menu.add(0, ADD_TO_LIST, 0, "Add to list");
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.compositionlist_context_menu, menu);
 	}
 
 	@Override
@@ -60,9 +61,9 @@ public class ListOfCompositions extends ListFragment {
 			long id) {
 		// TODO send this list to the queue, start playing from the selected
 		// item
-		
+
 		Log.d(Constants.LOG_TAG, "onListItemClick()");
-		((MainActivity)getActivity()).service.setToQueue(null, position);
+		((MainActivity) getActivity()).service.setToQueue(null, position);
 	}
 
 }

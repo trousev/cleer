@@ -3,15 +3,26 @@ package pro.trousev.cleer.android.service;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.Messaging.Message;
+import pro.trousev.cleer.Player.PlayerChangeEvent;
+import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.Playlist;
+import pro.trousev.cleer.android.AndroidMessages;
+import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
+import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
+import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
+import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 
 public class AndroidCleerService extends Service {
+	private static ServiceRespondMessage respondMessage = new ServiceRespondMessage();
 
 	// Binder позволяет получить ссылку в активити на сервис
 	public class CleerBinder extends Binder {
@@ -22,14 +33,75 @@ public class AndroidCleerService extends Service {
 
 	public void onCreate() {
 		super.onCreate();
+		Messaging.subscribe(AndroidMessages.ServiceRequestMessage.class, new Messaging.Event(){
+
+			@Override
+			public void messageReceived(Message message) {
+				//TODO end implementation of that event
+				ServiceRequestMessage mes =  (ServiceRequestMessage) message;
+				if (mes.type == TypeOfResult.Compositions);
+				switch (mes.type){
+				case Compositions:
+					break;
+				case Queue:
+					break;
+				case Albums:
+					break;
+				case Genres:
+					break;
+				case Artists:
+					break;
+				case Playlists:
+					break;
+				case Playlist:
+					break;
+				}
+			}
+		});
+		Messaging.subscribe(AndroidMessages.ServiceTaskMessage.class, new Messaging.Event(){
+
+			@Override
+			public void messageReceived(Message message) {
+				//TODO end implementation of that event
+				ServiceTaskMessage mes =  (ServiceTaskMessage) message;
+				switch (mes.action){
+				case Play:
+					SystemClock.sleep(1500);
+					play();
+					break;
+				case Pause:
+					pause();
+					break;
+				case Next:
+					next();
+					break;
+				case Previous:
+					prev();
+					break;
+				case addToQueue:
+					break;
+				case setToQueue:
+					break;
+					//TODO add others...
+				}
+			}
+		});
 		Log.d(Constants.LOG_TAG, "Service.onCreate()");
 	}
 
 	public void play() {
+		//TODO delete that
+		PlayerChangeEvent changeEvent = new PlayerChangeEvent(); 
+		changeEvent.status=Status.Playing;
+		Messaging.fire(changeEvent);
 		Log.d(Constants.LOG_TAG, "Service.play()");
 	}
 
 	public void pause() {
+		//TODO delete that
+		PlayerChangeEvent changeEvent = new PlayerChangeEvent(); 
+		changeEvent.status=Status.Paused;
+		Messaging.fire(changeEvent);
 		Log.d(Constants.LOG_TAG, "Service.pause()");
 	}
 

@@ -3,6 +3,7 @@ package pro.trousev.cleer.android.userInterface;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.AndroidCleerService;
 import android.content.ComponentName;
@@ -25,7 +26,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private ServiceConnection serviceConnection;
 	AndroidCleerService service;
 	private boolean bound;
-	Intent intent;
+	private Intent intent;
+	public ServiceTaskMessage taskMessage = new ServiceTaskMessage();
 
 	/** Called when the activity is first created. */
 	@Override
@@ -59,7 +61,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				bound = false;
 			}
 		};
-		startService(intent);
+		new Thread(new Runnable(){
+		public void run() {
+			// TODO Auto-generated method stub
+			startService(intent);
+		}
+		}
+		).run();
+
 		bindService(intent, serviceConnection, 0);
 		// TODO set implementations here
 		// TODO initialize Service
