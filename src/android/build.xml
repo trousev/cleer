@@ -101,7 +101,10 @@
         </fileset>
     </path>
 </target>
-
+<target name="clear">
+   <delete dir="${out.dir}"/>
+   <mkdir dir="${out.dir}"/>
+</target>
 <target name="run-on-device">
     <xpath input="AndroidManifest.xml"
            expression="/manifest/@package"

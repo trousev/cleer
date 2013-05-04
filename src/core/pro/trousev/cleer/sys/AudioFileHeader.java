@@ -30,6 +30,7 @@ public class AudioFileHeader implements Serializable {
 	private String _track;
 	private String _lyrics;
 	private String _tags;
+	private String _genre;
 	
 	// Sourceinfo
 	private String _filename;
@@ -57,7 +58,15 @@ public class AudioFileHeader implements Serializable {
 		_write_file = null;
 		return true;
 	}
-	
+	public String getGenre()
+	{
+		return _genre;
+	}
+	public void setGenre(String genre) throws KeyNotFoundException, FieldDataInvalidException
+	{
+		_genre = genre;
+		if(_write_file != null) _write_tag.setField(FieldKey.GENRE, genre);
+	}
 	public String getArtist()
 	{
 		return _artist;
@@ -145,6 +154,7 @@ public class AudioFileHeader implements Serializable {
 		_track = tag.getFirst(FieldKey.TRACK);
 		_lyrics = tag.getFirst(FieldKey.LYRICS);
 		_tags = tag.getFirst(FieldKey.TAGS);
+		_genre = tag.getFirst(FieldKey.GENRE);
 		_filename = file.getAbsolutePath();
 		_user_rating = tag.getFirst(FieldKey.RATING);
 		
