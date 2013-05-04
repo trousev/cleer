@@ -86,7 +86,8 @@ public class Messaging {
 		List<Event> events = _responders.get(message.getClass());
 		if (events != null)
 			for (Event e : events) {
-				new Thread(new RespondTask(e, message)).start();
+				//new Thread(new RespondTask(e, message)).start();
+				e.messageReceived(message);
 			}
 	}
 }
