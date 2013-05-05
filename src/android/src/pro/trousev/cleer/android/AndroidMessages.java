@@ -8,11 +8,11 @@ import pro.trousev.cleer.Playlist;
 
 public interface AndroidMessages {
 	enum TypeOfResult {
-		Compositions, Albums, Genres, Artists, Playlists, Queue, Playlist, PlaylistsInDialog
+		Compositions, Albums, Genres, Artists, Playlists, Queue, Playlist, PlaylistsInDialog, QueueChanged
 	}
 
 	enum Action {
-		Play, Pause, Stop, Next, Previous, setToQueue, addToQueue, addToPlaylist, createNewList
+		Play, Pause, Stop, Next, Previous, setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList
 	}
 
 	public static class ServiceRequestMessage implements Messaging.Message {
@@ -29,6 +29,7 @@ public interface AndroidMessages {
 	public static class ServiceTaskMessage implements Messaging.Message {
 		public Playlist playlist;
 		public List<Item> list;
+		public String searchQuery;
 		public int position;
 		public Action action;
 		// could we find Playlist with only its' title?

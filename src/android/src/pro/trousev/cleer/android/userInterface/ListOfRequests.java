@@ -4,7 +4,9 @@ import java.util.List;
 
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.android.AndroidMessages.Action;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
+import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
 import android.os.Bundle;
@@ -12,9 +14,11 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class ListOfRequests extends ListFragment {
 	String data[] = new String[] { "one", "two", "three", "four", "one", "two",
@@ -44,17 +48,41 @@ public class ListOfRequests extends ListFragment {
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.requestlist_context_menu, menu);
 	}
-
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		ServiceTaskMessage message = ((MainActivity) getActivity()).taskMessage;
+		Item track;
+		switch (item.getItemId()) {
+		case R.id.play:
+			message.action = Action.setToQueueBySearchQuery;
+//			track = list.get(acmi.position);
+//			message.list = null;
+//			message.list.add(track);
+//			message.position=list.indexOf(track);
+			Messaging.fire(message);
+			break;
+		case R.id.addToQueue:
+			message.action = Action.addToQueueBySearchQuery;
+//			track = list.get(acmi.position);
+//			message.searchQuery = track.getSearchQuery();
+			Messaging.fire(message);
+			break;
+		case R.id.addToList:
+			//TODO What to do?
+			break;
+		}
+		return true;
+	}
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id){
-		List<Item> listOfTracks= null;
 		//Item item = (Item)listView.getItemAtPosition(position);
 		//String searchQuery = item.getSearchQuery();
-		//ServiceRequestMessage message = new ServiceRequestMessage();
-		//message.type=TypeOfResult.Compositions;
+		ServiceRequestMessage message = new ServiceRequestMessage();
+		message.type=TypeOfResult.Compositions;
 		//message.searchQuery=searchQuery;
-		//Messaging.fire(message);
+		Messaging.fire(message);
 		//TODO get information from that object and give request to library
-		((MainActivity)getActivity()).setListOfCompositions(listOfTracks);
 	}
 }

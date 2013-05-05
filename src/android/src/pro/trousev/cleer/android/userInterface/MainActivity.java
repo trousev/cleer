@@ -11,6 +11,7 @@ import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.AndroidCleerService;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -90,7 +91,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 					//TODO decide how do we want show that
 					break;
 				case Playlist:
-					
+					setListOfCompositions(respondMessage.list);
 					break;
 				case Genres:
 					setListOfRequests(respondMessage.list, "Genre", "Number");
@@ -100,6 +101,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 					break;
 				case Queue:
 					setListOfCompositions(respondMessage.list);
+					break;
+				case PlaylistsInDialog:
+					//TODO set dialog here
+					//someExperiments
+					Dialog dialog = new Dialog(MainActivity.this);
+					dialog.show();
 					break;
 				}
 			}

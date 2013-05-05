@@ -4,8 +4,11 @@ import java.util.List;
 
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.android.AndroidMessages.Action;
+import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
+import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
 import android.app.Activity;
 import android.os.Bundle;
@@ -27,7 +30,9 @@ public class ListOfCompositions extends ListFragment {
 	public ListOfCompositions(List<Item> arg) {
 		list = arg;
 	}
-
+	public ListOfCompositions(Playlist playlist){
+		list = playlist.contents();
+	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,6 +86,9 @@ public class ListOfCompositions extends ListFragment {
 			Messaging.fire(message);
 			break;
 		case R.id.addToList:
+			ServiceRequestMessage msg = ((MainActivity)getActivity()).requestMessage;
+			msg.type=TypeOfResult.PlaylistsInDialog;
+			Messaging.fire(msg);
 			//TODO What to do?
 			break;
 		}
