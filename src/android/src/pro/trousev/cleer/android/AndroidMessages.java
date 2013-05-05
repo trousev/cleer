@@ -8,7 +8,7 @@ import pro.trousev.cleer.Playlist;
 
 public interface AndroidMessages {
 	enum TypeOfResult {
-		Compositions, Albums, Genres, Artists, Playlists, Queue, Playlist
+		Compositions, Albums, Genres, Artists, Playlists, Queue, Playlist, PlaylistsInDialog
 	}
 
 	enum Action {
@@ -21,6 +21,7 @@ public interface AndroidMessages {
 	}
 
 	public static class ServiceRespondMessage implements Messaging.Message {
+		public List<Playlist> playlists;
 		public List<Item> list;
 		public TypeOfResult typeOfContent;
 	}

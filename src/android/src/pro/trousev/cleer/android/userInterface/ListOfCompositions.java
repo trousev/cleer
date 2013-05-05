@@ -14,7 +14,9 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 public class ListOfCompositions extends ListFragment {
@@ -57,14 +59,42 @@ public class ListOfCompositions extends ListFragment {
 	}
 
 	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		ServiceTaskMessage message = ((MainActivity) getActivity()).taskMessage;
+		Item track;
+		switch (item.getItemId()) {
+		case R.id.play:
+			message.action = Action.setToQueue;
+//			track = list.get(acmi.position);
+//			message.list = null;
+//			message.list.add(track);
+//			message.position=list.indexOf(track);
+			Messaging.fire(message);
+			break;
+		case R.id.addToQueue:
+			message.action = Action.addToQueue;
+//			track = list.get(acmi.position);
+//			message.list = null;
+//			message.list.add(track);
+			Messaging.fire(message);
+			break;
+		case R.id.addToList:
+			//TODO What to do?
+			break;
+		}
+		return true;
+	}
+
+	@Override
 	public void onListItemClick(ListView listView, View view, int position,
 			long id) {
 		ServiceTaskMessage message = ((MainActivity) getActivity()).taskMessage;
 		message.action = Action.setToQueue;
-		message.list=list;
+		message.list = list;
 		message.position = position;
 		Messaging.fire(message);
 		Log.d(Constants.LOG_TAG, "onListItemClick()");
 	}
-
 }
