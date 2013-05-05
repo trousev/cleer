@@ -8,11 +8,13 @@ import pro.trousev.cleer.Playlist;
 
 public interface AndroidMessages {
 	enum TypeOfResult {
-		Compositions, Albums, Genres, Artists, Playlists, Queue, Playlist, PlaylistsInDialog, QueueChanged
+		Compositions, Albums, Genres, Artists, Playlists, Queue, Playlist, PlaylistsInDialog,
+		QueueChanged
 	}
 
 	enum Action {
-		Play, Pause, Stop, Next, Previous, setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList
+		Play, Pause, Stop, Next, Previous, setToQueue, setToQueueBySearchQuery,
+		addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList
 	}
 
 	public static class ServiceRequestMessage implements Messaging.Message {
