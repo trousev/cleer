@@ -52,22 +52,22 @@ public class Messaging {
 		void messageReceived(Message message);
 	}
 
-	private static class RespondTask implements Runnable {
-
-		private final Event e;
-
-		private final Message m;
-
-		public RespondTask(Event e, Message m) {
-			this.e = e;
-			this.m = m;
-		}
-
-		@Override
-		public void run() {
-			e.messageReceived(m);
-		}
-	}
+//	private static class RespondTask implements Runnable {
+//
+//		private final Event e;
+//
+//		private final Message m;
+//
+//		public RespondTask(Event e, Message m) {
+//			this.e = e;
+//			this.m = m;
+//		}
+//
+//		@Override
+//		public void run() {
+//			e.messageReceived(m);
+//		}
+//	}
 
 	@SuppressWarnings("rawtypes")
 	private static Map<Class, List<Event>> _responders = new ConcurrentHashMap<Class, List<Event>>();
