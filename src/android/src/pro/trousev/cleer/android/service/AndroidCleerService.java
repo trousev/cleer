@@ -59,6 +59,10 @@ public class AndroidCleerService extends Service {
 					respondMessage.typeOfContent=TypeOfResult.Playlists;
 					break;
 				case Playlist:
+					respondMessage.typeOfContent=TypeOfResult.Compositions;
+					break;
+				case PlaylistsInDialog:
+					respondMessage.typeOfContent=TypeOfResult.PlaylistsInDialog;
 					break;
 				}
 				Messaging.fire(respondMessage);

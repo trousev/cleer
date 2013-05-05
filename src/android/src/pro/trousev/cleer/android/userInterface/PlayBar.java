@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 public class PlayBar extends Fragment implements OnClickListener {
 	private Button playPauseBtn, prevCompBtn, nextCompBtn, queueBtn,
@@ -24,6 +25,7 @@ public class PlayBar extends Fragment implements OnClickListener {
 	final int PLAYING = 1;
 	final int NOT_PLAYING = 0;
 	private int status = NOT_PLAYING;
+	public static ProgressBar progressBar;
 	
 	public PlayBar() {
 	}
@@ -37,6 +39,7 @@ public class PlayBar extends Fragment implements OnClickListener {
 		nextCompBtn = (Button) view.findViewById(R.id.next_comp_btn);
 		queueBtn = (Button) view.findViewById(R.id.queue_btn);
 		mainMenuBtn = (Button) view.findViewById(R.id.main_menu_btn);
+		progressBar = (ProgressBar) view.findViewById(R.id.player_progress_bar);
 		queueBtn.setOnClickListener(root);
 		mainMenuBtn.setOnClickListener(root);
 		playPauseBtn.setOnClickListener(this);
@@ -98,5 +101,11 @@ public class PlayBar extends Fragment implements OnClickListener {
 		default:
 			break;
 		}
+	}
+	@Override
+	public void onDestroy(){
+		progressBar=null;
+		Log.d(Constants.LOG_TAG, "PlayBar.onDestroy()");
+		super.onDestroy();
 	}
 }
