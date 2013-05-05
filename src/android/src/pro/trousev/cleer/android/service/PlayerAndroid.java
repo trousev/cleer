@@ -26,6 +26,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 	private static PlayerChangeEvent changeEvent = new PlayerChangeEvent();
 
 	public PlayerAndroid() {
+		mediaPlayer = new MediaPlayer();
 	};
 
 	@Override
@@ -53,7 +54,6 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 
 	@Override
 	public void close() {
-
 		mediaPlayer.release();
 		mediaPlayer = null;
 		currentTrack = null;
@@ -87,7 +87,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 		prepared = false;
 		currentStatus = Status.Stopped;
 		changeEvent.error = null;
-		changeEvent.reason = null; // FILL THIS PLEASE!
+		changeEvent.reason = Reason.UserBreak; // FILL THIS PLEASE!
 		changeEvent.sender = this;
 		changeEvent.status = currentStatus;
 		changeEvent.track = currentTrack;
