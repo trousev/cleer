@@ -68,7 +68,7 @@ public class AndroidCleerService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		queue = new QueueImpl(new PlayerAndroid());
-		database = new DatabaseImpl(Constants.DATABASE_PATH);
+		//database = new DatabaseImpl(Constants.DATABASE_PATH);
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		Messaging.subscribe(AndroidMessages.ServiceRequestMessage.class,
 				new Messaging.Event() {
