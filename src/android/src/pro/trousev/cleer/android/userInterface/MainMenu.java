@@ -6,7 +6,6 @@ import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
-import pro.trousev.cleer.android.service.FileSystemScanner;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -46,8 +45,6 @@ public class MainMenu extends Fragment implements OnClickListener {
 		case R.id.compositions_btn:
 			message.type=TypeOfResult.Compositions;
 			message.searchQuery = null;
-			FileSystemScanner scanner = new FileSystemScanner();
-			List<Item> list = scanner.scanSystem();
 			Messaging.fire(message);
 			break;
 		case R.id.lists_btn:
