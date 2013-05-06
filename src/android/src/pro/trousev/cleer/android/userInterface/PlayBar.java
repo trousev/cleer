@@ -26,10 +26,22 @@ public class PlayBar extends Fragment implements OnClickListener {
 	final int NOT_PLAYING = 0;
 	private int status = NOT_PLAYING;
 	public static ProgressBar progressBar;
+	private PlayerChangedStatusEvent playerChangedStatusEvent;
 	
 	public PlayBar() {
 	}
-
+	private class PlayerChangedStatusEvent implements Event{
+	@Override
+	public void messageReceived(Message message) {
+		PlayerChangeEvent ev = (PlayerChangeEvent) message;
+		if (ev.status == Status.Playing) {
+			changeStatus(PLAYING);
+		} else {
+			changeStatus(NOT_PLAYING);
+		}
+		Log.d(Constants.LOG_TAG, "PlayBar.messageREceived()");
+	}
+}
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.play_bar, null, false);
@@ -45,19 +57,8 @@ public class PlayBar extends Fragment implements OnClickListener {
 		playPauseBtn.setOnClickListener(this);
 		prevCompBtn.setOnClickListener(this);
 		nextCompBtn.setOnClickListener(this);
-
-		Messaging.subscribe(Player.PlayerChangeEvent.class, new Event() {
-			@Override
-			public void messageReceived(Message message) {
-				PlayerChangeEvent ev = (PlayerChangeEvent) message;
-				if (ev.status == Status.Playing) {
-					changeStatus(PLAYING);
-				} else {
-					changeStatus(NOT_PLAYING);
-				}
-				Log.d(Constants.LOG_TAG, "PlayBar.messageREceived()");
-			}
-		});
+		playerChangedStatusEvent = new PlayerChangedStatusEvent();
+		Messaging.subscribe(Player.PlayerChangeEvent.class, playerChangedStatusEvent);
 
 		return view;
 	}
@@ -104,8 +105,9 @@ public class PlayBar extends Fragment implements OnClickListener {
 	}
 	@Override
 	public void onDestroy(){
-		progressBar=null;
+		progressBar=null; // Allows Service to know is Activity running or not
 		Log.d(Constants.LOG_TAG, "PlayBar.onDestroy()");
+		Messaging.unSubscribe(Player.PlayerChangeEvent.class, playerChangedStatusEvent);
 		super.onDestroy();
 	}
 }

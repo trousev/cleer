@@ -35,7 +35,44 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private Intent intent;
 	public ServiceTaskMessage taskMessage = new ServiceTaskMessage();
 	public ServiceRequestMessage requestMessage = new ServiceRequestMessage();
-
+	private ServiceRespondedEvent serviceRespondedEvent;
+	
+	class ServiceRespondedEvent implements Event{
+		@Override
+		public void messageReceived(Message message){
+			ServiceRespondMessage respondMessage = (ServiceRespondMessage) message;
+			switch(respondMessage.typeOfContent){
+			case Compositions:
+				setListOfCompositions(respondMessage.list);
+				break;
+			case Albums:
+				setListOfRequests(respondMessage.list, "Album", "Artist");
+				break;
+			case Playlists:
+				//TODO decide how do we want show that
+				break;
+			case Playlist:
+				setListOfCompositions(respondMessage.list);
+				break;
+			case Genres:
+				setListOfRequests(respondMessage.list, "Genre", "Number");
+				break;
+			case Artists:
+				setListOfRequests(respondMessage.list, "Artist", "Number");
+				break;
+			case Queue:
+				setListOfCompositions(respondMessage.list);
+				break;
+			case PlaylistsInDialog:
+				//TODO set dialog here
+				//someExperiments
+				Dialog dialog = new Dialog(MainActivity.this);
+				dialog.show();
+				break;
+			}
+		}
+	};
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,7 +86,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		fTrans.add(R.id.play_bar, playBar);
 		fTrans.add(R.id.work_space, mainMenu);
 		fTrans.commit();
-
 		intent = new Intent(
 				"pro.trousev.cleer.android.service.AndroidCleerService");
 
@@ -75,43 +111,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}).run();
 
 		bindService(intent, serviceConnection, 0);
+		serviceRespondedEvent = new ServiceRespondedEvent();
+		Messaging.subscribe(ServiceRespondMessage.class, serviceRespondedEvent);
 		
-		Messaging.subscribe(ServiceRespondMessage.class, new Event(){
-			@Override
-			public void messageReceived(Message message){
-				ServiceRespondMessage respondMessage = (ServiceRespondMessage) message;
-				switch(respondMessage.typeOfContent){
-				case Compositions:
-					setListOfCompositions(respondMessage.list);
-					break;
-				case Albums:
-					setListOfRequests(respondMessage.list, "Album", "Artist");
-					break;
-				case Playlists:
-					//TODO decide how do we want show that
-					break;
-				case Playlist:
-					setListOfCompositions(respondMessage.list);
-					break;
-				case Genres:
-					setListOfRequests(respondMessage.list, "Genre", "Number");
-					break;
-				case Artists:
-					setListOfRequests(respondMessage.list, "Artist", "Number");
-					break;
-				case Queue:
-					setListOfCompositions(respondMessage.list);
-					break;
-				case PlaylistsInDialog:
-					//TODO set dialog here
-					//someExperiments
-					Dialog dialog = new Dialog(MainActivity.this);
-					dialog.show();
-					break;
-				}
-			}
-		});
-
 	
 	
 	}
@@ -173,6 +175,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void onDestroy() {
 		if (bound)
 			unbindService(serviceConnection);
+		Messaging.unSubscribe(ServiceRespondMessage.class, serviceRespondedEvent);
 		Log.d(Constants.LOG_TAG, "MainActivity.onDestoy()");
 		super.onDestroy();
 	}
