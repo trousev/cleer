@@ -83,7 +83,7 @@ public class Messaging {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static void unSubscibe(Class type, Event event)	{
+	public static void unSubscribe(Class type, Event event)	{
 		List<Event> events = _responders.get(type);
 		if (events == null)
 			return;
