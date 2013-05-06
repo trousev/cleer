@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.lang.Thread;
+//import java.lang.Thread;
 
 public class Messaging {
 	public interface Message {
@@ -82,6 +82,15 @@ public class Messaging {
 		events.add(event);
 	}
 
+	@SuppressWarnings("rawtypes")
+	public static void unSubscibe(Class type, Event event)	{
+		List<Event> events = _responders.get(type);
+		if (events == null)
+			return;
+		events.remove(event);
+		_responders.put(type, events);
+	}
+	
 	public static void fire(Message message) {
 		List<Event> events = _responders.get(message.getClass());
 		if (events != null)
