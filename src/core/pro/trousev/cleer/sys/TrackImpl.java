@@ -30,6 +30,7 @@ public class TrackImpl implements Item {
 	//FIXME: make statistics
 	//TODO: add tag "genre"
 	//TODO: add service tag "type"
+	//FIXME: Make appropriate exceptions
 	private static final String[] _strict_tags = {"album", "artist", "title", "year", "number", "lyrics", "rating", "genre", "stat_player", "stat_repeated", "stat_skipped"};
 	//ВНИМАНИЕ, ДУБЛИРОВАНИЕ ИНФОРМАЦИИ!
 	// В интересах быстродействия я оставляю правило "Индекс в этом массиве должен в точности совпадать с Tag.name()
@@ -265,6 +266,7 @@ public class TrackImpl implements Item {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 	@Override
 	public boolean removeTag(Tag tag) {
 		// TODO Auto-generated method stub
