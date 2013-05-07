@@ -36,12 +36,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public ServiceTaskMessage taskMessage = new ServiceTaskMessage();
 	public ServiceRequestMessage requestMessage = new ServiceRequestMessage();
 	private ServiceRespondedEvent serviceRespondedEvent;
-	
-	class ServiceRespondedEvent implements Event{
+
+	class ServiceRespondedEvent implements Event {
 		@Override
-		public void messageReceived(Message message){
+		public void messageReceived(Message message) {
 			ServiceRespondMessage respondMessage = (ServiceRespondMessage) message;
-			switch(respondMessage.typeOfContent){
+			switch (respondMessage.typeOfContent) {
 			case Compositions:
 				setListOfCompositions(respondMessage.list);
 				break;
@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setListOfRequests(respondMessage.list, "Album", "Artist");
 				break;
 			case Playlists:
-				//TODO decide how do we want show that
+				// TODO decide how do we want show that
 				break;
 			case Playlist:
 				setListOfCompositions(respondMessage.list);
@@ -64,15 +64,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setListOfCompositions(respondMessage.list);
 				break;
 			case PlaylistsInDialog:
-				//TODO set dialog here
-				//someExperiments
+				// TODO set dialog here
+				// someExperiments
 				Dialog dialog = new Dialog(MainActivity.this);
 				dialog.show();
 				break;
 			}
 		}
 	};
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -113,9 +113,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		bindService(intent, serviceConnection, 0);
 		serviceRespondedEvent = new ServiceRespondedEvent();
 		Messaging.subscribe(ServiceRespondMessage.class, serviceRespondedEvent);
-		
-	
-	
+
 	}
 
 	public void clearBackStack() {
@@ -175,8 +173,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void onDestroy() {
 		if (bound)
 			unbindService(serviceConnection);
-		Messaging.unSubscribe(ServiceRespondMessage.class, serviceRespondedEvent);
+		Messaging.unSubscribe(ServiceRespondMessage.class,
+				serviceRespondedEvent);
 		Log.d(Constants.LOG_TAG, "MainActivity.onDestoy()");
+		System.runFinalization();
 		super.onDestroy();
 	}
 }
