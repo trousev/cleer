@@ -1,5 +1,6 @@
 package pro.trousev.cleer.android.userInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
@@ -30,13 +31,15 @@ public class ListOfCompositions extends ListFragment {
 	public ListOfCompositions(List<Item> arg) {
 		list = arg;
 	}
-	public ListOfCompositions(Playlist playlist){
+
+	public ListOfCompositions(Playlist playlist) {
 		list = playlist.contents();
 	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ListOfCompAdapter adapter = new ListOfCompAdapter(getActivity(), data);
+		ListOfCompAdapter adapter = new ListOfCompAdapter(getActivity(), list);
 		this.setHasOptionsMenu(true);
 		setListAdapter(adapter);
 	}
@@ -72,24 +75,24 @@ public class ListOfCompositions extends ListFragment {
 		switch (item.getItemId()) {
 		case R.id.play:
 			message.action = Action.setToQueue;
-//			track = list.get(acmi.position);
-//			message.list = null;
-//			message.list.add(track);
-//			message.position=list.indexOf(track);
+			track = list.get(acmi.position);
+			message.list = new ArrayList<Item>();
+			message.list.add(track);
+			message.position = list.indexOf(track);
 			Messaging.fire(message);
 			break;
 		case R.id.addToQueue:
 			message.action = Action.addToQueue;
-//			track = list.get(acmi.position);
-//			message.list = null;
-//			message.list.add(track);
+			track = list.get(acmi.position);
+			message.list = new ArrayList<Item>();
+			message.list.add(track);
 			Messaging.fire(message);
 			break;
 		case R.id.addToList:
-			ServiceRequestMessage msg = ((MainActivity)getActivity()).requestMessage;
-			msg.type=TypeOfResult.PlaylistsInDialog;
+			ServiceRequestMessage msg = ((MainActivity) getActivity()).requestMessage;
+			msg.type = TypeOfResult.PlaylistsInDialog;
 			Messaging.fire(msg);
-			//TODO What to do?
+			// TODO What to do?
 			break;
 		}
 		return true;

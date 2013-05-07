@@ -1,5 +1,10 @@
 package pro.trousev.cleer.android.userInterface;
 
+import java.util.List;
+
+import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Item.NoSuchTagException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
@@ -7,10 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ListOfCompAdapter extends ArrayAdapter<String>{
+public class ListOfCompAdapter extends ArrayAdapter<Item> {
 
-	public ListOfCompAdapter(Context context, String[] strings) {
-		super(context, R.layout.list_of_comp_element, strings);
+	public ListOfCompAdapter(Context context, List<Item> items) {
+		super(context, R.layout.list_of_comp_element, items);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -27,8 +32,14 @@ public class ListOfCompAdapter extends ArrayAdapter<String>{
 				.findViewById(R.id.comp_artist_name);
 		TextView compName = (TextView) view.findViewById(R.id.comp_name);
 		// TODO set text from TrackImpl
-		artistName.setText("artist name" + getItem(position));
-		compName.setText("compName");
+		try {
+			artistName.setText("artist name"
+					+ getItem(position).tag("artist").value());
+			compName.setText(getItem(position).tag("title").value());
+		} catch (NoSuchTagException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return view;
 	}
 
