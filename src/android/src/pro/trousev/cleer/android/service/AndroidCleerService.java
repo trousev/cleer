@@ -8,8 +8,8 @@ import pro.trousev.cleer.android.AndroidMessages;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
-import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
+import pro.trousev.cleer.android.service.MediaScanner.MediaScannerException;
 import pro.trousev.cleer.sys.QueueImpl;
 import android.app.Service;
 import android.content.Intent;
@@ -43,10 +43,17 @@ public class AndroidCleerService extends Service {
 					public void messageReceived(Message message) {
 						// TODO end implementation of that event
 						ServiceRequestMessage mes = (ServiceRequestMessage) message;
-						if (mes.type == TypeOfResult.Compositions)
-							;
 						switch (mes.type) {
 						case Compositions:
+							MediaScanner mediaScanner = new MediaScanner(
+									getApplication());
+							try {
+								respondMessage.list = mediaScanner.scanner();
+							} catch (MediaScannerException e) {
+								Log.e(Constants.LOG_TAG,
+										"Can't scan for mediafiles");
+								e.printStackTrace();
+							}
 							break;
 						case Queue:
 							break;
@@ -93,6 +100,9 @@ public class AndroidCleerService extends Service {
 							break;
 						case setToQueue:
 							queue.enqueue(mes.list, EnqueueMode.ReplaceAll);
+							queue.set(mes.position);
+							Log.d(Constants.LOG_TAG, "Message position "
+									+ mes.position);
 							break;
 						default:
 							break;
