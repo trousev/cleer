@@ -112,6 +112,7 @@ public class AndroidCleerService extends Service {
 
 	public void onDestroy() {
 		Log.d(Constants.LOG_TAG, "Service.onDestroy()");
+		queue.clear();
 		super.onDestroy();
 	}
 
