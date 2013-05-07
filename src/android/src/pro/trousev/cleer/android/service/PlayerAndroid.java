@@ -65,7 +65,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 	@Override
 	public void play() {
 		if ((currentStatus != Status.Stopped)
-				|| (currentStatus != Status.Paused))
+				&& (currentStatus != Status.Paused))
 			return;
 		if (prepared) {
 			mediaPlayer.start();
@@ -86,8 +86,8 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 	@Override
 	public void stop(Reason reason) {
 		if ((currentStatus != Status.Paused)
-				|| (currentStatus != Status.Playing)
-				|| (currentStatus != Status.Processing))
+				&& (currentStatus != Status.Playing)
+				&& (currentStatus != Status.Processing))
 			return;
 		mediaPlayer.stop();
 		prepared = false;
