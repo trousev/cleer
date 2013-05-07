@@ -1,5 +1,5 @@
-
 package pro.trousev.cleer.sys;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,17 +21,16 @@ public class QueueImpl implements Queue {
 	private List<Item> queue = null;
 	private int current = 0;
 
-	public QueueImpl(Player player)
-	{
+	public QueueImpl(Player player) {
 		this.player = player;
 		queue = new ArrayList<Item>();
 		Messaging.subscribe(Player.PlayerChangeEvent.class, new Event() {
-			
+
 			@Override
 			public void messageReceived(Message message) {
 				PlayerChangeEvent ev = (PlayerChangeEvent) message;
-				if(ev.status == Status.Stopped && ev.reason == Reason.EndOfTrack && ev.error == null)
-				{
+				if (ev.status == Status.Stopped
+						&& ev.reason == Reason.EndOfTrack && ev.error == null) {
 					next();
 				}
 			}
@@ -55,12 +54,9 @@ public class QueueImpl implements Queue {
 
 	@Override
 	public Item playing_track() {
-		try
-		{
+		try {
 			return queue.get(current);
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -75,20 +71,17 @@ public class QueueImpl implements Queue {
 
 	@Override
 	public void enqueue(List<Item> tracks, EnqueueMode mode) {
-		if(mode == EnqueueMode.AfterAll)
-		{
+		if (mode == EnqueueMode.AfterAll) {
 			queue.addAll(tracks);
 		}
-		if(mode == EnqueueMode.AfterCurrent)
-		{
-			int s = current+1;
-			if(s>=size())
+		if (mode == EnqueueMode.AfterCurrent) {
+			int s = current + 1;
+			if (s >= size())
 				s = size();
 			queue.addAll(s, tracks);
 		}
-		if(mode == EnqueueMode.Immidiaely)
-		{
-			if(size()!=0)
+		if (mode == EnqueueMode.Immidiaely) {
+			if (size() != 0)
 				queue.addAll(current, tracks);
 			else
 				queue.addAll(tracks);
@@ -101,8 +94,7 @@ public class QueueImpl implements Queue {
 			}
 			player.play();
 		}
-		if(mode == EnqueueMode.ReplaceAll)
-		{
+		if (mode == EnqueueMode.ReplaceAll) {
 			clear();
 			enqueue(tracks, EnqueueMode.Immidiaely);
 		}
@@ -119,35 +111,41 @@ public class QueueImpl implements Queue {
 	public void enqueue(Item track) {
 		enqueue(track, EnqueueMode.Immidiaely);
 	}
-	
-	@Override 
-	public boolean next()
-	{
+
+	@Override
+	public boolean next() {
 		return seek(+1);
 	}
+
 	@Override
 	public boolean prev() {
 		return seek(-1);
 	}
+
 	@Override
 	public boolean play() {
 		return seek(0);
 	}
+
 	@Override
 	public boolean pause() {
 		player.pause();
 		return true;
 	}
+
 	@Override
 	public boolean resume() {
 		player.resume();
 		return true;
 	}
+
 	@Override
 	public boolean seek(int index) {
 		current += index;
-		if(current >= size()) return false;
-		if(current <0 ) return false;
+		if (current >= size())
+			return false;
+		if (current < 0)
+			return false;
 		player.stop(Player.Reason.UserBreak);
 		try {
 			player.open(playing_track());
@@ -158,26 +156,34 @@ public class QueueImpl implements Queue {
 		player.play();
 		return true;
 	}
+
 	@Override
 	public void shuffle() {
 		Random r = new Random();
 		int nti = -1;
-		if(player.getStatus() == Status.Playing)
+		if (player.getStatus() == Status.Playing)
 			nti = playing_index();
-		if(queue == null)
-			return ;
+		if (queue == null)
+			return;
 		int N = queue.size();
-		for(int i=0; i<N*5; i++)
-		{
-			
+		for (int i = 0; i < N * 5; i++) {
+
 			int first = r.nextInt(N);
 			int second = r.nextInt(N);
-			if(first == second) continue;
-			if (first == nti || second == nti) continue;
+			if (first == second)
+				continue;
+			if (first == nti || second == nti)
+				continue;
 			Item F = queue.get(first);
 			Item S = queue.get(second);
 			queue.set(first, S);
 			queue.set(second, F);
 		}
+	}
+
+	@Override
+	public boolean set(int index) {
+		current = 0;
+		return seek(index);
 	}
 }
