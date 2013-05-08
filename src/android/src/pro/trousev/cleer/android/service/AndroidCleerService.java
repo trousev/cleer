@@ -15,6 +15,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 
 //TODO Make notification and foreground job
@@ -102,6 +103,8 @@ public class AndroidCleerService extends Service {
 							break;
 						case setToQueue:
 							queue.enqueue(mes.list, EnqueueMode.ReplaceAll);
+							// FIXME write one method which would work correctly
+							SystemClock.sleep(150);
 							queue.seek(mes.position);
 							break;
 						default:
