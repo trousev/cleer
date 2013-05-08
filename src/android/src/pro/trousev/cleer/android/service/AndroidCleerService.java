@@ -85,6 +85,9 @@ public class AndroidCleerService extends Service {
 						case Play:
 							queue.play();
 							break;
+						case Resume:
+							queue.resume();
+							break;
 						case Pause:
 							queue.pause();
 							break;

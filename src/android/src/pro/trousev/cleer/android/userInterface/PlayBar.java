@@ -1,5 +1,6 @@
 package pro.trousev.cleer.android.userInterface;
 
+import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
@@ -17,14 +18,17 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class PlayBar extends Fragment implements OnClickListener {
 	private Button playPauseBtn, prevCompBtn, nextCompBtn, queueBtn,
 			mainMenuBtn;
+	private TextView compName;
 	private MainActivity root;
 	final int PLAYING = 1;
-	final int NOT_PLAYING = 0;
-	private int status = NOT_PLAYING;
+	final int STOPPED = 0;
+	final int PAUSED = 2;
+	private int status = STOPPED;
 	public static ProgressBar progressBar;
 	private PlayerChangedStatusEvent playerChangedStatusEvent;
 
@@ -35,10 +39,22 @@ public class PlayBar extends Fragment implements OnClickListener {
 		@Override
 		public void messageReceived(Message message) {
 			PlayerChangeEvent ev = (PlayerChangeEvent) message;
-			if ((ev.status == Status.Playing)||(ev.status == Status.Processing)) {
+			if ((ev.status == Status.Playing)
+					|| (ev.status == Status.Processing)) {
 				changeStatus(PLAYING);
 			} else {
-				changeStatus(NOT_PLAYING);
+				if (ev.status == Status.Paused)
+					changeStatus(PAUSED);
+				else
+					changeStatus(STOPPED);
+			}
+			if (ev.track != null) {
+				try {
+					compName.setText(ev.track.tag("title").value());
+				} catch (NoSuchTagException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			Log.d(Constants.LOG_TAG, "PlayBar.messageReceived()");
 		}
@@ -48,7 +64,8 @@ public class PlayBar extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.play_bar, null, false);
 		root = (MainActivity) getActivity();
-		playPauseBtn = (Button) view.findViewById(R.id.play_pause_btn);
+		compName = (TextView) view.findViewById(R.id.playing_compotision_name);
+ 		playPauseBtn = (Button) view.findViewById(R.id.play_pause_btn);
 		prevCompBtn = (Button) view.findViewById(R.id.prev_comp_btn);
 		nextCompBtn = (Button) view.findViewById(R.id.next_comp_btn);
 		queueBtn = (Button) view.findViewById(R.id.queue_btn);
@@ -73,7 +90,10 @@ public class PlayBar extends Fragment implements OnClickListener {
 		case PLAYING:
 			string = "pause";
 			break;
-		case NOT_PLAYING:
+		case PAUSED:
+			string = "play";
+			break;
+		case STOPPED:
 			string = "play";
 			break;
 		}
@@ -86,12 +106,19 @@ public class PlayBar extends Fragment implements OnClickListener {
 		Log.d(Constants.LOG_TAG, "status = " + status);
 		switch (id) {
 		case R.id.play_pause_btn:
-			if (status == PLAYING) {
+			switch (status) {
+			case PLAYING:
 				root.taskMessage.action = Action.Pause;
 				Messaging.fire(root.taskMessage);
-			} else if (status == NOT_PLAYING) {
+				break;
+			case PAUSED:
+				root.taskMessage.action = Action.Resume;
+				Messaging.fire(root.taskMessage);
+				break;
+			case STOPPED:
 				root.taskMessage.action = Action.Play;
 				Messaging.fire(root.taskMessage);
+				break;
 			}
 			break;
 		case R.id.next_comp_btn:

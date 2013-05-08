@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import android.util.Log;
+
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Messaging.Message;
@@ -14,6 +16,7 @@ import pro.trousev.cleer.Player.Reason;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Player.Status;
+import pro.trousev.cleer.android.Constants;
 
 public class QueueImpl implements Queue {
 
@@ -154,6 +157,7 @@ public class QueueImpl implements Queue {
 			e.printStackTrace();
 		}
 		player.play();
+	//	Log.d(Constants.LOG_TAG, "queuePosition " + current);
 		return true;
 	}
 

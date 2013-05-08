@@ -106,6 +106,6 @@ public class ListOfCompositions extends ListFragment {
 		message.list = list;
 		message.position = position;
 		Messaging.fire(message);
-		Log.d(Constants.LOG_TAG, "onListItemClick()");
+		Log.d(Constants.LOG_TAG, "onListItemClick() position = " + position);
 	}
 }

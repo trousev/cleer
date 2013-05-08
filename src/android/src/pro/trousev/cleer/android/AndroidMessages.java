@@ -12,7 +12,7 @@ public interface AndroidMessages {
 	}
 
 	enum Action {
-		Play, Pause, Stop, Next, Previous, setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList
+		Play, Pause, Resume, Stop, Next, Previous, setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList
 	}
 
 	public static class ServiceRequestMessage implements Messaging.Message {
