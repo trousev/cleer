@@ -39,13 +39,11 @@ public class MediaScanner {
 				Uri filePathUri = Uri.parse(cursor.getString(columnIndex));
 				String filename = filePathUri.getPath().toString();
 				File file = new File(filename);
-				TrackImpl track = null;
 				try { // FIXME Make one exception for TrackImpl
-					track = new TrackImpl(file);
+					TrackImpl track = new TrackImpl(file);
+					data.add(track);
 				} catch (Exception e) {
-					throw new MediaScannerException("Cannot create TrackImpl");
 				}
-				data.add(track);
 			}
 		}
 		return data;
