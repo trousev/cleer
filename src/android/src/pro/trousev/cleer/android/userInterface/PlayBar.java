@@ -56,7 +56,6 @@ public class PlayBar extends Fragment implements OnClickListener {
 					e.printStackTrace();
 				}
 			}
-			Log.d(Constants.LOG_TAG, "PlayBar.messageReceived()");
 		}
 	}
 
@@ -103,7 +102,6 @@ public class PlayBar extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();
-		Log.d(Constants.LOG_TAG, "status = " + status);
 		switch (id) {
 		case R.id.play_pause_btn:
 			switch (status) {

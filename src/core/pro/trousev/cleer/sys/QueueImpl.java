@@ -157,7 +157,6 @@ public class QueueImpl implements Queue {
 			e.printStackTrace();
 		}
 		player.play();
-	//	Log.d(Constants.LOG_TAG, "queuePosition " + current);
 		return true;
 	}
 

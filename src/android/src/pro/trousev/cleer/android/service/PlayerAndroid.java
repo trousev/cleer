@@ -59,7 +59,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 		currentTrack = null;
 		currentStatus = Status.Closed;
 		prepared = false;
-		Log.d(Constants.LOG_TAG, "Player stopped");
+		Log.d(Constants.LOG_TAG, "Player closed");
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 	public boolean onError(MediaPlayer mp, int what, int extra) {
 		close();
 		currentStatus = Status.Error;
-		Log.e(Constants.LOG_TAG, "Error from media plaer");
+		Log.e(Constants.LOG_TAG, "Error from media player");
 		return false;
 	}
 
