@@ -27,21 +27,23 @@ public class PlayBar extends Fragment implements OnClickListener {
 	private int status = NOT_PLAYING;
 	public static ProgressBar progressBar;
 	private PlayerChangedStatusEvent playerChangedStatusEvent;
-	
+
 	public PlayBar() {
 	}
-	private class PlayerChangedStatusEvent implements Event{
-	@Override
-	public void messageReceived(Message message) {
-		PlayerChangeEvent ev = (PlayerChangeEvent) message;
-		if (ev.status == Status.Playing) {
-			changeStatus(PLAYING);
-		} else {
-			changeStatus(NOT_PLAYING);
+
+	private class PlayerChangedStatusEvent implements Event {
+		@Override
+		public void messageReceived(Message message) {
+			PlayerChangeEvent ev = (PlayerChangeEvent) message;
+			if ((ev.status == Status.Playing)||(ev.status == Status.Processing)) {
+				changeStatus(PLAYING);
+			} else {
+				changeStatus(NOT_PLAYING);
+			}
+			Log.d(Constants.LOG_TAG, "PlayBar.messageReceived()");
 		}
-		Log.d(Constants.LOG_TAG, "PlayBar.messageREceived()");
 	}
-}
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.play_bar, null, false);
@@ -58,7 +60,8 @@ public class PlayBar extends Fragment implements OnClickListener {
 		prevCompBtn.setOnClickListener(this);
 		nextCompBtn.setOnClickListener(this);
 		playerChangedStatusEvent = new PlayerChangedStatusEvent();
-		Messaging.subscribe(Player.PlayerChangeEvent.class, playerChangedStatusEvent);
+		Messaging.subscribe(Player.PlayerChangeEvent.class,
+				playerChangedStatusEvent);
 
 		return view;
 	}
@@ -84,30 +87,32 @@ public class PlayBar extends Fragment implements OnClickListener {
 		switch (id) {
 		case R.id.play_pause_btn:
 			if (status == PLAYING) {
-				root.taskMessage.action=Action.Pause;
+				root.taskMessage.action = Action.Pause;
 				Messaging.fire(root.taskMessage);
 			} else if (status == NOT_PLAYING) {
-				root.taskMessage.action=Action.Play;
+				root.taskMessage.action = Action.Play;
 				Messaging.fire(root.taskMessage);
 			}
 			break;
 		case R.id.next_comp_btn:
-				root.taskMessage.action=Action.Next;
-				Messaging.fire(root.taskMessage);
+			root.taskMessage.action = Action.Next;
+			Messaging.fire(root.taskMessage);
 			break;
 		case R.id.prev_comp_btn:
-			root.taskMessage.action=Action.Previous;
+			root.taskMessage.action = Action.Previous;
 			Messaging.fire(root.taskMessage);
 			break;
 		default:
 			break;
 		}
 	}
+
 	@Override
-	public void onDestroy(){
-		progressBar=null; // Allows Service to know is Activity running or not
+	public void onDestroy() {
+		progressBar = null; // Allows Service to know is Activity running or not
 		Log.d(Constants.LOG_TAG, "PlayBar.onDestroy()");
-		Messaging.unSubscribe(Player.PlayerChangeEvent.class, playerChangedStatusEvent);
+		Messaging.unSubscribe(Player.PlayerChangeEvent.class,
+				playerChangedStatusEvent);
 		super.onDestroy();
 	}
 }

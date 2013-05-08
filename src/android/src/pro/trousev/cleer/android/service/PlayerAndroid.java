@@ -107,6 +107,9 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 			return;
 		mediaPlayer.pause();
 		currentStatus = Status.Paused;
+		changeEvent.status = currentStatus;
+		changeEvent.track = currentTrack;
+		Messaging.fire(changeEvent);
 		Log.d(Constants.LOG_TAG, "Player is paused");
 	}
 

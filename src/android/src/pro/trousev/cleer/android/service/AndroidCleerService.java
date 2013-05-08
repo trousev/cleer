@@ -87,7 +87,6 @@ public class AndroidCleerService extends Service {
 							break;
 						case Pause:
 							queue.pause();
-							stopForeground(false);
 							break;
 						case Next:
 							queue.next();
