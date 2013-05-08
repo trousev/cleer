@@ -186,7 +186,6 @@ public class QueueImpl implements Queue {
 
 	@Override
 	public boolean set(int index) {
-		current = 0;
 		return seek(index);
 	}
 }

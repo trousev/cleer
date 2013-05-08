@@ -90,6 +90,7 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 				&& (currentStatus != Status.Processing))
 			return;
 		mediaPlayer.stop();
+		mediaPlayer.reset();
 		prepared = false;
 		currentStatus = Status.Stopped;
 		changeEvent.error = null;

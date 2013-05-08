@@ -102,9 +102,7 @@ public class AndroidCleerService extends Service {
 							break;
 						case setToQueue:
 							queue.enqueue(mes.list, EnqueueMode.ReplaceAll);
-							queue.set(mes.position);
-							Log.d(Constants.LOG_TAG, "Message position "
-									+ mes.position);
+							queue.seek(mes.position);
 							break;
 						default:
 							break;
