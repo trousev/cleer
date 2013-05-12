@@ -62,7 +62,7 @@ public class MediaScanner {
 				File file = new File(filename);
 				try { // FIXME Make one exception for TrackImpl
 					TrackImpl track = new TrackImpl(file);
-					track.addTag("title", new String(track.tag("title").toString().getBytes("windows-1251"),"utf-8"));
+					track.setTagValue("title", new String(track.tag("title").toString().getBytes("windows-1251"),"utf-8"));
 					data.add(track);
 				} catch (Exception e) {
 				}
