@@ -17,12 +17,12 @@ import pro.trousev.cleer.Database.DatabaseError;
 public class DatabaseImpl implements Database {
 	SQLiteDatabase db;
 
+		//constructor
 	public DatabaseImpl(String path) {
 		DatabaseErrorHandler errorHandler = null;
-		String str = null;
 		SQLiteDatabase.CursorFactory factory = null;
-
-		this.db = SQLiteDatabase.openOrCreateDatabase(str, factory,
+		//open last or create new database with path
+		this.db = SQLiteDatabase.openOrCreateDatabase(path, factory,
 				errorHandler);
 
 	}
@@ -34,6 +34,7 @@ public class DatabaseImpl implements Database {
 		private String section = null;
 		private String search = null;
 
+		//constructor number 1
 		public DatabaseObject(String section, DatabaseImpl parent, String id,
 				String contents) {
 			this.parent = parent;
@@ -41,31 +42,27 @@ public class DatabaseImpl implements Database {
 			this.contents = contents;
 			this.section = section;
 		}
-
+		//constructor number 2
 		public DatabaseObject(DatabaseImpl parent, String id) {
 			this.parent = parent;
 			this.id = id;
 		}
 
-		/**
-		 * Идентификатор
-		 **/
+		//return identificator
 		public String id() {
 			return this.id;
 		}
 
-		/**
-		 * Содержимое объекта
-		 **/
+		//return content of object
 		public String contents() {
 
 			if (this.contents == null) {
 				try {
-					// переменные для query
+					// values for query
 					String[] columns = { "value" };
 					String selection = "id = " + this.id;
-					// курсор
-					Cursor c = db.query("sections", columns, selection, null,
+					// cursor
+					Cursor c = db.query(this.section, columns, selection, null,
 							null, null, null);
 					this.contents = c.getColumnName(0);
 				} catch (SQLException e) {
@@ -77,9 +74,7 @@ public class DatabaseImpl implements Database {
 
 		}
 
-		/**
-		 * Поисковой контекст.
-		 **/
+		//return search context
 		public String search() {
 			return this.search;
 
@@ -94,6 +89,7 @@ public class DatabaseImpl implements Database {
 		 * 
 		 * @throws DatabaseError
 		 **/
+		//update object, change content and search
 		public boolean update(String contents, String search)
 				throws DatabaseError {
 			ContentValues cv = new ContentValues();
@@ -104,7 +100,7 @@ public class DatabaseImpl implements Database {
 				return true;
 			}
 			try {
-				int updCount = db.update("sections", cv, "id = " + this.id,
+				int updCount = db.update(this.section, cv, "id = " + this.id,
 						new String[] { id });
 			} catch (SQLException e) {
 				throw new DatabaseError(e);
@@ -114,9 +110,7 @@ public class DatabaseImpl implements Database {
 
 		}
 
-		/**
-		 * Обновляет только содержимое
-		 **/
+		//update contents
 		public boolean update_contents(String contents) throws DatabaseError {
 			ContentValues cv = new ContentValues();
 			cv.put("value", contents);
@@ -125,7 +119,7 @@ public class DatabaseImpl implements Database {
 				return true;
 			}
 			try {
-				int updCount = db.update("sections", cv, "id = " + this.id,
+				int updCount = db.update(this.section, cv, "id = " + this.id,
 						new String[] { id });
 			} catch (SQLException e) {
 				throw new DatabaseError(e);
@@ -135,9 +129,7 @@ public class DatabaseImpl implements Database {
 
 		}
 
-		/**
-		 * Обновляет только поисковой контекст.
-		 **/
+		//update search
 		public boolean update_search(String search) throws DatabaseError {
 			ContentValues cv = new ContentValues();
 			cv.put("search", search);
@@ -146,7 +138,7 @@ public class DatabaseImpl implements Database {
 				return true;
 			}
 			try {
-				int updCount = db.update("sections", cv, "id = " + this.id,
+				int updCount = db.update(this.section, cv, "id = " + this.id,
 						new String[] { id });
 			} catch (SQLException e) {
 				throw new DatabaseError(e);
@@ -157,6 +149,7 @@ public class DatabaseImpl implements Database {
 		}
 	}
 
+	//create section
 	@Override
 	public boolean declare_section(String section) throws DatabaseError {
 		try {
@@ -169,6 +162,7 @@ public class DatabaseImpl implements Database {
 		return true;
 	}
 
+	//delete section
 	@Override
 	public boolean clear_section(String section) throws DatabaseError {
 		try {
@@ -179,9 +173,13 @@ public class DatabaseImpl implements Database {
 		return true;
 	}
 
+	//insert object into section
 	@Override
 	public pro.trousev.cleer.Database.DatabaseObject store(String section,
 			String contents, String keywords) throws DatabaseError {
+		keywords = keywords.toLowerCase();
+		keywords = keywords.replace("'","''");
+		contents = contents.replace("'","''");
 		try {
 			db.execSQL("insert into" + section + "(value, keywords) values ("
 					+ contents + ", " + keywords + ");");
@@ -191,18 +189,58 @@ public class DatabaseImpl implements Database {
 		return null;
 	}
 
-	public String languageMatch(String query) {
-		return null;
+	private String languageMatch(String query) {
+		return String.format("search LIKE '%%%s%%'", query);
 	}
 
-	public String languageLike(String query) {
-		return null;
+	private String languageLike(String query) {
+		String[] keywords = query.split(" ");
+		String where = null;
+		for(String word : keywords)
+		{
+			word = word.replace("'", "''");
+			word = word.toLowerCase();
+			String clause = String.format("search LIKE '%%%s%%'",word);
+			if(where == null)
+				where = clause;
+			else where += " AND "+clause;
+		}
+		return where;
 	}
 
-	public String languagePyplay(String query) {
-		return null;
+	private String languagePyplay(String query) {
+		query = query.replaceAll("\\@", "artist:");
+		query = query.replaceAll("\\$", "album:");
+		query = query.replaceAll("\\!", "title:");
+		query = query.replaceAll("\\^", "genre:");
+		query = query.replaceAll("N\\/R", "rating:0");
+		query = query.replaceAll("\\{0\\}", "rating:0");
+		query = query.replaceAll("\\{1\\}", "rating:1");
+		query = query.replaceAll("\\{2\\}", "rating:2");
+		query = query.replaceAll("\\{3\\}", "rating:3");
+		query = query.replaceAll("\\{4\\}", "rating:4");
+		query = query.replaceAll("\\{5\\}", "rating:5");
+		String where = "";
+		for(String orList: query.split(" "))
+		{
+			orList = orList.trim();
+			if(orList.isEmpty()) continue;
+			String orClause = "";
+			for(String item: orList.split(","))
+			{
+				if(!orClause.isEmpty())
+					orClause += " OR ";
+				orClause += String.format("search LIKE '%%%s%%'",item);
+			}
+			if(orClause.isEmpty()) continue;
+			if(!where.isEmpty())
+				where += " AND ";
+			where += String.format(" ( %s ) ", orClause);
+		}
+		return where;
 	}
 
+	//search element with particular query, defaultLanguage = SearchSqlLike
 	@Override
 	public List<pro.trousev.cleer.Database.DatabaseObject> search(
 			String section, String query) throws DatabaseError {
@@ -210,6 +248,7 @@ public class DatabaseImpl implements Database {
 		return search(section, query, SearchLanguage.SearchSqlLike);
 	}
 
+	//search element with particular query, language = variety
 	@Override
 	public List<pro.trousev.cleer.Database.DatabaseObject> search(
 			String section, String query, SearchLanguage language)
@@ -233,17 +272,11 @@ public class DatabaseImpl implements Database {
 			String section, String where) throws DatabaseError {
 
 		List<pro.trousev.cleer.Database.DatabaseObject> answer = new ArrayList<Database.DatabaseObject>();
-		String selection;
 		Cursor c;
 
 		String[] columns = { "id", "value" };
 
-		if (where == null)
-			selection = null;
-		else
-			selection = where;
-
-		c = db.query("sections", columns, selection, null, null, null, null);
+		c = db.query(section, columns, where, null, null, null, null);
 		while (c.moveToNext()) {
 			answer.add(new DatabaseObject(section, this, c.getColumnName(0), c
 					.getColumnName(1)));
@@ -251,11 +284,10 @@ public class DatabaseImpl implements Database {
 		c.close();
 		return answer;
 	}
-
+	
+	//remove object from database (i.e. from particular section)
 	@Override
-	public boolean remove(String section,
-			pro.trousev.cleer.Database.DatabaseObject object)
-			throws DatabaseError {
+	public boolean remove(String section, pro.trousev.cleer.Database.DatabaseObject object) throws DatabaseError {
 		try {
 			db.execSQL("delete from " + section + "where id = " + object.id() + ";");
 		} catch (SQLException e) {
@@ -264,28 +296,44 @@ public class DatabaseImpl implements Database {
 		return true;
 	}
 
+	//close database
 	@Override
 	public void close() throws DatabaseError {
 		db.close();
 
 	}
 
+	//begin transaction
 	@Override
 	public boolean begin() throws DatabaseError {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			db.beginTransaction();
+		} catch (SQLException e) {
+			throw new DatabaseError(e);
+		}
+		return true;
 	}
 
+	//commit transaction
 	@Override
 	public boolean commit() throws DatabaseError {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			db.setTransactionSuccessful();
+		} catch (SQLException e) {
+			throw new DatabaseError(e);
+		}
+		return true;
 	}
 
+	//rollback transaction
 	@Override
 	public boolean rollback() throws DatabaseError {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			db.endTransaction();
+		} catch (SQLException e) {
+			throw new DatabaseError(e);
+		}
+		return true;
 	}
 
 }
