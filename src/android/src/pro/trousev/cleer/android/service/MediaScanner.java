@@ -1,8 +1,10 @@
 package pro.trousev.cleer.android.service;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.sys.TrackImpl;
 import android.content.Context;
 import android.database.Cursor;
@@ -24,6 +26,19 @@ public class MediaScanner {
 		}
 
 	}
+	
+	/*public TrackImpl TagChanger(TrackImpl track){
+		try {
+			String a=new String(track.tag("title").toString().getBytes("windows-1251"),"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchTagException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return track;
+	};*/
 
 	public ArrayList<Item> scanner() throws MediaScannerException {
 		String[] proj = { MediaStore.Audio.Media.DATA };
@@ -47,6 +62,7 @@ public class MediaScanner {
 				File file = new File(filename);
 				try { // FIXME Make one exception for TrackImpl
 					TrackImpl track = new TrackImpl(file);
+					track.addTag("title", new String(track.tag("title").toString().getBytes("windows-1251"),"utf-8"));
 					data.add(track);
 				} catch (Exception e) {
 				}
