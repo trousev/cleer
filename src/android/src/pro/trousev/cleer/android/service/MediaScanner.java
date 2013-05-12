@@ -5,13 +5,16 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
+import pro.trousev.cleer.Item.Tag;
+import pro.trousev.cleer.Item.Tag.ReadOnlyTagException;
+import pro.trousev.cleer.sys.AudioFileHeader;
 import pro.trousev.cleer.sys.TrackImpl;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-public class MediaScanner {
+public class MediaScanner extends pro.trousev.cleer.sys.TrackImpl{
 	private Context context;
 
 	public MediaScanner(Context cont) {
@@ -39,7 +42,23 @@ public class MediaScanner {
 		}
 		return track;
 	};*/
-
+	
+	public void setTagValue(String name, String value) throws ReadOnlyTagException, NoSuchTagException
+	{
+		Tag tag = tag(name);
+		tag.setValue(value);
+		/*AudioFileHeader head = new AudioFileHeader();
+		try {
+			head.readFromFile(_filename);
+			head.begin();
+			head.setRating(value);
+			head.commit();
+			updateTagInDatabase();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} */
+	}
 	public ArrayList<Item> scanner() throws MediaScannerException {
 		String[] proj = { MediaStore.Audio.Media.DATA };
 		Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
