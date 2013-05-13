@@ -1,8 +1,5 @@
 package pro.trousev.cleer.android.userInterface;
 
-import java.util.List;
-
-import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;

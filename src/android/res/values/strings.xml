@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">MainActivity</string>
     <string name="serv_name">Service</string>
     <string name="play">Play</string>
+    <string name="refresh">Update lybrary</string>
+	<string name="exit">Exit</string>
     <string name="addToQueue">Add to queue</string>
     <string name="addToList">Add to playlist</string>
+
 </resources>

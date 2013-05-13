@@ -46,15 +46,6 @@ public class AndroidCleerService extends Service {
 						ServiceRequestMessage mes = (ServiceRequestMessage) message;
 						switch (mes.type) {
 						case Compositions:
-							MediaScanner mediaScanner = new MediaScanner(
-									getApplication());
-							try {
-								respondMessage.list = mediaScanner.scanner();
-							} catch (MediaScannerException e) {
-								Log.e(Constants.LOG_TAG,
-										"Can't scan for mediafiles");
-								e.printStackTrace();
-							}
 							break;
 						case Queue:
 							break;
@@ -106,6 +97,19 @@ public class AndroidCleerService extends Service {
 							// FIXME write one method which would work correctly
 							SystemClock.sleep(150);
 							queue.seek(mes.position);
+							break;
+						case scanSystem:
+							MediaScanner mediaScanner = new MediaScanner(
+									getApplication());
+							try {
+								//TODO set this to database
+								mediaScanner.scanner();
+							} catch (MediaScannerException e) {
+								Log.e(Constants.LOG_TAG,
+										"Can't scan for mediafiles");
+								e.printStackTrace();
+							}
+							
 							break;
 						default:
 							break;

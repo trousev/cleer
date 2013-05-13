@@ -6,6 +6,7 @@ import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
+import pro.trousev.cleer.android.AndroidMessages;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
@@ -22,6 +23,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -168,7 +171,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 		}
 	}
+	
 
+	public boolean onCreateOptionsMenu(Menu menu){
+		this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	public boolean onOptionsItemSelected(MenuItem item){
+		switch(item.getItemId()){
+		case R.id.exit_option_btn:
+			if (bound)
+				unbindService(serviceConnection);
+			stopService(new Intent(this, AndroidCleerService.class));
+			bound = false;
+			this.finish();
+			break;
+		case R.id.scanSystem:
+			taskMessage.action = AndroidMessages.Action.scanSystem;
+			Messaging.fire(taskMessage);
+		}
+		return super.onOptionsItemSelected(item);
+	}
 	@Override
 	public void onDestroy() {
 		if (bound)
