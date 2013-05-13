@@ -3,7 +3,6 @@ package pro.trousev.cleer.android.service;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,24 +11,23 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.database.DatabaseErrorHandler;
-
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 
 public class DatabaseImpl implements Database {
 	public SQLiteDatabase db;
 
-		//constructor
+	// constructor
 	public DatabaseImpl(String path, Context context) {
 		DBHelper dbHelper = new DBHelper(path, context);
-		//open last or create new database with path
+		// open last or create new database with path
 		this.db = dbHelper.getWritableDatabase();
 
 	}
 
-public class DBHelper extends SQLiteOpenHelper {
+	public class DBHelper extends SQLiteOpenHelper {
 		public String section = "default";
-		
+
 		public DBHelper(String path, Context context) {
 			// конструктор суперкласса
 			super(context, path, null, 1);
@@ -37,11 +35,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			
-				db.execSQL("create table " + "section_default " + "("
+			db.execSQL("create table " + "section_default " + "("
 					+ "id integer primary key autoincrement," + "value text,"
 					+ "search text" + " keywords text" + ");");
-			
+
 		}
 
 		@Override
@@ -49,7 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		}
 	}
-	
+
 	public class DatabaseObject implements Database.DatabaseObject {
 		private String id = null;
 		private String contents = null;
@@ -57,7 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		private String section = null;
 		private String search = null;
 
-		//constructor number 1
+		// constructor number 1
 		public DatabaseObject(String section, DatabaseImpl parent, String id,
 				String contents) {
 			this.parent = parent;
@@ -65,18 +62,19 @@ public class DBHelper extends SQLiteOpenHelper {
 			this.contents = contents;
 			this.section = section;
 		}
-		//constructor number 2
+
+		// constructor number 2
 		public DatabaseObject(DatabaseImpl parent, String id) {
 			this.parent = parent;
 			this.id = id;
 		}
 
-		//return identificator
+		// return identificator
 		public String id() {
 			return this.id;
 		}
 
-		//return content of object
+		// return content of object
 		public String contents() {
 
 			if (this.contents == null) {
@@ -97,7 +95,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		}
 
-		//return search context
+		// return search context
 		public String search() {
 			return this.search;
 
@@ -112,7 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		 * 
 		 * @throws DatabaseError
 		 **/
-		//update object, change content and search
+		// update object, change content and search
 		public boolean update(String contents, String search)
 				throws DatabaseError {
 			ContentValues cv = new ContentValues();
@@ -133,7 +131,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		}
 
-		//update contents
+		// update contents
 		public boolean update_contents(String contents) throws DatabaseError {
 			ContentValues cv = new ContentValues();
 			cv.put("value", contents);
@@ -152,7 +150,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		}
 
-		//update search
+		// update search
 		public boolean update_search(String search) throws DatabaseError {
 			ContentValues cv = new ContentValues();
 			cv.put("search", search);
@@ -172,7 +170,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	//create section
+	// create section
 	@Override
 	public boolean declare_section(String section) throws DatabaseError {
 		try {
@@ -185,7 +183,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return true;
 	}
 
-	//delete section
+	// delete section
 	@Override
 	public boolean clear_section(String section) throws DatabaseError {
 		try {
@@ -196,13 +194,13 @@ public class DBHelper extends SQLiteOpenHelper {
 		return true;
 	}
 
-	//insert object into section
+	// insert object into section
 	@Override
 	public pro.trousev.cleer.Database.DatabaseObject store(String section,
 			String contents, String keywords) throws DatabaseError {
 		keywords = keywords.toLowerCase();
-		keywords = keywords.replace("'","''");
-		contents = contents.replace("'","''");
+		keywords = keywords.replace("'", "''");
+		contents = contents.replace("'", "''");
 		try {
 			db.execSQL("insert into" + section + "(value, keywords) values ("
 					+ contents + ", " + keywords + ");");
@@ -219,14 +217,14 @@ public class DBHelper extends SQLiteOpenHelper {
 	private String languageLike(String query) {
 		String[] keywords = query.split(" ");
 		String where = null;
-		for(String word : keywords)
-		{
+		for (String word : keywords) {
 			word = word.replace("'", "''");
 			word = word.toLowerCase();
-			String clause = String.format("search LIKE '%%%s%%'",word);
-			if(where == null)
+			String clause = String.format("search LIKE '%%%s%%'", word);
+			if (where == null)
 				where = clause;
-			else where += " AND "+clause;
+			else
+				where += " AND " + clause;
 		}
 		return where;
 	}
@@ -244,26 +242,26 @@ public class DBHelper extends SQLiteOpenHelper {
 		query = query.replaceAll("\\{4\\}", "rating:4");
 		query = query.replaceAll("\\{5\\}", "rating:5");
 		String where = "";
-		for(String orList: query.split(" "))
-		{
+		for (String orList : query.split(" ")) {
 			orList = orList.trim();
-			if(orList.isEmpty()) continue;
+			if (orList.isEmpty())
+				continue;
 			String orClause = "";
-			for(String item: orList.split(","))
-			{
-				if(!orClause.isEmpty())
+			for (String item : orList.split(",")) {
+				if (!orClause.isEmpty())
 					orClause += " OR ";
-				orClause += String.format("search LIKE '%%%s%%'",item);
+				orClause += String.format("search LIKE '%%%s%%'", item);
 			}
-			if(orClause.isEmpty()) continue;
-			if(!where.isEmpty())
+			if (orClause.isEmpty())
+				continue;
+			if (!where.isEmpty())
 				where += " AND ";
 			where += String.format(" ( %s ) ", orClause);
 		}
 		return where;
 	}
 
-	//search element with particular query, defaultLanguage = SearchSqlLike
+	// search element with particular query, defaultLanguage = SearchSqlLike
 	@Override
 	public List<pro.trousev.cleer.Database.DatabaseObject> search(
 			String section, String query) throws DatabaseError {
@@ -271,7 +269,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return search(section, query, SearchLanguage.SearchSqlLike);
 	}
 
-	//search element with particular query, language = variety
+	// search element with particular query, language = variety
 	@Override
 	public List<pro.trousev.cleer.Database.DatabaseObject> search(
 			String section, String query, SearchLanguage language)
@@ -307,26 +305,29 @@ public class DBHelper extends SQLiteOpenHelper {
 		c.close();
 		return answer;
 	}
-	
-	//remove object from database (i.e. from particular section)
+
+	// remove object from database (i.e. from particular section)
 	@Override
-	public boolean remove(String section, pro.trousev.cleer.Database.DatabaseObject object) throws DatabaseError {
+	public boolean remove(String section,
+			pro.trousev.cleer.Database.DatabaseObject object)
+			throws DatabaseError {
 		try {
-			db.execSQL("delete from " + section + "where id = " + object.id() + ";");
+			db.execSQL("delete from " + section + "where id = " + object.id()
+					+ ";");
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
 		}
 		return true;
 	}
 
-	//close database
+	// close database
 	@Override
 	public void close() throws DatabaseError {
 		db.close();
 
 	}
 
-	//begin transaction
+	// begin transaction
 	@Override
 	public boolean begin() throws DatabaseError {
 		try {
@@ -337,7 +338,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return true;
 	}
 
-	//commit transaction
+	// commit transaction
 	@Override
 	public boolean commit() throws DatabaseError {
 		try {
@@ -348,7 +349,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return true;
 	}
 
-	//rollback transaction
+	// rollback transaction
 	@Override
 	public boolean rollback() throws DatabaseError {
 		try {
