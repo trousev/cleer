@@ -17,12 +17,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class PlayBar extends Fragment implements OnClickListener {
-	private Button playPauseBtn, prevCompBtn, nextCompBtn, queueBtn,
-			mainMenuBtn;
+	private Button queueBtn, mainMenuBtn;
+	private ImageView playPauseBtn, prevCompBtn, nextCompBtn;
 	private TextView compName;
 	private MainActivity root;
 	final int PLAYING = 1;
@@ -64,9 +65,9 @@ public class PlayBar extends Fragment implements OnClickListener {
 		View view = inflater.inflate(R.layout.play_bar, null, false);
 		root = (MainActivity) getActivity();
 		compName = (TextView) view.findViewById(R.id.playing_compotision_name);
- 		playPauseBtn = (Button) view.findViewById(R.id.play_pause_btn);
-		prevCompBtn = (Button) view.findViewById(R.id.prev_comp_btn);
-		nextCompBtn = (Button) view.findViewById(R.id.next_comp_btn);
+		playPauseBtn = (ImageView) view.findViewById(R.id.play_pause_btn);
+		prevCompBtn = (ImageView) view.findViewById(R.id.prev_comp_btn);
+		nextCompBtn = (ImageView) view.findViewById(R.id.next_comp_btn);
 		queueBtn = (Button) view.findViewById(R.id.queue_btn);
 		mainMenuBtn = (Button) view.findViewById(R.id.main_menu_btn);
 		progressBar = (ProgressBar) view.findViewById(R.id.player_progress_bar);
@@ -75,6 +76,9 @@ public class PlayBar extends Fragment implements OnClickListener {
 		playPauseBtn.setOnClickListener(this);
 		prevCompBtn.setOnClickListener(this);
 		nextCompBtn.setOnClickListener(this);
+		playPauseBtn.setBackgroundResource(R.drawable.play_btn);
+		prevCompBtn.setBackgroundResource(R.drawable.prev);
+		nextCompBtn.setBackgroundResource(R.drawable.next);
 		playerChangedStatusEvent = new PlayerChangedStatusEvent();
 		Messaging.subscribe(Player.PlayerChangeEvent.class,
 				playerChangedStatusEvent);
@@ -84,19 +88,17 @@ public class PlayBar extends Fragment implements OnClickListener {
 
 	public void changeStatus(int newStatus) {
 		status = newStatus;
-		String string = null;
 		switch (status) {
 		case PLAYING:
-			string = "pause";
+			playPauseBtn.setBackgroundResource(R.drawable.pause);
 			break;
 		case PAUSED:
-			string = "play";
+			playPauseBtn.setBackgroundResource(R.drawable.play_btn);
 			break;
 		case STOPPED:
-			string = "play";
+			playPauseBtn.setBackgroundResource(R.drawable.play_btn);
 			break;
 		}
-		playPauseBtn.setText(string);
 	}
 
 	@Override
