@@ -1,5 +1,8 @@
 package pro.trousev.cleer.android.service;
 
+import java.util.List;
+
+import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Queue;
@@ -24,6 +27,8 @@ public class AndroidCleerService extends Service {
 
 	private Queue queue = null;
 
+	//FIXME delete that kostil
+	List<Item> itemList;
 	// private Database database = null;
 
 	// Binder allow us get Service.this from the Activity
@@ -46,8 +51,10 @@ public class AndroidCleerService extends Service {
 						ServiceRequestMessage mes = (ServiceRequestMessage) message;
 						switch (mes.type) {
 						case Compositions:
+							respondMessage.list = itemList;
 							break;
 						case Queue:
+							respondMessage.list = queue.queue();
 							break;
 						case Albums:
 							break;
@@ -103,7 +110,7 @@ public class AndroidCleerService extends Service {
 									getApplication());
 							try {
 								//TODO set this to database
-								mediaScanner.scanner();
+								itemList = mediaScanner.scanner();
 							} catch (MediaScannerException e) {
 								Log.e(Constants.LOG_TAG,
 										"Can't scan for mediafiles");

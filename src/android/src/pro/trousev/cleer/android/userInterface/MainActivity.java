@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
 	private FragmentTransaction fTrans;
@@ -187,6 +188,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			this.finish();
 			break;
 		case R.id.scanSystem:
+			Toast.makeText(this, "Library is scanning...", Toast.LENGTH_LONG).show();
 			taskMessage.action = AndroidMessages.Action.scanSystem;
 			Messaging.fire(taskMessage);
 		}
