@@ -38,9 +38,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			
-			/*	db.execSQL("create table " + "default " + "("
+				db.execSQL("create table " + "section_default " + "("
 					+ "id integer primary key autoincrement," + "value text,"
-					+ "search text" + " keywords text" + ");");*/
+					+ "search text" + " keywords text" + ");");
 			
 		}
 
