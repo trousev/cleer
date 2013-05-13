@@ -86,6 +86,7 @@ public class AndroidCleerService extends Service {
 
 					@Override
 					public void messageReceived(Message message) {
+						Log.d(Constants.LOG_TAG, getApplicationContext().getPackageName());
 						// TODO end implementation of that event
 						ServiceTaskMessage mes = (ServiceTaskMessage) message;
 						switch (mes.action) {
