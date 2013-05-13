@@ -31,11 +31,17 @@ public class MediaScanner {
 		ArrayList<Item> data = new ArrayList<Item>();
 		Cursor cursor = context.getContentResolver().query(uri, proj, null,
 				null, null);
-		if (cursor.getCount() > 0) {
+		/*if (cursor.getCount() > 0) {
 			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+					.moveToNext()) {*/
+		if (cursor==null){
+			//query fail
+		}else if(!cursor.moveToFirst()){
+			//no audio on device
+		}else{
 				int columnIndex = cursor
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+				do{
 				Uri filePathUri = Uri.parse(cursor.getString(columnIndex));
 				String filename = filePathUri.getPath().toString();
 				File file = new File(filename);
@@ -44,7 +50,7 @@ public class MediaScanner {
 					data.add(track);
 				} catch (Exception e) {
 				}
-			}
+				}while(cursor.moveToNext());
 		}
 		return data;
 
