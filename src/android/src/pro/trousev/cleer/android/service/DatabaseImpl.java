@@ -3,7 +3,9 @@ package pro.trousev.cleer.android.service;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,18 +17,39 @@ import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 
 public class DatabaseImpl implements Database {
-	SQLiteDatabase db;
+	public SQLiteDatabase db;
 
 		//constructor
-	public DatabaseImpl(String path) {
-		DatabaseErrorHandler errorHandler = null;
-		SQLiteDatabase.CursorFactory factory = null;
+	public DatabaseImpl(String path, Context context) {
+		DBHelper dbHelper = new DBHelper(path, context);
 		//open last or create new database with path
-		this.db = SQLiteDatabase.openOrCreateDatabase(path, factory,
-				errorHandler);
+		this.db = dbHelper.getWritableDatabase();
 
 	}
 
+public class DBHelper extends SQLiteOpenHelper {
+		public String section = "default";
+		
+		public DBHelper(String path, Context context) {
+			// конструктор суперкласса
+			super(context, path, null, 1);
+		}
+
+		@Override
+		public void onCreate(SQLiteDatabase db) {
+			
+			/*	db.execSQL("create table " + "default " + "("
+					+ "id integer primary key autoincrement," + "value text,"
+					+ "search text" + " keywords text" + ");");*/
+			
+		}
+
+		@Override
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+		}
+	}
+	
 	public class DatabaseObject implements Database.DatabaseObject {
 		private String id = null;
 		private String contents = null;
