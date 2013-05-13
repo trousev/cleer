@@ -54,6 +54,7 @@ public class AndroidCleerService extends Service {
 							respondMessage.list = itemList;
 							break;
 						case Queue:
+							//FIXME it doesn't work
 							respondMessage.list = queue.queue();
 							break;
 						case Albums:
