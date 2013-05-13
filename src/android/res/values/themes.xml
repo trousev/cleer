@@ -1,0 +1,8 @@
+<resources>
+    <style name="BaseTheme" parent="@android:style/Theme">
+       <!-- Костыли и фичи для версий ниже 3.0 писать здесь -->
+    </style>
+    <style name="CleerTheme" parent="BaseTheme">
+        <!-- Общие костыли и фичи для всех версий -->
+    </style>
+</resources>
