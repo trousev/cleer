@@ -1,5 +1,6 @@
 package pro.trousev.cleer.android.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
@@ -49,13 +50,14 @@ public class AndroidCleerService extends Service {
 					public void messageReceived(Message message) {
 						// TODO end implementation of that event
 						ServiceRequestMessage mes = (ServiceRequestMessage) message;
+						respondMessage.list = new ArrayList<Item>();
 						switch (mes.type) {
 						case Compositions:
-							respondMessage.list = itemList;
+							respondMessage.list.addAll(itemList);
 							break;
 						case Queue:
 							//FIXME it doesn't work
-							respondMessage.list = queue.queue();
+							respondMessage.list.addAll(queue.queue());
 							break;
 						case Albums:
 							break;
