@@ -12,7 +12,21 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
 public class ListOfCompAdapter extends ArrayAdapter<Item> {
+	
+
+	private final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+
+	String decodeUTF8(byte[] bytes) {
+	    return new String(bytes, UTF8_CHARSET);
+	}
+	byte[] encodeUTF8(String string) {
+	    return string.getBytes(UTF8_CHARSET);
+	}
+
 
 	public ListOfCompAdapter(Context context, List<Item> items) {
 		super(context, R.layout.list_of_comp_element, items);
@@ -34,9 +48,12 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 		// TODO set text from TrackImpl
 		try {
 			artistName.setText("artist name"
-					+ getItem(position).tag("artist").value());
+					+ new String(getItem(position).tag("artist").value().getBytes("cp1251"),UTF8_CHARSET));
 			compName.setText(getItem(position).tag("title").value());
 		} catch (NoSuchTagException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
