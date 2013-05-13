@@ -6,6 +6,9 @@ import java.util.List;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Message;
+import pro.trousev.cleer.Player;
+import pro.trousev.cleer.Player.PlayerChangeEvent;
+import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Queue.EnqueueMode;
 import pro.trousev.cleer.android.AndroidMessages;
@@ -27,7 +30,7 @@ public class AndroidCleerService extends Service {
 	private static ServiceRespondMessage respondMessage = new ServiceRespondMessage();
 
 	private Queue queue = null;
-
+	private Player player;
 	//FIXME delete that kostil
 	List<Item> itemList;
 	// private Database database = null;
@@ -41,7 +44,8 @@ public class AndroidCleerService extends Service {
 
 	public void onCreate() {
 		super.onCreate();
-		queue = new QueueImpl(new PlayerAndroid());
+		player = new PlayerAndroid();
+		queue = new QueueImpl(player);
 		// database = new DatabaseImpl(Constants.DATABASE_PATH);
 		Messaging.subscribe(AndroidMessages.ServiceRequestMessage.class,
 				new Messaging.Event() {
@@ -134,6 +138,13 @@ public class AndroidCleerService extends Service {
 	// This method is called every time UI starts
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(Constants.LOG_TAG, "Service.onStartCommand()");
+		Status status = player.getStatus();
+		if((status == Status.Playing)||(status==Status.Processing)||(status==Status.Paused)){
+			PlayerChangeEvent message = new PlayerChangeEvent();
+			message.status = status;
+			message.track = player.now_playing();
+			Messaging.fire(message);
+		}
 		return super.onStartCommand(intent, flags, startId);
 	}
 
