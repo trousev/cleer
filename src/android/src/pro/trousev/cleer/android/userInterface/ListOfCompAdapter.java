@@ -4,6 +4,7 @@ import java.util.List;
 
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
+import pro.trousev.cleer.android.service.RusTag;
 
 import android.app.Activity;
 import android.content.Context;
@@ -33,9 +34,9 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 		TextView compName = (TextView) view.findViewById(R.id.comp_name);
 		// TODO set text from TrackImpl
 		try {
-			artistName.setText("artist name"
-					+ getItem(position).tag("artist").value());
-			compName.setText(getItem(position).tag("title").value());
+			RusTag rusTag = new RusTag();
+			artistName.setText(rusTag.change(getItem(position).tag("artist").value()));
+			compName.setText(rusTag.change(getItem(position).tag("title").value()));
 		} catch (NoSuchTagException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

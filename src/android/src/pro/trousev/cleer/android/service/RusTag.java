@@ -6,6 +6,8 @@ import java.nio.charset.Charset;
 
 public class RusTag {
 	public String change(String s){
+		if (s == null)
+			return null;
 		Charset C= Charset.forName("windows-1251");
 		ByteBuffer buffer=null;
 		try{

@@ -8,6 +8,7 @@ import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.android.AndroidMessages.Action;
+import pro.trousev.cleer.android.service.RusTag;
 import pro.trousev.cleer.android.Constants;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,7 +52,8 @@ public class PlayBar extends Fragment implements OnClickListener {
 			}
 			if (ev.track != null) {
 				try {
-					compName.setText(ev.track.tag("title").value());
+					RusTag rusTag = new RusTag();
+					compName.setText(rusTag.change(ev.track.tag("title").value()));
 				} catch (NoSuchTagException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
