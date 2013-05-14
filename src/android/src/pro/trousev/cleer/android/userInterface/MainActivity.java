@@ -161,18 +161,18 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			setMainMenu();
 			clearBackStack();
 			break;
-		case R.id.exit_btn:
-			if (bound)
-				unbindService(serviceConnection);
-			stopService(new Intent(this, AndroidCleerService.class));
-			bound = false;
-			this.finish();
-			break;
 		default:
 			break;
 		}
 	}
 	
+	public void exit(){
+		if (bound)
+			unbindService(serviceConnection);
+		stopService(new Intent(this, AndroidCleerService.class));
+		bound = false;
+		this.finish();
+	}
 
 	public boolean onCreateOptionsMenu(Menu menu){
 		this.getMenuInflater().inflate(R.menu.main_option_menu, menu);

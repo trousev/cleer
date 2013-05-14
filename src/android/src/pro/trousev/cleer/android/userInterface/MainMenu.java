@@ -1,64 +1,70 @@
 package pro.trousev.cleer.android.userInterface;
 
 import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.android.AndroidMessages.Action;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
+import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ListView;
 
 
-public class MainMenu extends Fragment implements OnClickListener {
-	MainActivity root;
+public class MainMenu extends ListFragment {
+	MainActivity root = null;
+	private String[] menuPoints;
 	public MainMenu(){
 	}
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.main_menu, null, false);
-		root=(MainActivity) getActivity();
-		Button listsBtn = (Button) view.findViewById(R.id.lists_btn);
-		Button compositionsBtn = (Button) view.findViewById(R.id.compositions_btn);
-		Button artistsBtn = (Button) view.findViewById(R.id.artists_btn);
-		Button queueBtn = (Button) view.findViewById(R.id.queue_btn);
-		Button genresBtn = (Button) view.findViewById(R.id.genres_btn);
-		Button albumsBtn = (Button) view.findViewById(R.id.albums_btn);
-		listsBtn.setOnClickListener(this);
-		compositionsBtn.setOnClickListener(this);
-		artistsBtn.setOnClickListener(this);
-		queueBtn.setOnClickListener(root);
-		genresBtn.setOnClickListener(this);
-		albumsBtn.setOnClickListener(this);
-		return view;
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		root = (MainActivity) getActivity();
+		String[] strings = {root.getResources().getString(R.string.compositions), root.getResources().getString(R.string.lists),
+				root.getResources().getString(R.string.queue), root.getResources().getString(R.string.artists), 
+				root.getResources().getString(R.string.genres), root.getResources().getString(R.string.albums), 
+				root.getResources().getString(R.string.refresh), root.getResources().getString(R.string.exit)};
+		menuPoints = strings;
+		MainMenuAdapter adapter = new MainMenuAdapter(root, menuPoints );
+		setListAdapter(adapter);
 	}
 	
-	@Override
-	public void onClick(View view) {
-		int id = view.getId();
+	public void onListItemClick(ListView listView, View view, int position,
+			long id) {
+		int viewId = view.getId();
 		ServiceRequestMessage message = root.requestMessage;
-		switch (id) {
-		case R.id.compositions_btn:
+		switch (viewId) {
+		case 0:
 			message.type=TypeOfResult.Compositions;
 			message.searchQuery = null;
 			Messaging.fire(message);
 			break;
-		case R.id.lists_btn:
+		case 1:
+			message.type=TypeOfResult.Queue;
+			Messaging.fire(message);
+		case 2:
 			message.type=TypeOfResult.Playlists;
 			Messaging.fire(message);
 			break;
-		case R.id.genres_btn:
+		case 4:
 			message.type=TypeOfResult.Genres;
 			Messaging.fire(message);
 			break;
-		case R.id.artists_btn:
+		case 3:
 			message.type=TypeOfResult.Artists;
 			Messaging.fire(message);
 			break;
-		case R.id.albums_btn:
+		case 5:
 			message.type=TypeOfResult.Albums;
 			Messaging.fire(message);
+			break;
+		case 6:
+			ServiceTaskMessage mes = new ServiceTaskMessage();
+			mes.action = Action.scanSystem;
+			Messaging.fire(mes);
+			break;
+		case 7:
+			root.exit();
 			break;
 		default:
 			break;	
