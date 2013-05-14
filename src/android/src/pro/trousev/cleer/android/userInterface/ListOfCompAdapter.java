@@ -13,7 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+
+import org.jaudiotagger.tag.FieldKey;
 
 public class ListOfCompAdapter extends ArrayAdapter<Item> {
 	
@@ -33,6 +36,9 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 		// TODO Auto-generated constructor stub
 	}
 
+	Charset C= Charset.forName("windows-1251");
+	ByteBuffer buffer=null;
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Here will be my description of how i create my View
@@ -48,7 +54,7 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 		// TODO set text from TrackImpl
 		try {
 			artistName.setText("artist name"
-					+ new String(getItem(position).tag("artist").value().getBytes("cp1251"),UTF8_CHARSET));
+					+ (C.decode(buffer.wrap(getItem(position).tag("artist").value().getBytes("UTF-16LE")))));
 			compName.setText(getItem(position).tag("title").value());
 		} catch (NoSuchTagException e) {
 			// TODO Auto-generated catch block
