@@ -10,5 +10,9 @@
 	<string name="compositions">Compositions</string>
     <string name="addToQueue">Add to queue</string>
     <string name="addToList">Add to playlist</string>
+    <string name="albums">Albums</string>
+    <string name="artists">Artists</string>
+    <string name="genres">Genres</string>
+    <string name="lists">Playists</string>
 
 </resources>

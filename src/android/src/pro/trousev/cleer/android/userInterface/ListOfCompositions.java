@@ -24,8 +24,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 public class ListOfCompositions extends ListFragment {
-	String data[] = new String[] { "one", "two", "three", "four", "one", "two",
-			"three", "four", "one", "two", "three", "four" };
 	List<Item> list;
 
 	public ListOfCompositions(List<Item> arg) {
