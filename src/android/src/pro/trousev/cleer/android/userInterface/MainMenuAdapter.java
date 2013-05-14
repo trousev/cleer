@@ -53,6 +53,24 @@ public class MainMenuAdapter extends ArrayAdapter<String>{
 		if(res[position] == context.getResources().getString(R.string.exit))
 			view.setId(7);
 		switch(view.getId()){
+		case 0:
+			image.setBackgroundResource(R.drawable.compositions_icon);
+			break;
+		case 2:
+			image.setBackgroundResource(R.drawable.lists_icon);
+			break;
+		case 1:
+			image.setBackgroundResource(R.drawable.queue_icon);
+			break;
+		case 3:
+			image.setBackgroundResource(R.drawable.artist_icon);
+			break;
+		case 4:
+			image.setBackgroundResource(R.drawable.genres_icon);
+			break;
+		case 5:
+			image.setBackgroundResource(R.drawable.album_icon);
+			break;
 		case 6:
 			image.setBackgroundResource(R.drawable.refresh_icon);
 			break;

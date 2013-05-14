@@ -127,6 +127,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	public void setListOfCompositions(List<Item> list) {
+		if (list == null) {
+			Toast.makeText(this, "There is nothing to represent", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
 		ListOfCompositions listOfCompositions = new ListOfCompositions(list);
 		fTrans = fragmentManager.beginTransaction();
 		fTrans.replace(R.id.work_space, listOfCompositions);
@@ -136,6 +141,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	public void setListOfRequests(List<Item> item, String firstTagName,
 			String secondTagName) {
+		if (item == null) {
+			Toast.makeText(this, "There is nothing to represent", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
 		ListOfRequests listOfRequests = new ListOfRequests(item, firstTagName,
 				secondTagName);
 		fTrans = fragmentManager.beginTransaction();
@@ -165,8 +175,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 		}
 	}
-	
-	public void exit(){
+
+	public void exit() {
 		if (bound)
 			unbindService(serviceConnection);
 		stopService(new Intent(this, AndroidCleerService.class));
@@ -174,12 +184,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		this.finish();
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu){
+	public boolean onCreateOptionsMenu(Menu menu) {
 		this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	public boolean onOptionsItemSelected(MenuItem item){
-		switch(item.getItemId()){
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
 		case R.id.exit_option_btn:
 			if (bound)
 				unbindService(serviceConnection);
@@ -188,12 +199,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			this.finish();
 			break;
 		case R.id.scanSystem:
-			Toast.makeText(this, "Library is scanning...", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Library is scanning...", Toast.LENGTH_LONG)
+					.show();
 			taskMessage.action = AndroidMessages.Action.scanSystem;
 			Messaging.fire(taskMessage);
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	@Override
 	public void onDestroy() {
 		if (bound)
