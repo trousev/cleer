@@ -141,11 +141,9 @@ public class QueueImpl implements Queue {
 
 	@Override
 	public boolean seek(int index) {
+		if (((current + index) >= size()) || ((current + index) < 0))
+			return false;
 		current += index;
-		if (current >= size())
-			return false;
-		if (current < 0)
-			return false;
 		player.stop(Player.Reason.UserBreak);
 		try {
 			player.open(playing_track());
@@ -179,10 +177,5 @@ public class QueueImpl implements Queue {
 			queue.set(first, S);
 			queue.set(second, F);
 		}
-	}
-
-	@Override
-	public boolean set(int index) {
-		return seek(index);
 	}
 }
