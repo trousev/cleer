@@ -33,7 +33,7 @@ public class AndroidCleerService extends Service {
 	private Queue queue = null;
 	private Player player;
 	//FIXME delete that kostil
-	List<Item> itemList;
+	private List<Item> itemList = new ArrayList<Item>();
 	private Database database = null;
 
 	// Binder allow us get Service.this from the Activity
