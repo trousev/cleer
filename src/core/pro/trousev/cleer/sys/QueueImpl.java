@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import android.util.Log;
-
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Messaging.Message;
@@ -16,7 +14,6 @@ import pro.trousev.cleer.Player.Reason;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Player.Status;
-import pro.trousev.cleer.android.Constants;
 
 public class QueueImpl implements Queue {
 
@@ -144,11 +141,9 @@ public class QueueImpl implements Queue {
 
 	@Override
 	public boolean seek(int index) {
+		if (((current + index) >= size()) || ((current + index) < 0))
+			return false;
 		current += index;
-		if (current >= size())
-			return false;
-		if (current < 0)
-			return false;
 		player.stop(Player.Reason.UserBreak);
 		try {
 			player.open(playing_track());
@@ -182,10 +177,5 @@ public class QueueImpl implements Queue {
 			queue.set(first, S);
 			queue.set(second, F);
 		}
-	}
-
-	@Override
-	public boolean set(int index) {
-		return seek(index);
 	}
 }

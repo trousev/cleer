@@ -3,6 +3,7 @@ package pro.trousev.cleer.android.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Message;
@@ -33,7 +34,7 @@ public class AndroidCleerService extends Service {
 	private Player player;
 	//FIXME delete that kostil
 	List<Item> itemList;
-	// private Database database = null;
+	private Database database = null;
 
 	// Binder allow us get Service.this from the Activity
 	public class CleerBinder extends Binder {
@@ -46,7 +47,7 @@ public class AndroidCleerService extends Service {
 		super.onCreate();
 		player = new PlayerAndroid();
 		queue = new QueueImpl(player);
-		// database = new DatabaseImpl(Constants.DATABASE_PATH);
+		database = new DatabaseImpl(Constants.DATABASE_PATH, getApplicationContext());
 		Messaging.subscribe(AndroidMessages.ServiceRequestMessage.class,
 				new Messaging.Event() {
 
@@ -85,6 +86,7 @@ public class AndroidCleerService extends Service {
 
 					@Override
 					public void messageReceived(Message message) {
+						Log.d(Constants.LOG_TAG, getApplicationContext().getPackageName());
 						// TODO end implementation of that event
 						ServiceTaskMessage mes = (ServiceTaskMessage) message;
 						switch (mes.action) {
