@@ -132,15 +132,6 @@ public interface Queue {
 	boolean seek(int index);
 
 	/**
-	 * Sets to chosen index in queue
-	 * 
-	 * @param index
-	 *            song number
-	 * @return true if all OK. false else.
-	 */
-	boolean set(int index);
-
-	/**
 	 * Перемешивает всю очередь, за исключением текущего индекса
 	 */
 	void shuffle();
