@@ -76,7 +76,7 @@ public class ListOfCompositions extends ListFragment {
 			track = list.get(acmi.position);
 			message.list = new ArrayList<Item>();
 			message.list.add(track);
-			message.position = list.indexOf(track);
+			message.position = 0;
 			Messaging.fire(message);
 			break;
 		case R.id.addToQueue:

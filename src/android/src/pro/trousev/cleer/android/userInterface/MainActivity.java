@@ -10,6 +10,7 @@ import pro.trousev.cleer.android.AndroidMessages;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
+import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.AndroidCleerService;
 import android.app.Dialog;
@@ -165,7 +166,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		int id = view.getId();
 		switch (id) {
 		case R.id.queue_btn:
-			setListOfCompositions(null);
+			requestMessage.type = TypeOfResult.Queue;
+			Messaging.fire(requestMessage);
 			break;
 		case R.id.main_menu_btn:
 			setMainMenu();

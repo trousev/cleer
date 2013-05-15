@@ -21,16 +21,15 @@ import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class ListOfRequests extends ListFragment {
-	String data[] = new String[] { "one", "two", "three", "four", "one", "two",
-			"three", "four", "one", "two", "three", "four" };
 	List<Item> list;
-	public ListOfRequests(List<Item> arg, String firstTagANme, String secondTagName){
+	String firstTag, secondTag;
+	public ListOfRequests(List<Item> arg, String firstTagName, String secondTagName){
 		list = arg;
 	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ListOfRequestsAdapter adapter = new ListOfRequestsAdapter(getActivity(), data);
+		ListOfRequestsAdapter adapter = new ListOfRequestsAdapter(getActivity(), list, firstTag, secondTag);
 		setListAdapter(adapter);
 	}
 	@Override
@@ -57,16 +56,16 @@ public class ListOfRequests extends ListFragment {
 		switch (item.getItemId()) {
 		case R.id.play:
 			message.action = Action.setToQueueBySearchQuery;
-//			track = list.get(acmi.position);
-//			message.list = null;
-//			message.list.add(track);
-//			message.position=list.indexOf(track);
+			track = list.get(acmi.position);
+			message.list = null;
+			message.list.add(track);
+			message.position=list.indexOf(track);
 			Messaging.fire(message);
 			break;
 		case R.id.addToQueue:
 			message.action = Action.addToQueueBySearchQuery;
-//			track = list.get(acmi.position);
-//			message.searchQuery = track.getSearchQuery();
+			track = list.get(acmi.position);
+			message.searchQuery = track.getSearchQuery();
 			Messaging.fire(message);
 			break;
 		case R.id.addToList:

@@ -4,12 +4,12 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/reqv_name"
+        android:id="@+id/firstTag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="22sp" />
     <TextView
-        android:id="@+id/number"
+        android:id="@+id/secondTag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
