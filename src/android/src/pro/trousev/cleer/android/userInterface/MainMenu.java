@@ -8,7 +8,6 @@ import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ListView;
 
 

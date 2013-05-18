@@ -7,6 +7,7 @@ import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.android.AndroidMessages;
+import pro.trousev.cleer.android.AndroidMessages.Action;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
@@ -19,6 +20,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +38,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private FragmentManager fragmentManager;
 	private ServiceConnection serviceConnection;
 	AndroidCleerService service;
+	ListOfCompositions queue;
 	private boolean bound;
 	private Intent intent;
 	public ServiceTaskMessage taskMessage = new ServiceTaskMessage();
@@ -66,7 +69,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setListOfRequests(respondMessage.list, "Artist", "Number");
 				break;
 			case Queue:
-				setListOfCompositions(respondMessage.list);
+				setQueue(respondMessage.list);
 				break;
 			case PlaylistsInDialog:
 				// TODO set dialog here
@@ -109,16 +112,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				bound = false;
 			}
 		};
-		new Thread(new Runnable() {
-			public void run() {
-				startService(intent);
-			}
-		}).run();
+
+		startService(intent);
 
 		bindService(intent, serviceConnection, 0);
 		serviceRespondedEvent = new ServiceRespondedEvent();
 		Messaging.subscribe(ServiceRespondMessage.class, serviceRespondedEvent);
-
 	}
 
 	public void clearBackStack() {
@@ -127,10 +126,24 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 
+	void showDialog() {
+		DialogFragment newFragment = NeedScanDialogFragment
+				.newInstance(R.string.need_scan_dialog_title);
+		newFragment.show(fragmentManager, "dialog");
+	}
+
+	public void doPositiveClick() {
+		ServiceTaskMessage mes = new ServiceTaskMessage();
+		mes.action = Action.scanSystem;
+		Messaging.fire(mes);
+	}
+
+	public void doNegativeClick() {
+	}
+
 	public void setListOfCompositions(List<Item> list) {
-		if (list == null) {
-			Toast.makeText(this, "There is nothing to represent", Toast.LENGTH_LONG)
-					.show();
+		if ((list.isEmpty()) || (list == null)) {
+			showDialog();
 			return;
 		}
 		ListOfCompositions listOfCompositions = new ListOfCompositions(list);
@@ -140,17 +153,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		fTrans.commit();
 	}
 
-	public void setListOfRequests(List<Item> item, String firstTagName,
+	public void setListOfRequests(List<Item> list, String firstTagName,
 			String secondTagName) {
-		if (item == null) {
-			Toast.makeText(this, "There is nothing to represent", Toast.LENGTH_LONG)
-					.show();
+		if ((list.isEmpty()) || (list == null)) {
+			showDialog();
 			return;
 		}
-		ListOfRequests listOfRequests = new ListOfRequests(item, firstTagName,
+		ListOfRequests listOfRequests = new ListOfRequests(list, firstTagName,
 				secondTagName);
 		fTrans = fragmentManager.beginTransaction();
 		fTrans.replace(R.id.work_space, listOfRequests);
+		fTrans.addToBackStack(null);
+		fTrans.commit();
+	}
+
+	public void setQueue(List<Item> list) {
+		if (list == null) {
+			return;
+		}
+		queue = new ListOfCompositions(list);
+		fTrans = fragmentManager.beginTransaction();
+		fTrans.replace(R.id.work_space, queue);
 		fTrans.addToBackStack(null);
 		fTrans.commit();
 	}

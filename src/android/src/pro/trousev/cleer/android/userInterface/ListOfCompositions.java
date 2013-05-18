@@ -21,11 +21,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ListOfCompositions extends ListFragment {
 	List<Item> list;
-
+	private ArrayAdapter<Item> adapter = null;
 	public ListOfCompositions(List<Item> arg) {
 		list = arg;
 	}
@@ -33,15 +34,18 @@ public class ListOfCompositions extends ListFragment {
 	public ListOfCompositions(Playlist playlist) {
 		list = playlist.contents();
 	}
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ListOfCompAdapter adapter = new ListOfCompAdapter(getActivity(), list);
+		adapter = new ListOfCompAdapter(getActivity(), list);
 		this.setHasOptionsMenu(true);
 		setListAdapter(adapter);
 	}
 
+	public ArrayAdapter<Item> getAdapter(){
+		return adapter;
+	}
 	@Override
 	public void onAttach(Activity activcity) {
 		super.onAttach(activcity);

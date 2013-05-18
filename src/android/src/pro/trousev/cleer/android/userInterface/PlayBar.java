@@ -62,6 +62,8 @@ public class PlayBar extends Fragment implements OnClickListener {
 					e.printStackTrace();
 				}
 			}
+			if (root.queue != null)
+				root.queue.getAdapter().notifyDataSetChanged();
 		}
 	}
 

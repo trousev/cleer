@@ -5,12 +5,12 @@ import java.util.List;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.android.service.RusTag;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ListOfCompAdapter extends ArrayAdapter<Item> {
@@ -33,6 +33,13 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 				.findViewById(R.id.comp_artist_name);
 		TextView compName = (TextView) view.findViewById(R.id.comp_name);
 		// TODO set text from TrackImpl
+		if(getItem(position) == (PlayBar.currentTrack)){
+			ImageView icon = (ImageView) view.findViewById(R.id.is_played);
+			icon.setBackgroundResource(android.R.drawable.ic_media_play);
+		}else{
+			ImageView icon = (ImageView) view.findViewById(R.id.is_played);
+			icon.setBackgroundResource(0);
+		}
 		try {
 			RusTag rusTag = new RusTag();
 			artistName.setText(rusTag.change(getItem(position).tag("artist").value()));

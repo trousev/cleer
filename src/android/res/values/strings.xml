@@ -4,15 +4,19 @@
     <string name="app_name">Cleer</string>
     <string name="play">Play</string>
     <string name="refresh">Update library</string>
-	<string name="exit">Exit</string>
-	<string name="queue">Queue</string>
-	<string name="menu">Menu</string>
-	<string name="compositions">Compositions</string>
+    <string name="exit">Exit</string>
+    <string name="queue">Queue</string>
+    <string name="menu">Menu</string>
+    <string name="compositions">Compositions</string>
     <string name="addToQueue">Add to queue</string>
     <string name="addToList">Add to playlist</string>
     <string name="albums">Albums</string>
     <string name="artists">Artists</string>
     <string name="genres">Genres</string>
-    <string name="lists">Playists</string>
+    <string name="lists">Playlists</string>
+    <string name="alert_dialog_ok">Scan</string>
+    <string name="alert_dialog_cancel">Cancel</string>
+    <string name="need_scan_dialog_title">Library is empty</string>
+    <string name="need_scan">There is no mediafiles in library. Maybe you should refresh it.</string>
 
 </resources>
