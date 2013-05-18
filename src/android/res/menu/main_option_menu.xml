@@ -1,16 +1,17 @@
 
     <menu xmlns:android="http://schemas.android.com/apk/res/android"
        
-        style="@android:style/Theme"
         >
    
-        <item 
+        <item
+            android:showAsAction="ifRoom" 
             android:id="@+id/scanSystem"
             android:title="@string/refresh"
             android:icon="@drawable/refresh_icon"/>
         <item 
             android:id="@+id/exit_option_btn"
             android:title="@string/exit"
+            android:showAsAction="ifRoom"
             android:icon="@drawable/exit_icon"/>
     </menu>
   
