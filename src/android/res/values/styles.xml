@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="BaseTheme" parent="@android:style/Theme">
+    <style name="BaseTheme" parent="@android:style/Theme.NoTitleBar">
        <!-- Костыли и фичи для версий ниже 3.0 писать здесь -->
     </style>
     <style name="CleerTheme" parent="BaseTheme">

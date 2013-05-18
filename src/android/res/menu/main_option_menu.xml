@@ -1,5 +1,9 @@
 
-    <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <menu xmlns:android="http://schemas.android.com/apk/res/android"
+       
+        style="@android:style/Theme"
+        >
+   
         <item 
             android:id="@+id/scanSystem"
             android:title="@string/refresh"

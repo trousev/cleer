@@ -5,13 +5,14 @@
     android:versionName="1.0" >
 
     <application
+        android:hardwareAccelerated="true"
         android:icon="@drawable/application_icon"
         android:label="@string/app_name"
-        android:hardwareAccelerated="true"
         android:theme="@style/CleerTheme" >
         <activity
             android:name="MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

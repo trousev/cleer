@@ -1,5 +1,6 @@
 package pro.trousev.cleer.android.userInterface;
 
+import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
@@ -8,8 +9,8 @@ import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.android.AndroidMessages.Action;
-import pro.trousev.cleer.android.service.RusTag;
 import pro.trousev.cleer.android.Constants;
+import pro.trousev.cleer.android.service.RusTag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -26,6 +27,7 @@ public class PlayBar extends Fragment implements OnClickListener {
 	private Button queueBtn, mainMenuBtn;
 	private ImageView playPauseBtn, prevCompBtn, nextCompBtn;
 	private TextView compName;
+	static Item currentTrack = null;
 	private MainActivity root;
 	final int PLAYING = 1;
 	final int STOPPED = 0;
@@ -52,6 +54,7 @@ public class PlayBar extends Fragment implements OnClickListener {
 			}
 			if (ev.track != null) {
 				try {
+					currentTrack = ev.track;
 					RusTag rusTag = new RusTag();
 					compName.setText(rusTag.change(ev.track.tag("title").value()));
 				} catch (NoSuchTagException e) {

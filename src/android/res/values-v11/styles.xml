@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="BaseTheme" parent="@android:style/Theme.Holo">
+        
         <!-- Костыли и фичи для версий от 3.0 и выше писать здесь -->
     </style>
 </resources>
