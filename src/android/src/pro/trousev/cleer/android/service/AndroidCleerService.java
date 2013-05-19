@@ -2,7 +2,6 @@ package pro.trousev.cleer.android.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
@@ -27,6 +26,7 @@ import pro.trousev.cleer.sys.TrackImpl;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
@@ -106,15 +106,19 @@ public class AndroidCleerService extends Service {
 				queue.seek(mes.position);
 				break;
 			case scanSystem:
-				MediaScanner mediaScanner = new MediaScanner(getApplication());
-				try {
-					// TODO set this to database
-					itemList = mediaScanner.scanner();
-				} catch (MediaScannerException e) {
-					Log.e(Constants.LOG_TAG,
-							"Service: Cannot scan for mediafiles");
-					e.printStackTrace();
-				}
+				// MediaScanner mediaScanner = new
+				// MediaScanner(getApplication());
+				// try {
+				// // TODO set this to database
+				// itemList = mediaScanner.scanner();
+				// } catch (MediaScannerException e) {
+				// Log.e(Constants.LOG_TAG,
+				// "Service: Cannot scan for mediafiles");
+				// e.printStackTrace();
+				// }
+				Log.d(Constants.LOG_TAG,
+						"Service: Triing to scan within Library.folder_scan()");
+				library.folder_scan(null);
 
 				break;
 			default:
@@ -139,10 +143,12 @@ public class AndroidCleerService extends Service {
 				getApplicationContext());
 		try {
 			library = new LibraryImpl(database, TrackImpl.Factory);
-		} catch (DatabaseError e1) {
+			// FIXME Make scanning of particular dirs in next version
+			library.folder_add(Environment.getExternalStorageDirectory());
+		} catch (DatabaseError e) {
 			Log.e(Constants.LOG_TAG,
 					"Service: Cannot create library. Database error.");
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
 		Log.d(Constants.LOG_TAG, "Service: All service instances created");
 		Messaging.subscribe(AndroidMessages.ServiceRequestMessage.class,
