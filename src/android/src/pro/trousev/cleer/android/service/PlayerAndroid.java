@@ -1,5 +1,7 @@
 package pro.trousev.cleer.android.service;
 
+import java.io.IOException;
+
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -72,7 +74,17 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 			currentStatus = Status.Playing;
 		} else {
 			currentStatus = Status.Processing;
-			mediaPlayer.prepareAsync();
+			//mediaPlayer.prepareAsync();
+			try {
+				mediaPlayer.prepare();
+			} catch (IllegalStateException e) {
+				Log.e(Constants.LOG_TAG, "PlayerAndroid: Called play() int illegal state");
+				//e.printStackTrace();
+			} catch (IOException e) {
+				Log.e(Constants.LOG_TAG, "PlayerAndroid: IOException");
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		changeEvent.error = null;
 		changeEvent.reason = null;

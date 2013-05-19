@@ -102,7 +102,6 @@ public class AndroidCleerService extends Service {
 			case setToQueue:
 				queue.enqueue(mes.list, EnqueueMode.ReplaceAll);
 				// FIXME write one method which would work correctly
-				SystemClock.sleep(150);
 				queue.seek(mes.position);
 				break;
 			case scanSystem:
