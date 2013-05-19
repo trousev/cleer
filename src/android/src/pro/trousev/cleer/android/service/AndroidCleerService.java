@@ -2,9 +2,9 @@ package pro.trousev.cleer.android.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Player;
@@ -16,14 +16,23 @@ import pro.trousev.cleer.android.AndroidMessages;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
+import pro.trousev.cleer.android.CleerAndroidNotificationManager;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.MediaScanner.MediaScannerException;
+import pro.trousev.cleer.android.userInterface.MainActivity;
+import pro.trousev.cleer.android.userInterface.R;
 import pro.trousev.cleer.sys.QueueImpl;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 //TODO Make notification and foreground job
@@ -32,9 +41,10 @@ public class AndroidCleerService extends Service {
 
 	private Queue queue = null;
 	private Player player;
-	//FIXME delete that kostil
+	// FIXME delete that kostil
 	private List<Item> itemList = new ArrayList<Item>();
 	private Database database = null;
+	private CleerAndroidNotificationManager mNotificationManager;
 
 	// Binder allow us get Service.this from the Activity
 	public class CleerBinder extends Binder {
@@ -47,7 +57,9 @@ public class AndroidCleerService extends Service {
 		super.onCreate();
 		player = new PlayerAndroid();
 		queue = new QueueImpl(player);
-		database = new DatabaseImpl(Constants.DATABASE_PATH, getApplicationContext());
+		database = new DatabaseImpl(Constants.DATABASE_PATH,
+				getApplicationContext());
+		mNotificationManager = new CleerAndroidNotificationManager(this);
 		Messaging.subscribe(AndroidMessages.ServiceRequestMessage.class,
 				new Messaging.Event() {
 
@@ -61,7 +73,7 @@ public class AndroidCleerService extends Service {
 							respondMessage.list.addAll(itemList);
 							break;
 						case Queue:
-							//FIXME it doesn't work
+							// FIXME it doesn't work
 							respondMessage.list.addAll(queue.queue());
 							break;
 						case Albums:
@@ -86,24 +98,37 @@ public class AndroidCleerService extends Service {
 
 					@Override
 					public void messageReceived(Message message) {
-						Log.d(Constants.LOG_TAG, getApplicationContext().getPackageName());
+						Log.d(Constants.LOG_TAG, getApplicationContext()
+								.getPackageName());
 						// TODO end implementation of that event
 						ServiceTaskMessage mes = (ServiceTaskMessage) message;
+						String description = "";
+						Boolean foreground = false;
 						switch (mes.action) {
 						case Play:
 							queue.play();
+							description = " (Playing)";
+							foreground = true;
 							break;
 						case Resume:
 							queue.resume();
+							description = " (Playing)";
+							foreground = true;
 							break;
 						case Pause:
 							queue.pause();
+							description = " (Paused)";
+							foreground = false;
 							break;
 						case Next:
 							queue.next();
+							description = " (Playing)";
+							foreground = true;
 							break;
 						case Previous:
 							queue.prev();
+							description = " (Playing)";
+							foreground = true;
 							break;
 						case addToQueue:
 							queue.enqueue(mes.list, EnqueueMode.AfterAll);
@@ -113,23 +138,40 @@ public class AndroidCleerService extends Service {
 							// FIXME write one method which would work correctly
 							SystemClock.sleep(150);
 							queue.seek(mes.position);
+							description = " (Playing)";
 							break;
 						case scanSystem:
 							MediaScanner mediaScanner = new MediaScanner(
 									getApplication());
 							try {
-								//TODO set this to database
+								// TODO set this to database
 								itemList = mediaScanner.scanner();
 							} catch (MediaScannerException e) {
 								Log.e(Constants.LOG_TAG,
 										"Can't scan for mediafiles");
 								e.printStackTrace();
 							}
-							
 							break;
 						default:
 							break;
 						// TODO add others...
+						}
+						if (!description.equals("")) {
+							String n = "";
+							try {
+								n = queue.playing_track().tag("title").value();
+							} catch (NoSuchTagException e1) {
+								n = "NO_NAME_AVALIBLE";
+								//e1.printStackTrace();
+							} finally {
+								mNotificationManager.postPlayerNotification(n + description);
+							}					
+							if (foreground) {
+								Notification notification = mNotificationManager.getPlayerNotification();
+								startForeground(Constants.PLAYER_NOTIFICATION_ID, notification);
+							} else {
+								stopForeground(true);
+							}
 						}
 					}
 				});
@@ -141,7 +183,8 @@ public class AndroidCleerService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(Constants.LOG_TAG, "Service.onStartCommand()");
 		Status status = player.getStatus();
-		if((status == Status.Playing)||(status==Status.Processing)||(status==Status.Paused)){
+		if ((status == Status.Playing) || (status == Status.Processing)
+				|| (status == Status.Paused)) {
 			PlayerChangeEvent message = new PlayerChangeEvent();
 			message.status = status;
 			message.track = player.now_playing();
@@ -153,6 +196,7 @@ public class AndroidCleerService extends Service {
 	public void onDestroy() {
 		Log.d(Constants.LOG_TAG, "Service.onDestroy()");
 		queue.clear();
+		mNotificationManager.cancelAll();
 		super.onDestroy();
 	}
 
