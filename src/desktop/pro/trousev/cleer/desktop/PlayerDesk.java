@@ -180,4 +180,19 @@ public class PlayerDesk implements Player
 	public Status getStatus() {
 		return current_status;
 	}
+
+    @Override
+    public int getDuration() {
+        return -1;
+    }
+
+    @Override 
+    public int getCurrentPosition() {
+        return -1;
+    }
+
+    @Override
+    public void setCurrentPosition(int msec) {
+        return;
+    }
 }

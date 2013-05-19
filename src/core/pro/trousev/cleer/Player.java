@@ -35,6 +35,10 @@ public interface Player  {
 	public Item now_playing();
 	Status getStatus();
 	
+	public int getCurrentPosition();
+	public int getDuration();
+	public void setCurrentPosition(int msec);
+	
 	
 	public static class PlayerException extends Exception {
 		private static final long serialVersionUID = -23891433149501L; //user defined

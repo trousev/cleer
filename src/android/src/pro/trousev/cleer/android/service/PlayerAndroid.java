@@ -150,4 +150,19 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 		stop(Reason.EndOfTrack);
 	}
 
+	@Override
+	public int getCurrentPosition() {
+		return mediaPlayer.getCurrentPosition();
+	}
+
+	@Override
+	public int getDuration() {
+		return mediaPlayer.getDuration();
+	}
+
+	@Override
+	public void setCurrentPosition(int msec) {
+		mediaPlayer.seekTo(msec);
+	}
+
 }
