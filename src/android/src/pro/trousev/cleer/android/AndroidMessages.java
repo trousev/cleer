@@ -2,6 +2,8 @@ package pro.trousev.cleer.android;
 
 import java.util.List;
 
+import android.widget.ProgressBar;
+
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Playlist;
@@ -16,6 +18,9 @@ public interface AndroidMessages {
 		addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList, scanSystem
 	}
 
+	public static class ProgressBarMessage implements Messaging.Message{
+		public ProgressBar progressBar;
+	}
 	public static class ServiceRequestMessage implements Messaging.Message {
 		public String searchQuery;
 		public TypeOfResult type;
