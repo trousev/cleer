@@ -16,6 +16,7 @@ import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Queue.EnqueueMode;
 import pro.trousev.cleer.android.AndroidMessages;
+import pro.trousev.cleer.android.AndroidMessages.ProgressBarMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
@@ -32,6 +33,7 @@ import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 //TODO Make notification and foreground job
 public class AndroidCleerService extends Service {
@@ -79,8 +81,7 @@ public class AndroidCleerService extends Service {
 	private Event serviceTaskEvent = new Messaging.Event() {
 		@Override
 		public void messageReceived(Message message) {
-			Log.d(Constants.LOG_TAG, getApplicationContext()
-					.getPackageName());
+			Log.d(Constants.LOG_TAG, getApplicationContext().getPackageName());
 			// TODO end implementation of that event
 			ServiceTaskMessage mes = (ServiceTaskMessage) message;
 			String description = "";
@@ -120,14 +121,12 @@ public class AndroidCleerService extends Service {
 				description = " (Playing)";
 				break;
 			case scanSystem:
-				MediaScanner mediaScanner = new MediaScanner(
-						getApplication());
+				MediaScanner mediaScanner = new MediaScanner(getApplication());
 				try {
 					// TODO set this to database
 					itemList = mediaScanner.scanner();
 				} catch (MediaScannerException e) {
-					Log.e(Constants.LOG_TAG,
-							"Can't scan for mediafiles");
+					Log.e(Constants.LOG_TAG, "Can't scan for mediafiles");
 					e.printStackTrace();
 				}
 				break;
@@ -141,19 +140,41 @@ public class AndroidCleerService extends Service {
 					n = queue.playing_track().tag("title").value();
 				} catch (NoSuchTagException e1) {
 					n = "NO_NAME_AVALIBLE";
-					//e1.printStackTrace();
+					// e1.printStackTrace();
 				} finally {
-					mNotificationManager.postPlayerNotification(n + description);
-				}					
+					mNotificationManager
+							.postPlayerNotification(n + description);
+				}
 				if (foreground) {
-					Notification notification = mNotificationManager.getPlayerNotification();
-					startForeground(Constants.PLAYER_NOTIFICATION_ID, notification);
+					Notification notification = mNotificationManager
+							.getPlayerNotification();
+					startForeground(Constants.PLAYER_NOTIFICATION_ID,
+							notification);
 				} else {
 					stopForeground(true);
 				}
 			}
 		}
 	};
+
+	private Event progressBarEvent = new Messaging.Event() {
+
+		@Override
+		public void messageReceived(Message message) {
+			// Log.d(Constants.LOG_TAG, "Timer tick");
+			ProgressBarMessage mes = (ProgressBarMessage) message;
+			ProgressBar p = mes.progressBar;
+			if ((player.getStatus() == Status.Playing)
+					|| (player.getStatus() == Status.Paused)) {
+				p.setMax(player.getDuration());
+				p.setProgress(player.getCurrentPosition());
+			} else {
+				p.setMax(1);
+				p.setProgress(0);
+			}
+		}
+	};
+
 	private CleerAndroidNotificationManager mNotificationManager;
 
 	// Binder allow us get Service.this from the Activity
@@ -184,6 +205,8 @@ public class AndroidCleerService extends Service {
 				serviceRequestEvent);
 		Messaging.subscribe(AndroidMessages.ServiceTaskMessage.class,
 				serviceTaskEvent);
+		Messaging.subscribe(AndroidMessages.ProgressBarMessage.class,
+				progressBarEvent);
 		Log.d(Constants.LOG_TAG, "Service: Subscibed on several messages");
 	}
 

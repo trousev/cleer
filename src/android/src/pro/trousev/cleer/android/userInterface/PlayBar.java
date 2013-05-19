@@ -1,5 +1,8 @@
 package pro.trousev.cleer.android.userInterface;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging;
@@ -30,12 +33,14 @@ public class PlayBar extends Fragment implements OnClickListener {
 	private TextView compName;
 	static Item currentTrack = null;
 	private MainActivity root;
-	ProgressBarMessage pBMessage = null;
 	final int PLAYING = 1;
 	final int STOPPED = 0;
 	final int PAUSED = 2;
 	private int status = STOPPED;
 	private ProgressBar progressBar;
+	ProgressBarMessage progressBarMessage = null;
+	Timer progressBarTimer = null;
+	TimerTask progressBarTimerTask = null;
 	private PlayerChangedStatusEvent playerChangedStatusEvent;
 
 	public PlayBar() {
@@ -58,7 +63,8 @@ public class PlayBar extends Fragment implements OnClickListener {
 				try {
 					currentTrack = ev.track;
 					RusTag rusTag = new RusTag();
-					compName.setText(rusTag.change(ev.track.tag("title").value()));
+					compName.setText(rusTag.change(ev.track.tag("title")
+							.value()));
 				} catch (NoSuchTagException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -66,6 +72,7 @@ public class PlayBar extends Fragment implements OnClickListener {
 			}
 			if (root.queue != null)
 				root.queue.getAdapter().notifyDataSetChanged();
+			Messaging.fire(progressBarMessage);
 		}
 	}
 
@@ -89,12 +96,21 @@ public class PlayBar extends Fragment implements OnClickListener {
 		prevCompBtn.setBackgroundResource(R.drawable.prev);
 		nextCompBtn.setBackgroundResource(R.drawable.next);
 		playerChangedStatusEvent = new PlayerChangedStatusEvent();
-		pBMessage = new ProgressBarMessage();
-		pBMessage.progressBar = this.progressBar;
-		Messaging.fire(pBMessage);
 		Messaging.subscribe(Player.PlayerChangeEvent.class,
 				playerChangedStatusEvent);
 
+		progressBarMessage = new ProgressBarMessage();
+		progressBarMessage.progressBar = this.progressBar;
+		progressBarTimerTask = new TimerTask() {
+
+			@Override
+			public void run() {
+				Messaging.fire(progressBarMessage);
+			}
+		};
+		progressBarTimer = new Timer();
+		progressBarTimer.scheduleAtFixedRate(progressBarTimerTask, 0,
+				Constants.PROGRESSBAR_TIMER_RATE);
 		return view;
 	}
 
@@ -152,8 +168,11 @@ public class PlayBar extends Fragment implements OnClickListener {
 		Log.d(Constants.LOG_TAG, "PlayBar.onDestroy()");
 		Messaging.unSubscribe(Player.PlayerChangeEvent.class,
 				playerChangedStatusEvent);
-		pBMessage.progressBar = null;
-		Messaging.fire(pBMessage);
+		progressBarMessage.progressBar = null;
+		progressBarTimerTask.cancel();
+		progressBarTimerTask = null;
+		progressBarTimer.cancel();
+		progressBarTimer = null;
 		super.onDestroy();
 	}
 }
