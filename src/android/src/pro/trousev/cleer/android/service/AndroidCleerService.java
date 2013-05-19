@@ -6,6 +6,7 @@ import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Library;
+import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
@@ -18,11 +19,13 @@ import pro.trousev.cleer.android.AndroidMessages;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
+import pro.trousev.cleer.android.CleerAndroidNotificationManager;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.MediaScanner.MediaScannerException;
 import pro.trousev.cleer.sys.LibraryImpl;
-import pro.trousev.cleer.sys.QueueImpl;
 import pro.trousev.cleer.sys.TrackImpl;
+import pro.trousev.cleer.sys.QueueImpl;
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -77,24 +80,37 @@ public class AndroidCleerService extends Service {
 	private Event serviceTaskEvent = new Messaging.Event() {
 		@Override
 		public void messageReceived(Message message) {
-			Log.d(Constants.LOG_TAG, getApplicationContext().getPackageName());
+			Log.d(Constants.LOG_TAG, getApplicationContext()
+					.getPackageName());
 			// TODO end implementation of that event
 			ServiceTaskMessage mes = (ServiceTaskMessage) message;
+			String description = "";
+			Boolean foreground = false;
 			switch (mes.action) {
 			case Play:
 				queue.play();
+				description = " (Playing)";
+				foreground = true;
 				break;
 			case Resume:
 				queue.resume();
+				description = " (Playing)";
+				foreground = true;
 				break;
 			case Pause:
 				queue.pause();
+				description = " (Paused)";
+				foreground = false;
 				break;
 			case Next:
 				queue.next();
+				description = " (Playing)";
+				foreground = true;
 				break;
 			case Previous:
 				queue.prev();
+				description = " (Playing)";
+				foreground = true;
 				break;
 			case addToQueue:
 				queue.enqueue(mes.list, EnqueueMode.AfterAll);
@@ -102,30 +118,46 @@ public class AndroidCleerService extends Service {
 			case setToQueue:
 				queue.enqueue(mes.list, EnqueueMode.ReplaceAll);
 				// FIXME write one method which would work correctly
+				SystemClock.sleep(150);
 				queue.seek(mes.position);
+				description = " (Playing)";
 				break;
 			case scanSystem:
-				// MediaScanner mediaScanner = new
-				// MediaScanner(getApplication());
-				// try {
-				// // TODO set this to database
-				// itemList = mediaScanner.scanner();
-				// } catch (MediaScannerException e) {
-				// Log.e(Constants.LOG_TAG,
-				// "Service: Cannot scan for mediafiles");
-				// e.printStackTrace();
-				// }
-				Log.d(Constants.LOG_TAG,
-						"Service: Triing to scan within Library.folder_scan()");
-				library.folder_scan(null);
-
+				MediaScanner mediaScanner = new MediaScanner(
+						getApplication());
+				try {
+					// TODO set this to database
+					itemList = mediaScanner.scanner();
+				} catch (MediaScannerException e) {
+					Log.e(Constants.LOG_TAG,
+							"Can't scan for mediafiles");
+					e.printStackTrace();
+				}
 				break;
 			default:
 				break;
 			// TODO add others...
 			}
+			if (!description.equals("")) {
+				String n = "";
+				try {
+					n = queue.playing_track().tag("title").value();
+				} catch (NoSuchTagException e1) {
+					n = "NO_NAME_AVALIBLE";
+					//e1.printStackTrace();
+				} finally {
+					mNotificationManager.postPlayerNotification(n + description);
+				}					
+				if (foreground) {
+					Notification notification = mNotificationManager.getPlayerNotification();
+					startForeground(Constants.PLAYER_NOTIFICATION_ID, notification);
+				} else {
+					stopForeground(true);
+				}
+			}
 		}
 	};
+	private CleerAndroidNotificationManager mNotificationManager;
 
 	// Binder allow us get Service.this from the Activity
 	public class CleerBinder extends Binder {
@@ -150,6 +182,7 @@ public class AndroidCleerService extends Service {
 			e.printStackTrace();
 		}
 		Log.d(Constants.LOG_TAG, "Service: All service instances created");
+		mNotificationManager = new CleerAndroidNotificationManager(this);
 		Messaging.subscribe(AndroidMessages.ServiceRequestMessage.class,
 				serviceRequestEvent);
 		Messaging.subscribe(AndroidMessages.ServiceTaskMessage.class,
@@ -177,6 +210,7 @@ public class AndroidCleerService extends Service {
 				serviceRequestEvent);
 		Messaging.unSubscribe(AndroidMessages.ServiceTaskMessage.class,
 				serviceTaskEvent);
+		mNotificationManager.cancelAll();
 		super.onDestroy();
 		Log.d(Constants.LOG_TAG, "Service: Destroyed");
 	}

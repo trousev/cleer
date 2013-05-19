@@ -9,6 +9,7 @@ import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.android.AndroidMessages.Action;
+import pro.trousev.cleer.android.AndroidMessages.ProgressBarMessage;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.RusTag;
 import android.os.Bundle;
@@ -29,11 +30,12 @@ public class PlayBar extends Fragment implements OnClickListener {
 	private TextView compName;
 	static Item currentTrack = null;
 	private MainActivity root;
+	ProgressBarMessage pBMessage = null;
 	final int PLAYING = 1;
 	final int STOPPED = 0;
 	final int PAUSED = 2;
 	private int status = STOPPED;
-	public static ProgressBar progressBar;
+	private ProgressBar progressBar;
 	private PlayerChangedStatusEvent playerChangedStatusEvent;
 
 	public PlayBar() {
@@ -87,6 +89,9 @@ public class PlayBar extends Fragment implements OnClickListener {
 		prevCompBtn.setBackgroundResource(R.drawable.prev);
 		nextCompBtn.setBackgroundResource(R.drawable.next);
 		playerChangedStatusEvent = new PlayerChangedStatusEvent();
+		pBMessage = new ProgressBarMessage();
+		pBMessage.progressBar = this.progressBar;
+		Messaging.fire(pBMessage);
 		Messaging.subscribe(Player.PlayerChangeEvent.class,
 				playerChangedStatusEvent);
 
@@ -147,6 +152,8 @@ public class PlayBar extends Fragment implements OnClickListener {
 		Log.d(Constants.LOG_TAG, "PlayBar.onDestroy()");
 		Messaging.unSubscribe(Player.PlayerChangeEvent.class,
 				playerChangedStatusEvent);
+		pBMessage.progressBar = null;
+		Messaging.fire(pBMessage);
 		super.onDestroy();
 	}
 }
