@@ -57,6 +57,7 @@ public class CleerAndroidNotificationManager {
 
 	public void postPlayerNotification(String text) {
 		playerNotification = buildNotification(Constants.PLAYER_NOTIFICATION_TITLE, text);
+		playerNotification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT);
 		postNotification(playerNotification, Constants.PLAYER_NOTIFICATION_ID);
 	}
 
