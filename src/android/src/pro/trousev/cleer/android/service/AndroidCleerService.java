@@ -37,7 +37,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-//TODO Make notification and foreground job
 public class AndroidCleerService extends Service {
 	private static ServiceRespondMessage respondMessage = new ServiceRespondMessage();
 
@@ -162,8 +161,6 @@ public class AndroidCleerService extends Service {
 		}
 	};
 
-	// TODO Rewrite it with several Events like PlaybarEvent, QueueEvent,
-	// ScanSystemEvent
 	private Event serviceTaskEvent = new Messaging.Event() {
 		@Override
 		public void messageReceived(Message message) {
