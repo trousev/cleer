@@ -137,7 +137,7 @@ public class LibraryImpl implements Library {
 		catch(Exception e)
 		{
 			//TODO: re-throw exception, don't block it!
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			return false;
 		}
 		return false;
