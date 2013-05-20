@@ -12,12 +12,18 @@
 
     <SeekBar
         android:id="@+id/player_progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
+        style="@android:style/Widget.SeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:maxHeight="5dp"
+        android:thumb="@drawable/thumb"
+        android:progressDrawable="@drawable/seek_bar_drawable"
+        android:scrollbarAlwaysDrawVerticalTrack="false"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="insideOverlay" />
 
     <LinearLayout
         android:layout_width="match_parent"
