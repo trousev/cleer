@@ -26,6 +26,7 @@ public interface AndroidMessages {
 	//set currentPosition in Player
 	public static class SeekBarMessage implements Messaging.Message {
 		public SeekBar seekBar;
+		int position;
 	}
 
 	public static class ServiceRequestMessage implements Messaging.Message {
