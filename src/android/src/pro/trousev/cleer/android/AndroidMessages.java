@@ -3,6 +3,7 @@ package pro.trousev.cleer.android;
 import java.util.List;
 
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
@@ -14,13 +15,19 @@ public interface AndroidMessages {
 	}
 
 	enum Action {
-		Play, Pause, Resume, Stop, Next, Previous, setToQueue, setToQueueBySearchQuery, addToQueue,
-		addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList, scanSystem
+		Play, Pause, Resume, Stop, Next, Previous, setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList, scanSystem
 	}
 
-	public static class ProgressBarMessage implements Messaging.Message{
+	//set ProgressBar
+	public static class ProgressBarMessage implements Messaging.Message {
 		public ProgressBar progressBar;
 	}
+	
+	//set currentPosition in Player
+	public static class SeekBarMessage implements Messaging.Message {
+		public SeekBar seekBar;
+	}
+
 	public static class ServiceRequestMessage implements Messaging.Message {
 		public String searchQuery;
 		public TypeOfResult type;

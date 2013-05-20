@@ -174,6 +174,15 @@ public class AndroidCleerService extends Service {
 			}
 		}
 	};
+	
+	private Event seekBarEvent = new Messaging.Event() {
+		
+		@Override
+		public void messageReceived(Message message) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
 
 	private CleerAndroidNotificationManager mNotificationManager;
 
@@ -207,6 +216,7 @@ public class AndroidCleerService extends Service {
 				serviceTaskEvent);
 		Messaging.subscribe(AndroidMessages.ProgressBarMessage.class,
 				progressBarEvent);
+		Messaging.subscribe(AndroidMessages.SeekBarMessage.class, seekBarEvent);
 		Log.d(Constants.LOG_TAG, "Service: Subscibed on several messages");
 	}
 
@@ -230,6 +240,7 @@ public class AndroidCleerService extends Service {
 				serviceRequestEvent);
 		Messaging.unSubscribe(AndroidMessages.ServiceTaskMessage.class,
 				serviceTaskEvent);
+		Messaging.unSubscribe(AndroidMessages.SeekBarMessage.class, seekBarEvent);
 		mNotificationManager.cancelAll();
 		super.onDestroy();
 		Log.d(Constants.LOG_TAG, "Service: Destroyed");
