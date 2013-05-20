@@ -13,5 +13,5 @@ public final class Constants {
 	public static final int GENERAL_NOTIFICATON_ID = 2;
 	public static final int PLAYER_NOTIFICATION_ID = 1;
 	public static final int DISPOSABLE_NOTIFICATON_ID = 3;
-	public static final long PROGRESSBAR_TIMER_RATE = 1000; // in milliseconds
+	public static final int PROGRESSBAR_TIMER_RATE = 1000; // in milliseconds
 }

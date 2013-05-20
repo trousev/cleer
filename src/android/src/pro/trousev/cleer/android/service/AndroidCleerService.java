@@ -17,6 +17,7 @@ import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Queue.EnqueueMode;
 import pro.trousev.cleer.android.AndroidMessages;
 import pro.trousev.cleer.android.AndroidMessages.ProgressBarMessage;
+import pro.trousev.cleer.android.AndroidMessages.SeekBarMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
@@ -179,8 +180,9 @@ public class AndroidCleerService extends Service {
 		
 		@Override
 		public void messageReceived(Message message) {
-			// TODO Auto-generated method stub
-			
+			SeekBarMessage mes = (SeekBarMessage) message;
+			int position = mes.value * Constants.PROGRESSBAR_TIMER_RATE;
+			player.setCurrentPosition(position);
 		}
 	};
 
