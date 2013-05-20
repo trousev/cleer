@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="BaseTheme" parent="@android:style/Theme.NoTitleBar">
-       <!-- Костыли и фичи для версий ниже 3.0 писать здесь -->
+
+        <!-- Костыли и фичи для версий ниже 3.0 писать здесь -->
+
+        <item name="android:progressDrawable">@drawable/seek_bar_drawable</item>
     </style>
+
     <style name="CleerTheme" parent="BaseTheme">
         <!-- Общие костыли и фичи для всех версий -->
     </style>
+
 </resources>
