@@ -79,36 +79,47 @@ public class AndroidCleerService extends Service {
 		}
 	};
 
+	
+	// TODO Rewrite it with several Events like PlaybarEvent, QueueEvent, ScanSystemEvent
 	private Event serviceTaskEvent = new Messaging.Event() {
 		@Override
 		public void messageReceived(Message message) {
 			Log.d(Constants.LOG_TAG, getApplicationContext().getPackageName());
-			// TODO end implementation of that event
 			ServiceTaskMessage mes = (ServiceTaskMessage) message;
 			String description = "";
 			Boolean foreground = false;
 			switch (mes.action) {
 			case Play:
+				if (player.getStatus() == Status.Closed)
+					break;
 				queue.play();
 				description = " (Playing)";
 				foreground = true;
 				break;
 			case Resume:
+				if (player.getStatus() == Status.Closed)
+					break;
 				queue.resume();
 				description = " (Playing)";
 				foreground = true;
 				break;
 			case Pause:
+				if (player.getStatus() == Status.Closed)
+					break;
 				queue.pause();
 				description = " (Paused)";
 				foreground = false;
 				break;
 			case Next:
+				if (player.getStatus() == Status.Closed)
+					break;
 				queue.next();
 				description = " (Playing)";
 				foreground = true;
 				break;
 			case Previous:
+				if (player.getStatus() == Status.Closed)
+					break;
 				queue.prev();
 				description = " (Playing)";
 				foreground = true;
@@ -133,10 +144,11 @@ public class AndroidCleerService extends Service {
 				break;
 			default:
 				break;
-			// TODO add others...
 			}
+			Log.d(Constants.LOG_TAG, "Service: \"switch\" completed");
 			if (!description.equals("")) {
-				String n = "";
+				String n = "";					
+				Log.d(Constants.LOG_TAG, "What's up?" + description);
 				try {
 					n = queue.playing_track().tag("title").value();
 				} catch (NoSuchTagException e1) {
