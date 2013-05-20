@@ -182,10 +182,11 @@ public class AndroidCleerService extends Service {
 		public void messageReceived(Message message) {
 			Log.d(Constants.LOG_TAG, "Service: SeekBar message received");
 			SeekBarMessage mes = (SeekBarMessage) message;
-			int position = mes.value * Constants.PROGRESSBAR_TIMER_RATE;
-			if ((player != null) || (player.getStatus() == Status.Playing)
-					|| (player.getStatus() == Status.Paused))
-				player.setCurrentPosition(position);
+			int position = mes.value;
+			if (player != null)
+				if ((player.getStatus() == Status.Playing)
+						|| (player.getStatus() == Status.Paused))
+					player.setCurrentPosition(position);
 			Log.d(Constants.LOG_TAG, "Service: SeekBar message proceeed");
 		}
 	};
