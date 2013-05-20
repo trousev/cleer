@@ -15,18 +15,26 @@ public interface AndroidMessages {
 	}
 
 	enum Action {
-		Play, Pause, Resume, Stop, Next, Previous, setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList, scanSystem
+		setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList, scanSystem
 	}
 
-	//set ProgressBar
+	public enum PlayBarAction {
+		Play, Pause, Resume, Stop, Next, Previous
+	}
+	
+	// set ProgressBar
 	public static class ProgressBarMessage implements Messaging.Message {
 		public ProgressBar progressBar;
 	}
-	
-	//set currentPosition in Player
+
+	// set currentPosition in Player
 	public static class SeekBarMessage implements Messaging.Message {
 		public SeekBar seekBar;
 		public int value;
+	}
+
+	public static class PlayBarMessage implements Messaging.Message {
+		public PlayBarAction action;
 	}
 
 	public static class ServiceRequestMessage implements Messaging.Message {
