@@ -181,7 +181,7 @@ public class AndroidCleerService extends Service {
 		@Override
 		public void messageReceived(Message message) {
 			SeekBarMessage mes = (SeekBarMessage) message;
-			int position = mes.value * Constants.PROGRESSBAR_TIMER_RATE;
+			int position = mes.value;
 			player.setCurrentPosition(position);
 		}
 	};

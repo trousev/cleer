@@ -29,7 +29,8 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class PlayBar extends Fragment implements OnClickListener, OnSeekBarChangeListener{
+public class PlayBar extends Fragment implements OnClickListener,
+		OnSeekBarChangeListener {
 	private Button queueBtn, mainMenuBtn;
 	private ImageView playPauseBtn, prevCompBtn, nextCompBtn;
 	private TextView compName;
@@ -183,18 +184,18 @@ public class PlayBar extends Fragment implements OnClickListener, OnSeekBarChang
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
-		seekBarMessage.seekBar = seekBar;
-		seekBarMessage.value = progress;
-		Messaging.fire(seekBarMessage);
+		
 	}
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
-	
+
 	}
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-
+		seekBarMessage.seekBar = seekBar;
+		seekBarMessage.value = seekBar.getProgress();
+		Messaging.fire(seekBarMessage);
 	}
 }
