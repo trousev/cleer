@@ -17,12 +17,10 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 
 	public ListOfCompAdapter(Context context, List<Item> items) {
 		super(context, R.layout.list_of_comp_element, items);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Here will be my description of how i create my View
 		View view;
 		if (convertView == null)
 			view = ((Activity) getContext()).getLayoutInflater().inflate(
@@ -32,7 +30,6 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 		TextView artistName = (TextView) view
 				.findViewById(R.id.comp_artist_name);
 		TextView compName = (TextView) view.findViewById(R.id.comp_name);
-		// TODO set text from TrackImpl
 		if(getItem(position) == (PlayBar.currentTrack)){
 			ImageView icon = (ImageView) view.findViewById(R.id.is_played);
 			icon.setBackgroundResource(android.R.drawable.ic_media_play);
@@ -42,10 +39,9 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 		}
 		try {
 			RusTag rusTag = new RusTag();
-			artistName.setText(rusTag.change(getItem(position).tag("artist").value()));
 			compName.setText(rusTag.change(getItem(position).tag("title").value()));
+			artistName.setText(rusTag.change(getItem(position).tag("artist").value()));
 		} catch (NoSuchTagException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return view;

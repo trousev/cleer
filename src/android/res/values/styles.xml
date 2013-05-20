@@ -4,7 +4,6 @@
     <style name="BaseTheme" parent="@android:style/Theme.NoTitleBar">
 
         <!-- Костыли и фичи для версий ниже 3.0 писать здесь -->
-
         <item name="android:progressDrawable">@drawable/seek_bar_drawable</item>
     </style>
 

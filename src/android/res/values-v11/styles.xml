@@ -2,5 +2,6 @@
 <resources>
     <style name="BaseTheme" parent="@android:style/Theme.Holo">
         <!-- Костыли и фичи для версий от 3.0 и выше писать здесь -->
+        <item name="android:thumb">@drawable/transparent</item>
     </style>
 </resources>

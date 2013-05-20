@@ -23,15 +23,20 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 public class ListOfRequests extends ListFragment {
 	List<Item> list;
 	String firstTag, secondTag;
-	public ListOfRequests(List<Item> arg, String firstTagName, String secondTagName){
+
+	public ListOfRequests(List<Item> arg, String firstTagName,
+			String secondTagName) {
 		list = arg;
 	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ListOfRequestsAdapter adapter = new ListOfRequestsAdapter(getActivity(), list, firstTag, secondTag);
+		ListOfRequestsAdapter adapter = new ListOfRequestsAdapter(
+				getActivity(), list, firstTag, secondTag);
 		setListAdapter(adapter);
 	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -47,6 +52,7 @@ public class ListOfRequests extends ListFragment {
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.requestlist_context_menu, menu);
 	}
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
@@ -59,7 +65,7 @@ public class ListOfRequests extends ListFragment {
 			track = list.get(acmi.position);
 			message.list = null;
 			message.list.add(track);
-			message.position=list.indexOf(track);
+			message.position = list.indexOf(track);
 			Messaging.fire(message);
 			break;
 		case R.id.addToQueue:
@@ -68,20 +74,18 @@ public class ListOfRequests extends ListFragment {
 			message.searchQuery = track.getSearchQuery();
 			Messaging.fire(message);
 			break;
-		case R.id.addToList:
-			//TODO What to do?
-			break;
 		}
 		return true;
 	}
+
 	@Override
-	public void onListItemClick(ListView listView, View view, int position, long id){
-		//Item item = (Item)listView.getItemAtPosition(position);
-		//String searchQuery = item.getSearchQuery();
+	public void onListItemClick(ListView listView, View view, int position,
+			long id) {
+		Item item = (Item) listView.getItemAtPosition(position);
+		String searchQuery = item.getSearchQuery();
 		ServiceRequestMessage message = new ServiceRequestMessage();
-		message.type=TypeOfResult.Compositions;
-		//message.searchQuery=searchQuery;
+		message.type = TypeOfResult.Compositions;
+		message.searchQuery = searchQuery;
 		Messaging.fire(message);
-		//TODO get information from that object and give request to library
 	}
 }

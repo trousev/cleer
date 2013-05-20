@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.android.AndroidMessages.Action;
@@ -11,6 +12,7 @@ import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
+import pro.trousev.cleer.android.service.RusTag;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -62,7 +64,13 @@ public class ListOfCompositions extends ListFragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View view,
 			ContextMenuInfo menuInfo) {
-		Log.d(Constants.LOG_TAG, "ListOfComp.onCreateCotextMenu()");
+		Item item = (Item) list.get(((AdapterContextMenuInfo)menuInfo).position);
+		try {
+			RusTag rusTag = new RusTag();
+			menu.setHeaderTitle(rusTag.change(item.tag("title").value()));
+		} catch (NoSuchTagException e) {
+			e.printStackTrace();
+		}
 		super.onCreateContextMenu(menu, view, menuInfo);
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.compositionlist_context_menu, menu);
@@ -93,6 +101,7 @@ public class ListOfCompositions extends ListFragment {
 		case R.id.addToList:
 			ServiceRequestMessage msg = ((MainActivity) getActivity()).requestMessage;
 			msg.type = TypeOfResult.PlaylistsInDialog;
+			msg.item = list.get(acmi.position);
 			Messaging.fire(msg);
 			// TODO What to do?
 			break;

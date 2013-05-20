@@ -34,15 +34,15 @@ public class ListOfRequestsAdapter extends ArrayAdapter<String> {
 		TextView firstTextView = (TextView) view.findViewById(R.id.firstTag);
 		TextView secondTextView = (TextView) view.findViewById(R.id.secondTag);
 		RusTag rusTag = new RusTag();
-		try{
-			firstTextView.setText(rusTag.change(list.get(position).tag(firstTag).value()));
-			firstTextView.setText(rusTag.change(list.get(position).tag(secondTag).value()));
-		}catch(NoSuchTagException e){
-			
-		}catch(NullPointerException e){
-			//FIXME resolve that
+		try {
+			firstTextView.setText(rusTag.change(list.get(position)
+					.tag(firstTag).value()));
+			secondTextView.setText(rusTag.change(list.get(position)
+					.tag(secondTag).value()));
+		} catch (NoSuchTagException e) {
+		} catch (NullPointerException e) {
 		}
-			return view;
+		return view;
 	}
 
 }
