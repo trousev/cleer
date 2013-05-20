@@ -13,6 +13,7 @@ import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.android.AndroidMessages.Action;
 import pro.trousev.cleer.android.AndroidMessages.ProgressBarMessage;
+import pro.trousev.cleer.android.AndroidMessages.SeekBarMessage;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.RusTag;
 import android.os.Bundle;
@@ -24,10 +25,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class PlayBar extends Fragment implements OnClickListener {
+public class PlayBar extends Fragment implements OnClickListener, OnSeekBarChangeListener{
 	private Button queueBtn, mainMenuBtn;
 	private ImageView playPauseBtn, prevCompBtn, nextCompBtn;
 	private TextView compName;
@@ -37,8 +39,9 @@ public class PlayBar extends Fragment implements OnClickListener {
 	final int STOPPED = 0;
 	final int PAUSED = 2;
 	private int status = STOPPED;
-	private ProgressBar progressBar;
-	ProgressBarMessage progressBarMessage = null;
+	private SeekBar progressBar;
+	private SeekBarMessage seekBarMessage = null;
+	private ProgressBarMessage progressBarMessage = null;
 	Timer progressBarTimer = null;
 	TimerTask progressBarTimerTask = null;
 	private PlayerChangedStatusEvent playerChangedStatusEvent;
@@ -66,7 +69,6 @@ public class PlayBar extends Fragment implements OnClickListener {
 					compName.setText(rusTag.change(ev.track.tag("title")
 							.value()));
 				} catch (NoSuchTagException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -86,7 +88,8 @@ public class PlayBar extends Fragment implements OnClickListener {
 		nextCompBtn = (ImageView) view.findViewById(R.id.next_comp_btn);
 		queueBtn = (Button) view.findViewById(R.id.queue_btn);
 		mainMenuBtn = (Button) view.findViewById(R.id.main_menu_btn);
-		progressBar = (ProgressBar) view.findViewById(R.id.player_progress_bar);
+		progressBar = (SeekBar) view.findViewById(R.id.player_progress_bar);
+		progressBar.setOnSeekBarChangeListener(this);
 		queueBtn.setOnClickListener(root);
 		mainMenuBtn.setOnClickListener(root);
 		playPauseBtn.setOnClickListener(this);
@@ -100,6 +103,7 @@ public class PlayBar extends Fragment implements OnClickListener {
 				playerChangedStatusEvent);
 
 		progressBarMessage = new ProgressBarMessage();
+		seekBarMessage = new SeekBarMessage();
 		progressBarMessage.progressBar = this.progressBar;
 		progressBarTimerTask = new TimerTask() {
 
@@ -174,5 +178,23 @@ public class PlayBar extends Fragment implements OnClickListener {
 		progressBarTimer.cancel();
 		progressBarTimer = null;
 		super.onDestroy();
+	}
+
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress,
+			boolean fromUser) {
+		seekBarMessage.seekBar = seekBar;
+		seekBarMessage.position = progress;
+		Messaging.fire(seekBarMessage);
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+	
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+
 	}
 }

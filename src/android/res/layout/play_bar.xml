@@ -10,7 +10,7 @@
         android:layout_marginLeft="10dp"
         android:textSize="13sp" />
 
-    <ProgressBar
+    <SeekBar
         android:id="@+id/player_progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
