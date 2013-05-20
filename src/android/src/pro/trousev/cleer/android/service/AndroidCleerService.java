@@ -175,14 +175,18 @@ public class AndroidCleerService extends Service {
 			}
 		}
 	};
-	
+
 	private Event seekBarEvent = new Messaging.Event() {
-		
+
 		@Override
 		public void messageReceived(Message message) {
+			Log.d(Constants.LOG_TAG, "Service: SeekBar message received");
 			SeekBarMessage mes = (SeekBarMessage) message;
 			int position = mes.value * Constants.PROGRESSBAR_TIMER_RATE;
-			player.setCurrentPosition(position);
+			if ((player != null) || (player.getStatus() == Status.Playing)
+					|| (player.getStatus() == Status.Paused))
+				player.setCurrentPosition(position);
+			Log.d(Constants.LOG_TAG, "Service: SeekBar message proceeed");
 		}
 	};
 
@@ -242,7 +246,8 @@ public class AndroidCleerService extends Service {
 				serviceRequestEvent);
 		Messaging.unSubscribe(AndroidMessages.ServiceTaskMessage.class,
 				serviceTaskEvent);
-		Messaging.unSubscribe(AndroidMessages.SeekBarMessage.class, seekBarEvent);
+		Messaging.unSubscribe(AndroidMessages.SeekBarMessage.class,
+				seekBarEvent);
 		mNotificationManager.cancelAll();
 		super.onDestroy();
 		Log.d(Constants.LOG_TAG, "Service: Destroyed");
