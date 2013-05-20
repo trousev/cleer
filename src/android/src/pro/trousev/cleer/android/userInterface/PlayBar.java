@@ -11,7 +11,8 @@ import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.Status;
-import pro.trousev.cleer.android.AndroidMessages.Action;
+import pro.trousev.cleer.android.AndroidMessages.PlayBarAction;
+import pro.trousev.cleer.android.AndroidMessages.PlayBarMessage;
 import pro.trousev.cleer.android.AndroidMessages.ProgressBarMessage;
 import pro.trousev.cleer.android.AndroidMessages.SeekBarMessage;
 import pro.trousev.cleer.android.Constants;
@@ -43,6 +44,7 @@ public class PlayBar extends Fragment implements OnClickListener,
 	private SeekBar progressBar;
 	private SeekBarMessage seekBarMessage = null;
 	private ProgressBarMessage progressBarMessage = null;
+	private PlayBarMessage playBarMessage = null;
 	Timer progressBarTimer = null;
 	TimerTask progressBarTimerTask = null;
 	private PlayerChangedStatusEvent playerChangedStatusEvent;
@@ -102,7 +104,8 @@ public class PlayBar extends Fragment implements OnClickListener,
 		playerChangedStatusEvent = new PlayerChangedStatusEvent();
 		Messaging.subscribe(Player.PlayerChangeEvent.class,
 				playerChangedStatusEvent);
-
+		
+		playBarMessage = new PlayBarMessage();
 		progressBarMessage = new ProgressBarMessage();
 		seekBarMessage = new SeekBarMessage();
 		progressBarMessage.progressBar = this.progressBar;
@@ -141,30 +144,27 @@ public class PlayBar extends Fragment implements OnClickListener,
 		case R.id.play_pause_btn:
 			switch (status) {
 			case PLAYING:
-				root.taskMessage.action = Action.Pause;
-				Messaging.fire(root.taskMessage);
+				playBarMessage.action = PlayBarAction.Pause;
 				break;
 			case PAUSED:
-				root.taskMessage.action = Action.Resume;
-				Messaging.fire(root.taskMessage);
+				playBarMessage.action = PlayBarAction.Resume;
 				break;
 			case STOPPED:
-				root.taskMessage.action = Action.Play;
-				Messaging.fire(root.taskMessage);
+				playBarMessage.action = PlayBarAction.Play;
 				break;
 			}
 			break;
 		case R.id.next_comp_btn:
-			root.taskMessage.action = Action.Next;
-			Messaging.fire(root.taskMessage);
+			playBarMessage.action = PlayBarAction.Next;
 			break;
 		case R.id.prev_comp_btn:
-			root.taskMessage.action = Action.Previous;
-			Messaging.fire(root.taskMessage);
+			playBarMessage.action = PlayBarAction.Previous;
 			break;
 		default:
+			Log.e(Constants.LOG_TAG, "PlayBar: Illegal state id");
 			break;
 		}
+		Messaging.fire(playBarMessage);
 	}
 
 	@Override
