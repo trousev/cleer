@@ -77,8 +77,10 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 			//mediaPlayer.prepareAsync();
 			try {
 				mediaPlayer.prepare();
+				mediaPlayer.start();
+				currentStatus = Status.Playing;
 			} catch (IllegalStateException e) {
-				Log.e(Constants.LOG_TAG, "PlayerAndroid: Called play() int illegal state");
+				Log.e(Constants.LOG_TAG, "PlayerAndroid: Called play() in illegal state");
 				//e.printStackTrace();
 			} catch (IOException e) {
 				Log.e(Constants.LOG_TAG, "PlayerAndroid: IOException");

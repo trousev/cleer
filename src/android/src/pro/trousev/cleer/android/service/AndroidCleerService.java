@@ -5,8 +5,8 @@ import java.util.List;
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
-import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Item.NoSuchTagException;
+import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
@@ -16,6 +16,7 @@ import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Queue.EnqueueMode;
 import pro.trousev.cleer.android.AndroidMessages;
+import pro.trousev.cleer.android.AndroidMessages.PlayBarMessage;
 import pro.trousev.cleer.android.AndroidMessages.ProgressBarMessage;
 import pro.trousev.cleer.android.AndroidMessages.SeekBarMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
@@ -25,8 +26,8 @@ import pro.trousev.cleer.android.CleerAndroidNotificationManager;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.MediaScanner.MediaScannerException;
 import pro.trousev.cleer.sys.LibraryImpl;
-import pro.trousev.cleer.sys.TrackImpl;
 import pro.trousev.cleer.sys.QueueImpl;
+import pro.trousev.cleer.sys.TrackImpl;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
@@ -36,7 +37,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-//TODO Make notification and foreground job
 public class AndroidCleerService extends Service {
 	private static ServiceRespondMessage respondMessage = new ServiceRespondMessage();
 
@@ -46,6 +46,54 @@ public class AndroidCleerService extends Service {
 	private List<Item> itemList = new ArrayList<Item>();
 	private Database database = null;
 	private Library library = null;
+
+	private void updatePlayerNotification() {
+		if (player == null)
+			return;
+		Boolean foreground = false;
+		String description = "";
+		switch (player.getStatus()) {
+		case Playing:
+			description = " (Playing)";
+			foreground = true;
+			break;
+		case Paused:
+			description = " (Paused)";
+			foreground = false;
+			break;
+		case Processing:
+			description = " (Processing)";
+			foreground = true;
+			break;
+		case Stopped:
+			foreground = false;
+			break;
+		case Closed:
+			foreground = false;
+			break;
+		default:
+			Log.e(Constants.LOG_TAG, "Service: Illegal player status");
+		}
+		Log.d(Constants.LOG_TAG, "Service: What's up?" + description);
+		if (!description.equals("")) {
+			String n = "";
+			try {
+				n = queue.playing_track().tag("title").value();
+			} catch (NoSuchTagException e1) {
+				n = "NO_NAME_AVALIBLE";
+				// e1.printStackTrace();
+			} finally {
+				mNotificationManager.postPlayerNotification(n + description);
+			}
+			if (foreground) {
+				Notification notification = mNotificationManager
+						.getPlayerNotification();
+				startForeground(Constants.PLAYER_NOTIFICATION_ID, notification);
+			} else {
+				stopForeground(false);
+			}
+		}
+	}
 
 	private Event serviceRequestEvent = new Messaging.Event() {
 		@Override
@@ -79,47 +127,53 @@ public class AndroidCleerService extends Service {
 		}
 	};
 
+	private Event playBarEvent = new Messaging.Event() {
+
+		@Override
+		public void messageReceived(Message message) {
+			if (player == null)
+				if ((player.getStatus() == Status.Closed)
+						|| (player.getStatus() == Status.Error)
+						|| (player.getStatus() == Status.Processing))
+					return;
+			PlayBarMessage mes = (PlayBarMessage) message;
+			switch (mes.action) {
+			case Play:
+				queue.play();
+				break;
+			case Resume:
+				queue.resume();
+				break;
+			case Pause:
+				queue.pause();
+				break;
+			case Next:
+				queue.next();
+				break;
+			case Previous:
+				queue.prev();
+				break;
+			default:
+				Log.e(Constants.LOG_TAG, "Service: Unknown PlayBar action");
+				return;
+			}
+			updatePlayerNotification();
+		}
+	};
+
 	private Event serviceTaskEvent = new Messaging.Event() {
 		@Override
 		public void messageReceived(Message message) {
 			Log.d(Constants.LOG_TAG, getApplicationContext().getPackageName());
-			// TODO end implementation of that event
 			ServiceTaskMessage mes = (ServiceTaskMessage) message;
-			String description = "";
-			Boolean foreground = false;
 			switch (mes.action) {
-			case Play:
-				queue.play();
-				description = " (Playing)";
-				foreground = true;
-				break;
-			case Resume:
-				queue.resume();
-				description = " (Playing)";
-				foreground = true;
-				break;
-			case Pause:
-				queue.pause();
-				description = " (Paused)";
-				foreground = false;
-				break;
-			case Next:
-				queue.next();
-				description = " (Playing)";
-				foreground = true;
-				break;
-			case Previous:
-				queue.prev();
-				description = " (Playing)";
-				foreground = true;
-				break;
 			case addToQueue:
 				queue.enqueue(mes.list, EnqueueMode.AfterAll);
 				break;
 			case setToQueue:
 				queue.enqueue(mes.list, EnqueueMode.ReplaceAll);
 				queue.seek(mes.position);
-				description = " (Playing)";
+				updatePlayerNotification();
 				break;
 			case scanSystem:
 				MediaScanner mediaScanner = new MediaScanner(getApplication());
@@ -132,29 +186,11 @@ public class AndroidCleerService extends Service {
 				}
 				break;
 			default:
-				break;
-			// TODO add others...
+				Log.e(Constants.LOG_TAG, "Service: Unkonwn ServiceTask action");
+				return;
 			}
-			if (!description.equals("")) {
-				String n = "";
-				try {
-					n = queue.playing_track().tag("title").value();
-				} catch (NoSuchTagException e1) {
-					n = "NO_NAME_AVALIBLE";
-					// e1.printStackTrace();
-				} finally {
-					mNotificationManager
-							.postPlayerNotification(n + description);
-				}
-				if (foreground) {
-					Notification notification = mNotificationManager
-							.getPlayerNotification();
-					startForeground(Constants.PLAYER_NOTIFICATION_ID,
-							notification);
-				} else {
-					stopForeground(true);
-				}
-			}
+			Log.d(Constants.LOG_TAG, "Service: \"switch\" completed");
+
 		}
 	};
 
@@ -215,14 +251,15 @@ public class AndroidCleerService extends Service {
 					"Service: Cannot create library. Database error.");
 			e.printStackTrace();
 		}
-		Log.d(Constants.LOG_TAG, "Service: All service instances created");
 		mNotificationManager = new CleerAndroidNotificationManager(this);
+		Log.d(Constants.LOG_TAG, "Service: All service instances created");
 		Messaging.subscribe(AndroidMessages.ServiceRequestMessage.class,
 				serviceRequestEvent);
 		Messaging.subscribe(AndroidMessages.ServiceTaskMessage.class,
 				serviceTaskEvent);
 		Messaging.subscribe(AndroidMessages.ProgressBarMessage.class,
 				progressBarEvent);
+		Messaging.subscribe(AndroidMessages.PlayBarMessage.class, playBarEvent);
 		Messaging.subscribe(AndroidMessages.SeekBarMessage.class, seekBarEvent);
 		Log.d(Constants.LOG_TAG, "Service: Subscibed on several messages");
 	}
@@ -249,6 +286,8 @@ public class AndroidCleerService extends Service {
 				serviceTaskEvent);
 		Messaging.unSubscribe(AndroidMessages.SeekBarMessage.class,
 				seekBarEvent);
+		Messaging.unSubscribe(AndroidMessages.PlayBarMessage.class,
+				playBarEvent);
 		mNotificationManager.cancelAll();
 		super.onDestroy();
 		Log.d(Constants.LOG_TAG, "Service: Destroyed");
