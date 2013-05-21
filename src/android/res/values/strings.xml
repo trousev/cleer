@@ -14,9 +14,13 @@
     <string name="artists">Artists</string>
     <string name="genres">Genres</string>
     <string name="lists">Playlists</string>
-    <string name="alert_dialog_ok">Scan</string>
+    <string name="alert_dialog_ok">OK</string>
+    <string name="scan">Scan</string>
+    <string name="clear_queue">Do you want to clear queue?</string>
     <string name="alert_dialog_cancel">Cancel</string>
+    <string name="playlist_name">playlist name</string>
     <string name="need_scan_dialog_title">Library is empty</string>
+    <string name="new_playlist">New playlist</string>
     <string name="need_scan">There is no mediafiles in library. Maybe you should refresh it.</string>
 
 </resources>
