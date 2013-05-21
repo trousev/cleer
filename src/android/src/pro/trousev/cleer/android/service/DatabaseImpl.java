@@ -9,11 +9,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.database.DatabaseErrorHandler;
 import pro.trousev.cleer.Database;
-import pro.trousev.cleer.Database.DatabaseError;
-import pro.trousev.cleer.Database.DatabaseObject;
+
 
 public class DatabaseImpl implements Database {
 	public SQLiteDatabase db;
@@ -51,6 +48,7 @@ public class DatabaseImpl implements Database {
 	public class DatabaseObject implements Database.DatabaseObject {
 		private String id = null;
 		private String contents = null;
+		@SuppressWarnings("unused")
 		private DatabaseImpl parent = null;
 		private String section = null;
 		private String search = null;
@@ -122,6 +120,7 @@ public class DatabaseImpl implements Database {
 				return true;
 			}
 			try {
+				@SuppressWarnings("unused")
 				int updCount = db.update(this.section, cv, "id = " + this.id,
 						new String[] { id });
 			} catch (SQLException e) {
@@ -141,6 +140,7 @@ public class DatabaseImpl implements Database {
 				return true;
 			}
 			try {
+				@SuppressWarnings("unused")
 				int updCount = db.update(this.section, cv, "id = " + this.id,
 						new String[] { id });
 			} catch (SQLException e) {
@@ -160,6 +160,7 @@ public class DatabaseImpl implements Database {
 				return true;
 			}
 			try {
+				@SuppressWarnings("unused")
 				int updCount = db.update(this.section, cv, "id = " + this.id,
 						new String[] { id });
 			} catch (SQLException e) {

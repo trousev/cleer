@@ -7,14 +7,12 @@ import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Library;
-import pro.trousev.cleer.Library.FolderScanCallback;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.Status;
-import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Queue.EnqueueMode;
 import pro.trousev.cleer.android.AndroidMessages;
@@ -100,15 +98,14 @@ public class AndroidCleerService extends Service {
 	private Event serviceRequestEvent = new Messaging.Event() {
 		@Override
 		public void messageReceived(Message message) {
-			// TODO end implementation of that event
 			ServiceRequestMessage mes = (ServiceRequestMessage) message;
 			respondMessage.list = new ArrayList<Item>();
 			switch (mes.type) {
 			case Compositions:
-				Playlist p = library.search("");
-				List<Item> l = p.contents();
-				Log.d(Constants.LOG_TAG, "Service: Compositions" + p.contents().get(0).filename().toString());
-				respondMessage.list.addAll(p.contents());
+//				Playlist p = library.search("");
+//				List<Item> l = p.contents();
+//				Log.d(Constants.LOG_TAG, "Service: Compositions" + p.contents().get(0).filename().toString());
+				respondMessage.list.addAll(itemList);
 				break;
 			case Queue:
 				// FIXME it doesn't work
@@ -184,39 +181,39 @@ public class AndroidCleerService extends Service {
 				updatePlayerNotification();
 				break;
 			case scanSystem:
-//				MediaScanner mediaScanner = new MediaScanner(getApplication());
-//				try {
-//					// TODO set this to database
-//					itemList = mediaScanner.scanner();
-//				} catch (MediaScannerException e) {
-//					Log.e(Constants.LOG_TAG, "Can't scan for mediafiles");
-//					e.printStackTrace();
-//				}
-				library.folder_scan(new FolderScanCallback() {
-
-					@Override
-					public void started() {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void finished() {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void progress(int current, int maximum) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void message(String message) {
-						// TODO Auto-generated method stub
-						
-					}});
+				MediaScanner mediaScanner = new MediaScanner(getApplication());
+				try {
+					// TODO set this to database
+					itemList = mediaScanner.scanner();
+				} catch (MediaScannerException e) {
+					Log.e(Constants.LOG_TAG, "Can't scan for mediafiles");
+					e.printStackTrace();
+				}
+//				library.folder_scan(new FolderScanCallback() {
+//
+//					@Override
+//					public void started() {
+//						// TODO Auto-generated method stub
+//						
+//					}
+//
+//					@Override
+//					public void finished() {
+//						// TODO Auto-generated method stub
+//						
+//					}
+//
+//					@Override
+//					public void progress(int current, int maximum) {
+//						// TODO Auto-generated method stub
+//						
+//					}
+//
+//					@Override
+//					public void message(String message) {
+//						// TODO Auto-generated method stub
+//						
+//					}});
 				break;
 			default:
 				Log.e(Constants.LOG_TAG, "Service: Unkonwn ServiceTask action");

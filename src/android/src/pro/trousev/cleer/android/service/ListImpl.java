@@ -3,15 +3,9 @@ package pro.trousev.cleer.android.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import pro.trousev.cleer.Database;
-import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.android.Constants;
-import pro.trousev.cleer.android.service.DatabaseImpl.DatabaseObject;
+import android.content.Context;
 
 public class ListImpl {
 	DatabaseImpl database;

@@ -9,9 +9,8 @@ public class RusTag {
 		if (s == null)
 			return null;
 		Charset C= Charset.forName("windows-1251");
-		ByteBuffer buffer=null;
 		try{
-			return (C.decode(buffer.wrap(s.getBytes("UTF-16LE")))).toString();
+			return (C.decode(ByteBuffer.wrap(s.getBytes("UTF-16LE")))).toString();
 		}catch(UnsupportedEncodingException e){
 			return s;
 		}
