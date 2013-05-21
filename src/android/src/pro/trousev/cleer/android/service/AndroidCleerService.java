@@ -11,6 +11,7 @@ import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Player;
+import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.Queue;
@@ -108,7 +109,6 @@ public class AndroidCleerService extends Service {
 				respondMessage.list.addAll(itemList);
 				break;
 			case Queue:
-				// FIXME it doesn't work
 				respondMessage.list.addAll(queue.queue());
 				break;
 			case Albums:
@@ -118,6 +118,7 @@ public class AndroidCleerService extends Service {
 			case Artists:
 				break;
 			case Playlists:
+				respondMessage.playlists = new ArrayList<Playlist>();
 				break;
 			case Playlist:
 				break;

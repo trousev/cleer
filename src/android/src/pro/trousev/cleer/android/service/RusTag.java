@@ -5,17 +5,20 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 public class RusTag {
-	public String change(String s){
+	public String change(String s) {
 		if (s == null)
 			return null;
 		if (s.isEmpty())
 			return s;
-		Charset C= Charset.forName("windows-1251");
-		ByteBuffer buffer=null;
-		int i,x=0;
-		try{
-			//TODO insert Akbar
-		}catch(UnsupportedEncodingException e){
+		Charset C = Charset.forName("windows-1251");
+
+		try {
+			if ((int) s.charAt(0) < 1040)
+				return C.decode(ByteBuffer.wrap(s.getBytes("UTF-16LE")))
+						.toString();
+			else
+				return s;
+		} catch (UnsupportedEncodingException e) {
 			return s;
 		}
 	}
