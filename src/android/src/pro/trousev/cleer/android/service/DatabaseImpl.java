@@ -26,7 +26,7 @@ public class DatabaseImpl implements Database {
 	}
 
 	public class DBHelper extends SQLiteOpenHelper {
-		public String section = "default";
+		public String section = "section_default";
 
 		public DBHelper(String path, Context context) {
 			// конструктор суперкласса
@@ -174,9 +174,7 @@ public class DatabaseImpl implements Database {
 	@Override
 	public boolean declare_section(String section) throws DatabaseError {
 		try {
-			db.execSQL("create table " + section + "("
-					+ "id integer primary key autoincrement," + "value text,"
-					+ "search text" + "keywords text" + ");");
+			db.execSQL("CREATE TABLE IF NOT EXISTS " + section + " (`id` integer primary key autoincrement, `value` text, `keywords` text,  `search` text);");
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
 		}
@@ -187,7 +185,7 @@ public class DatabaseImpl implements Database {
 	@Override
 	public boolean clear_section(String section) throws DatabaseError {
 		try {
-			db.delete(section, null, null);
+			db.execSQL("drop table "+ section);
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
 		}
@@ -200,9 +198,11 @@ public class DatabaseImpl implements Database {
 			String contents, String keywords) throws DatabaseError {
 		keywords = keywords.toLowerCase();
 		keywords = keywords.replace("'", "''");
+		keywords = "'" + keywords + "'";
 		contents = contents.replace("'", "''");
+		contents = "'" + contents + "'";
 		try {
-			db.execSQL("insert into" + section + "(value, keywords) values ("
+			db.execSQL("insert into " + section + " (`value`, `keywords`) values ("
 					+ contents + ", " + keywords + ");");
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
@@ -312,7 +312,7 @@ public class DatabaseImpl implements Database {
 			pro.trousev.cleer.Database.DatabaseObject object)
 			throws DatabaseError {
 		try {
-			db.execSQL("delete from " + section + "where id = " + object.id()
+			db.execSQL("delete * from " + section + "where id = " + object.id()
 					+ ";");
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
