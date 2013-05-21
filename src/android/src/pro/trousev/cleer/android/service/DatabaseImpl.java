@@ -13,6 +13,7 @@ import android.util.Log;
 import android.database.DatabaseErrorHandler;
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
+import pro.trousev.cleer.Database.DatabaseObject;
 
 public class DatabaseImpl implements Database {
 	public SQLiteDatabase db;
@@ -174,7 +175,9 @@ public class DatabaseImpl implements Database {
 	@Override
 	public boolean declare_section(String section) throws DatabaseError {
 		try {
-			db.execSQL("CREATE TABLE IF NOT EXISTS " + section + " (`id` integer primary key autoincrement, `value` text, `keywords` text,  `search` text);");
+			db.execSQL("CREATE TABLE IF NOT EXISTS "
+					+ section
+					+ " (`id` integer primary key autoincrement, `value` text, `keywords` text,  `search` text);");
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
 		}
@@ -185,7 +188,7 @@ public class DatabaseImpl implements Database {
 	@Override
 	public boolean clear_section(String section) throws DatabaseError {
 		try {
-			db.execSQL("drop table "+ section);
+			db.execSQL("drop table " + section);
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
 		}
@@ -202,12 +205,40 @@ public class DatabaseImpl implements Database {
 		contents = contents.replace("'", "''");
 		contents = "'" + contents + "'";
 		try {
-			db.execSQL("insert into " + section + " (`value`, `keywords`) values ("
-					+ contents + ", " + keywords + ");");
+			db.execSQL("insert into " + section
+					+ " (`value`, `keywords`) values (" + contents + ", "
+					+ keywords + ");");
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
 		}
 		return null;
+	}
+
+	public boolean store(String section, String content) throws DatabaseError {
+		content = content.replace("'", "''");
+		content = "'" + content + "'";
+		Cursor c;
+		String[] columns = { "id", "value", "count" };
+		String where = "value = " + content;
+
+		try {
+			db.execSQL("create table if not exists "
+					+ section
+					+ " (`id` integer primary key autoincrement, `value` text,  `count` int);");
+
+			c = db.query(section, columns, where, null, null, null, null);
+			if (c.getColumnName(1) != null) {
+				db.execSQL("update " + section
+						+ "set count = count + 1 where value = " + content);
+			} else {
+				db.execSQL("insert into " + section
+						+ " (`value`, `count`) values (" + content + ", 1);");
+			}
+			c.close();
+		} catch (SQLException e) {
+			throw new DatabaseError(e);
+		}
+		return true;
 	}
 
 	private String languageMatch(String query) {
@@ -306,6 +337,21 @@ public class DatabaseImpl implements Database {
 		return answer;
 	}
 
+	public List<String> search(String section) throws DatabaseError {
+
+		List<String> answer = new ArrayList<String>();
+		Cursor c;
+
+		String[] columns = { "id", "value" };
+
+		c = db.query(section, columns, null, null, null, null, null);
+		while (c.moveToNext()) {
+			answer.add(c.getColumnName(1));
+		}
+		c.close();
+		return answer;
+	}
+
 	// remove object from database (i.e. from particular section)
 	@Override
 	public boolean remove(String section,
@@ -314,6 +360,23 @@ public class DatabaseImpl implements Database {
 		try {
 			db.execSQL("delete * from " + section + "where id = " + object.id()
 					+ ";");
+		} catch (SQLException e) {
+			throw new DatabaseError(e);
+		}
+		return true;
+	}
+
+	public boolean remove(String section, pro.trousev.cleer.Database.DatabaseObject object,
+			String otherSection) throws DatabaseError {
+		try {
+			db.execSQL("delete * from " + section + "where id = " + object.id()
+					+ ";");
+			db.execSQL("delete * from " + otherSection
+					+ "where content = "
+					+ object.contents() + "and count = 1" + ";");
+			db.execSQL("update " + otherSection
+					+ "set count = count - 1 where content = "
+					+ object.contents() + "and (count - 1) > 0" + ";");
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
 		}
@@ -359,5 +422,6 @@ public class DatabaseImpl implements Database {
 		}
 		return true;
 	}
+
 
 }
