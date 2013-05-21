@@ -34,7 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class Queue extends ListOfCompositions {
-	private QueueChangedEvent event;
+
 	public Queue(List<Item> arg) {
 		super(arg);
 	}
@@ -105,6 +105,8 @@ public class Queue extends ListOfCompositions {
 		case R.id.clearQueue:
 			message.action = Action.clearQueue;
 			Messaging.fire(message);
+			list.clear();
+			getAdapter().notifyDataSetChanged();
 			break;
 		case R.id.addToList:
 			ServiceRequestMessage msg = ((MainActivity) getActivity()).requestMessage;
@@ -126,8 +128,5 @@ public class Queue extends ListOfCompositions {
 		message.position = position;
 		Messaging.fire(message);
 	}
-	@Override
-	public void onDestroy(){
-		super.onDestroy();
-	}
+
 }
