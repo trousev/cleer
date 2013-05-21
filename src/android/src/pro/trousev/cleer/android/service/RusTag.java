@@ -8,7 +8,9 @@ public class RusTag {
 	public String change(String s){
 		if (s == null)
 			return null;
-		Charset C= Charset.forName("windows 1251");
+		if (s.isEmpty())
+			return s;
+		Charset C= Charset.forName("windows-1251");
 		ByteBuffer buffer=null;
 		try{
 				if ((int)s.charAt(0)<0400){
