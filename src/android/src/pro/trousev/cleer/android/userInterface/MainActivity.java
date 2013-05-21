@@ -6,6 +6,7 @@ import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
+import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.android.AndroidMessages;
 import pro.trousev.cleer.android.AndroidMessages.Action;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
@@ -14,7 +15,6 @@ import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.AndroidCleerService;
-import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -57,7 +57,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setListOfRequests(respondMessage.list, "Album", "Artist");
 				break;
 			case Playlists:
-				// TODO decide how do we want show that
+				
 				break;
 			case Playlist:
 				setListOfCompositions(respondMessage.list);
@@ -72,10 +72,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setQueue(respondMessage.list);
 				break;
 			case PlaylistsInDialog:
-				// TODO set dialog here
-				// someExperiments
-				Dialog dialog = new Dialog(MainActivity.this);
-				dialog.show();
+				showPlaylistsDialog(respondMessage.playlists,
+						respondMessage.item);
 				break;
 			}
 		}
@@ -102,13 +100,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			public void onServiceConnected(ComponentName name, IBinder binder) {
 				service = ((AndroidCleerService.CleerBinder) binder)
 						.getService();
-				Log.d(Constants.LOG_TAG, "MainActivity onServiceConnected");
 				bound = true;
 			}
 
 			@Override
 			public void onServiceDisconnected(ComponentName name) {
-				Log.d(Constants.LOG_TAG, "MainActivity onServiceDisconnected");
 				bound = false;
 			}
 		};
@@ -126,24 +122,33 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 
-	void showDialog() {
+	void showNewPlaylistDialog(Item item) {
+		DialogFragment dialog = NewPlaylistDialogFragment.newInstance(item);
+		dialog.show(fragmentManager, "dialog");
+	}
+
+	void showClearQueueDialog() {
+		DialogFragment dialog = ClearQueueDialogFragment.newInstance();
+		dialog.show(fragmentManager, "dialog");
+	}
+
+	void showPlaylistsDialog(List<Playlist> playlists, Item item) {
+		DialogFragment dialog = PlaylistsDialogFragment.newInstance(playlists,
+				item);
+		dialog.show(fragmentManager, "dialog");
+	}
+
+	void showScanAlertDialog() {
 		DialogFragment newFragment = NeedScanDialogFragment
 				.newInstance(R.string.need_scan_dialog_title);
 		newFragment.show(fragmentManager, "dialog");
 	}
 
-	public void doPositiveClick() {
-		ServiceTaskMessage mes = new ServiceTaskMessage();
-		mes.action = Action.scanSystem;
-		Messaging.fire(mes);
-	}
-
-	public void doNegativeClick() {
-	}
+	
 
 	public void setListOfCompositions(List<Item> list) {
 		if ((list.isEmpty()) || (list == null)) {
-			showDialog();
+			showScanAlertDialog();
 			return;
 		}
 		ListOfCompositions listOfCompositions = new ListOfCompositions(list);
@@ -156,7 +161,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void setListOfRequests(List<Item> list, String firstTagName,
 			String secondTagName) {
 		if ((list.isEmpty()) || (list == null)) {
-			showDialog();
+			showScanAlertDialog();
 			return;
 		}
 		ListOfRequests listOfRequests = new ListOfRequests(list, firstTagName,

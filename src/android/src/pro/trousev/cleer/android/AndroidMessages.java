@@ -15,7 +15,7 @@ public interface AndroidMessages {
 	}
 
 	enum Action {
-		setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList, scanSystem
+		clearQueue, setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList, scanSystem
 	}
 
 	public enum PlayBarAction {
@@ -39,11 +39,13 @@ public interface AndroidMessages {
 
 	public static class ServiceRequestMessage implements Messaging.Message {
 		public String searchQuery;
+		public Item item;
 		public TypeOfResult type;
 	}
 
 	public static class ServiceRespondMessage implements Messaging.Message {
 		public List<Playlist> playlists;
+		public Item item;
 		public List<Item> list;
 		public TypeOfResult typeOfContent;
 	}

@@ -167,6 +167,9 @@ public class AndroidCleerService extends Service {
 			Log.d(Constants.LOG_TAG, getApplicationContext().getPackageName());
 			ServiceTaskMessage mes = (ServiceTaskMessage) message;
 			switch (mes.action) {
+			case clearQueue:
+				queue.clear();
+				break;
 			case addToQueue:
 				queue.enqueue(mes.list, EnqueueMode.AfterAll);
 				break;

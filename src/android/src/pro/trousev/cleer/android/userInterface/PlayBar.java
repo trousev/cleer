@@ -18,11 +18,13 @@ import pro.trousev.cleer.android.AndroidMessages.SeekBarMessage;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.RusTag;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,8 +32,8 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class PlayBar extends Fragment implements OnClickListener,
-		OnSeekBarChangeListener {
+public class PlayBar extends Fragment implements OnClickListener, OnLongClickListener,
+		OnSeekBarChangeListener{
 	private Button queueBtn, mainMenuBtn;
 	private ImageView playPauseBtn, prevCompBtn, nextCompBtn;
 	private TextView compName;
@@ -94,6 +96,7 @@ public class PlayBar extends Fragment implements OnClickListener,
 		progressBar = (SeekBar) view.findViewById(R.id.player_progress_bar);
 		progressBar.setOnSeekBarChangeListener(this);
 		queueBtn.setOnClickListener(root);
+		queueBtn.setOnLongClickListener(this);
 		mainMenuBtn.setOnClickListener(root);
 		playPauseBtn.setOnClickListener(this);
 		prevCompBtn.setOnClickListener(this);
@@ -197,5 +200,14 @@ public class PlayBar extends Fragment implements OnClickListener,
 		seekBarMessage.seekBar = seekBar;
 		seekBarMessage.value = seekBar.getProgress();
 		Messaging.fire(seekBarMessage);
+	}
+
+	@Override
+	public boolean onLongClick(View view) {
+		switch(view.getId()){
+		case R.id.queue_btn:
+			((MainActivity)getActivity()).showClearQueueDialog();
+		}
+		return false;
 	}
 }
