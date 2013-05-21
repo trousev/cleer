@@ -57,8 +57,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setListOfRequests(respondMessage.list, "Album", "Artist");
 				break;
 			case Playlists:
-				// FIXME
-				// setListOfRequests(respondMessage.playlists);
+				
 				break;
 			case Playlist:
 				setListOfCompositions(respondMessage.list);
@@ -145,11 +144,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		newFragment.show(fragmentManager, "dialog");
 	}
 
-	public void doPositiveClick() {
-		ServiceTaskMessage mes = new ServiceTaskMessage();
-		mes.action = Action.scanSystem;
-		Messaging.fire(mes);
-	}
+	
 
 	public void setListOfCompositions(List<Item> list) {
 		if ((list.isEmpty()) || (list == null)) {

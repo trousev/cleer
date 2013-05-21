@@ -1,5 +1,8 @@
 package pro.trousev.cleer.android.userInterface;
 
+import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.android.AndroidMessages.Action;
+import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -26,17 +29,20 @@ public class NeedScanDialogFragment extends DialogFragment {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
-								((MainActivity) getActivity())
-										.doPositiveClick();
+								ServiceTaskMessage mes = new ServiceTaskMessage();
+								mes.action = Action.scanSystem;
+								Messaging.fire(mes);
 							}
 						})
-				.setNegativeButton(R.string.alert_dialog_cancel,new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog,
-							int whichButton) {
-						NeedScanDialogFragment.this.getDialog().cancel();
-					}
-				})
-				
+				.setNegativeButton(R.string.alert_dialog_cancel,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								NeedScanDialogFragment.this.getDialog()
+										.cancel();
+							}
+						})
+
 				.create();
 	}
 }
