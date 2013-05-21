@@ -8,9 +8,13 @@ public class RusTag {
 	public String change(String s){
 		if (s == null)
 			return null;
+		if (s.isEmpty())
+			return s;
 		Charset C= Charset.forName("windows-1251");
+		ByteBuffer buffer=null;
+		int i,x=0;
 		try{
-			return (C.decode(ByteBuffer.wrap(s.getBytes("UTF-16LE")))).toString();
+			//TODO insert Akbar
 		}catch(UnsupportedEncodingException e){
 			return s;
 		}
