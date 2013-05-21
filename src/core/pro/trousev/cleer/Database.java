@@ -2,6 +2,9 @@ package pro.trousev.cleer;
 
 import java.util.List;
 
+import pro.trousev.cleer.Database.DatabaseError;
+import pro.trousev.cleer.Database.DatabaseObject;
+
 
 /**
  * Database -- Интерфейс, предоставляющий функционал произвольного хранилища.
@@ -157,4 +160,7 @@ public interface Database {
 	 * @return
 	 */
 	public boolean rollback() throws DatabaseError;
+
+	boolean remove(String section, DatabaseObject object, String otherSection)
+			throws DatabaseError;
 }
