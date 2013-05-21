@@ -15,7 +15,7 @@ public interface AndroidMessages {
 	}
 
 	enum Action {
-		setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList, scanSystem
+		clearQueue, setToQueue, setToQueueBySearchQuery, addToQueue, addToQueueBySearchQuery, addToPlayListBySeachQuery, addToPlaylist, createNewList, scanSystem
 	}
 
 	public enum PlayBarAction {

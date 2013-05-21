@@ -57,8 +57,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setListOfRequests(respondMessage.list, "Album", "Artist");
 				break;
 			case Playlists:
-				//FIXME
-				//setListOfRequests(respondMessage.playlists);
+				// FIXME
+				// setListOfRequests(respondMessage.playlists);
 				break;
 			case Playlist:
 				setListOfCompositions(respondMessage.list);
@@ -73,7 +73,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setQueue(respondMessage.list);
 				break;
 			case PlaylistsInDialog:
-				showPlaylistsDialog(respondMessage.playlists, respondMessage.item);
+				showPlaylistsDialog(respondMessage.playlists,
+						respondMessage.item);
 				break;
 			}
 		}
@@ -121,16 +122,23 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			fragmentManager.popBackStackImmediate();
 		}
 	}
-	void showNewPlaylistDialog(Item item){
+
+	void showNewPlaylistDialog(Item item) {
 		DialogFragment dialog = NewPlaylistDialogFragment.newInstance(item);
 		dialog.show(fragmentManager, "dialog");
 	}
-	
-	void showPlaylistsDialog(List<Playlist> playlists, Item item){
-		DialogFragment dialog = PlaylistsDialogFragment.newInstance(playlists, item);
+
+	void showClearQueueDialog() {
+		DialogFragment dialog = ClearQueueDialogFragment.newInstance();
 		dialog.show(fragmentManager, "dialog");
 	}
-	
+
+	void showPlaylistsDialog(List<Playlist> playlists, Item item) {
+		DialogFragment dialog = PlaylistsDialogFragment.newInstance(playlists,
+				item);
+		dialog.show(fragmentManager, "dialog");
+	}
+
 	void showScanAlertDialog() {
 		DialogFragment newFragment = NeedScanDialogFragment
 				.newInstance(R.string.need_scan_dialog_title);
