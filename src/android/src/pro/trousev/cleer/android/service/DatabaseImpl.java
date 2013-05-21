@@ -366,7 +366,7 @@ public class DatabaseImpl implements Database {
 		return true;
 	}
 
-	public boolean remove(String section, DatabaseObject object,
+	public boolean remove(String section, pro.trousev.cleer.Database.DatabaseObject object,
 			String otherSection) throws DatabaseError {
 		try {
 			db.execSQL("delete * from " + section + "where id = " + object.id()
@@ -422,5 +422,6 @@ public class DatabaseImpl implements Database {
 		}
 		return true;
 	}
+
 
 }
