@@ -16,6 +16,7 @@
     <string name="lists">Playlists</string>
     <string name="alert_dialog_ok">OK</string>
     <string name="scan">Scan</string>
+    <string name="clearQueue">Clear Queue</string>
     <string name="clear_queue">Do you want to clear queue?</string>
     <string name="alert_dialog_cancel">Cancel</string>
     <string name="playlist_name">playlist name</string>

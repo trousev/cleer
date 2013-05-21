@@ -64,8 +64,10 @@ public class PlayBar extends Fragment implements OnClickListener, OnLongClickLis
 			} else {
 				if (ev.status == Status.Paused)
 					changeStatus(PAUSED);
-				else
+				else{
 					changeStatus(STOPPED);
+					compName.setText("");
+				}
 			}
 			if (ev.track != null) {
 				try {

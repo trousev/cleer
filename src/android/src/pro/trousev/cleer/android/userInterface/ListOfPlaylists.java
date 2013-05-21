@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
-import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.android.AndroidMessages.Action;
@@ -12,7 +11,6 @@ import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
-import pro.trousev.cleer.android.service.RusTag;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -26,27 +24,31 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ListOfCompositions extends ListFragment {
-	List<Item> list;
-	protected ArrayAdapter<Item> adapter = null;
-	public ListOfCompositions(List<Item> arg) {
-		list = arg;
+public class ListOfPlaylists extends ListFragment {
+	List<Playlist> playlists;
+	private ArrayAdapter<String> adapter = null;
+
+	public ListOfPlaylists(List<Playlist> playlists) {
+		this.playlists = playlists;
 	}
 
-	public ListOfCompositions(Playlist playlist) {
-		list = playlist.contents();
-	}
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		adapter = new ListOfCompAdapter(getActivity(), list);
+		List<String> playlistNames = new ArrayList<String>();
+		for (Playlist pl : playlists) {
+			playlistNames.add(pl.title());
+		}
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+				android.R.layout.simple_list_item_1, playlistNames);
+		this.setHasOptionsMenu(true);
 		setListAdapter(adapter);
 	}
 
-	public ArrayAdapter<Item> getAdapter(){
+	public ArrayAdapter<String> getAdapter() {
 		return adapter;
 	}
+
 	@Override
 	public void onAttach(Activity activcity) {
 		super.onAttach(activcity);
@@ -63,13 +65,7 @@ public class ListOfCompositions extends ListFragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View view,
 			ContextMenuInfo menuInfo) {
-		Item item = (Item) list.get(((AdapterContextMenuInfo)menuInfo).position);
-		try {
-			RusTag rusTag = new RusTag();
-			menu.setHeaderTitle(rusTag.change(item.tag("title").value()));
-		} catch (NoSuchTagException e) {
-			e.printStackTrace();
-		}
+		Log.d(Constants.LOG_TAG, "ListOfComp.onCreateCotextMenu()");
 		super.onCreateContextMenu(menu, view, menuInfo);
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.compositionlist_context_menu, menu);
@@ -80,28 +76,20 @@ public class ListOfCompositions extends ListFragment {
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 		ServiceTaskMessage message = ((MainActivity) getActivity()).taskMessage;
-		Item track;
+		List<Item> tracks = new ArrayList<Item>();
 		switch (item.getItemId()) {
 		case R.id.play:
 			message.action = Action.setToQueue;
-			track = list.get(acmi.position);
-			message.list = new ArrayList<Item>();
-			message.list.add(track);
+			tracks = playlists.get(acmi.position).contents();
+			message.list = tracks;
 			message.position = 0;
 			Messaging.fire(message);
 			break;
 		case R.id.addToQueue:
 			message.action = Action.addToQueue;
-			track = list.get(acmi.position);
-			message.list = new ArrayList<Item>();
-			message.list.add(track);
+			tracks = playlists.get(acmi.position).contents();
+			message.list = tracks;
 			Messaging.fire(message);
-			break;
-		case R.id.addToList:
-			ServiceRequestMessage msg = ((MainActivity) getActivity()).requestMessage;
-			msg.type = TypeOfResult.PlaylistsInDialog;
-			msg.item = list.get(acmi.position);
-			Messaging.fire(msg);
 			break;
 		}
 		return true;
@@ -110,10 +98,7 @@ public class ListOfCompositions extends ListFragment {
 	@Override
 	public void onListItemClick(ListView listView, View view, int position,
 			long id) {
-		ServiceTaskMessage message = ((MainActivity) getActivity()).taskMessage;
-		message.action = Action.setToQueue;
-		message.list = list;
-		message.position = position;
-		Messaging.fire(message);
+		MainActivity activity = ((MainActivity) getActivity());
+		activity.setListOfCompositions(playlists.get(position).contents());
 	}
 }

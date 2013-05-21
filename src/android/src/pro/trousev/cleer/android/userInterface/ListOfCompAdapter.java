@@ -30,6 +30,7 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 		TextView artistName = (TextView) view
 				.findViewById(R.id.comp_artist_name);
 		TextView compName = (TextView) view.findViewById(R.id.comp_name);
+		
 		if(getItem(position) == (PlayBar.currentTrack)){
 			ImageView icon = (ImageView) view.findViewById(R.id.is_played);
 			icon.setBackgroundResource(android.R.drawable.ic_media_play);
@@ -37,6 +38,8 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 			ImageView icon = (ImageView) view.findViewById(R.id.is_played);
 			icon.setBackgroundResource(0);
 		}
+		ImageView icon = (ImageView) view.findViewById(R.id.is_played);
+		icon.setBackgroundResource(0);
 		try {
 			RusTag rusTag = new RusTag();
 			compName.setText(rusTag.change(getItem(position).tag("title").value()));

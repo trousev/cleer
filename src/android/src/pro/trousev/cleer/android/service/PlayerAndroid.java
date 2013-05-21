@@ -61,6 +61,12 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 		currentTrack = null;
 		currentStatus = Status.Closed;
 		prepared = false;
+		changeEvent.error = null;
+		changeEvent.reason = null;
+		changeEvent.sender = this;
+		changeEvent.status = currentStatus;
+		changeEvent.track = currentTrack;
+		Messaging.fire(changeEvent);
 		Log.d(Constants.LOG_TAG, "Player closed");
 	}
 

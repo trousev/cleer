@@ -5,7 +5,7 @@
             android:title="@string/play"/>
         <item
             android:id="@+id/clearQueue"
-            android:title="@string/addToQueue"/>
+            android:title="@string/clearQueue"/>
         <item 
             android:id="@+id/addToList"
             android:title="@string/addToList"/>

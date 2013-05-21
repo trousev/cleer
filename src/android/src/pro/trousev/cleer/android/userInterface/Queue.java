@@ -6,7 +6,10 @@ import java.util.List;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.Messaging.Event;
+import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Playlist;
+import pro.trousev.cleer.android.AndroidMessages;
 import pro.trousev.cleer.android.AndroidMessages.Action;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
@@ -14,6 +17,7 @@ import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.android.service.RusTag;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -22,48 +26,55 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-public class ListOfCompositions extends ListFragment {
-	List<Item> list;
-	protected ArrayAdapter<Item> adapter = null;
-	public ListOfCompositions(List<Item> arg) {
-		list = arg;
+public class Queue extends ListOfCompositions {
+	private QueueChangedEvent event;
+	public Queue(List<Item> arg) {
+		super(arg);
 	}
 
-	public ListOfCompositions(Playlist playlist) {
-		list = playlist.contents();
+	public Queue(Playlist playlist) {
+		super(playlist);
 	}
 	
+	private class QueueAdapter extends ListOfCompAdapter {
+
+		public QueueAdapter(Context context, List<Item> items) {
+			super(context, items);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View view = super.getView(position, convertView, parent);
+			if (getItem(position) == (PlayBar.currentTrack)) {
+				ImageView icon = (ImageView) view.findViewById(R.id.is_played);
+				icon.setBackgroundResource(android.R.drawable.ic_media_play);
+			} else {
+				ImageView icon = (ImageView) view.findViewById(R.id.is_played);
+				icon.setBackgroundResource(0);
+			}
+			return view;
+		}
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		adapter = new ListOfCompAdapter(getActivity(), list);
+		adapter = new QueueAdapter(getActivity(), list);
 		setListAdapter(adapter);
-	}
-
-	public ArrayAdapter<Item> getAdapter(){
-		return adapter;
-	}
-	@Override
-	public void onAttach(Activity activcity) {
-		super.onAttach(activcity);
-		Log.d(Constants.LOG_TAG, "ListOfComp.onAttach()");
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		getListView().setOnCreateContextMenuListener(this);
-		Log.d(Constants.LOG_TAG, "ListOfComp.onActivityCreated()");
 	}
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View view,
 			ContextMenuInfo menuInfo) {
-		Item item = (Item) list.get(((AdapterContextMenuInfo)menuInfo).position);
+		Item item = (Item) list
+				.get(((AdapterContextMenuInfo) menuInfo).position);
 		try {
 			RusTag rusTag = new RusTag();
 			menu.setHeaderTitle(rusTag.change(item.tag("title").value()));
@@ -71,8 +82,9 @@ public class ListOfCompositions extends ListFragment {
 			e.printStackTrace();
 		}
 		super.onCreateContextMenu(menu, view, menuInfo);
+		menu.clear();
 		MenuInflater inflater = getActivity().getMenuInflater();
-		inflater.inflate(R.menu.compositionlist_context_menu, menu);
+		inflater.inflate(R.menu.queue_context_menu, menu);
 	}
 
 	@Override
@@ -90,11 +102,8 @@ public class ListOfCompositions extends ListFragment {
 			message.position = 0;
 			Messaging.fire(message);
 			break;
-		case R.id.addToQueue:
-			message.action = Action.addToQueue;
-			track = list.get(acmi.position);
-			message.list = new ArrayList<Item>();
-			message.list.add(track);
+		case R.id.clearQueue:
+			message.action = Action.clearQueue;
 			Messaging.fire(message);
 			break;
 		case R.id.addToList:
@@ -102,6 +111,7 @@ public class ListOfCompositions extends ListFragment {
 			msg.type = TypeOfResult.PlaylistsInDialog;
 			msg.item = list.get(acmi.position);
 			Messaging.fire(msg);
+			// TODO What to do?
 			break;
 		}
 		return true;
@@ -115,5 +125,9 @@ public class ListOfCompositions extends ListFragment {
 		message.list = list;
 		message.position = position;
 		Messaging.fire(message);
+	}
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
 	}
 }

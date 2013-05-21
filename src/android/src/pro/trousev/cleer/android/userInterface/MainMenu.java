@@ -41,6 +41,7 @@ public class MainMenu extends ListFragment {
 		case 1:
 			message.type=TypeOfResult.Queue;
 			Messaging.fire(message);
+			break;
 		case 2:
 			message.type=TypeOfResult.Playlists;
 			Messaging.fire(message);

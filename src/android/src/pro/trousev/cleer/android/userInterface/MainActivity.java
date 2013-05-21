@@ -8,7 +8,6 @@ import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.android.AndroidMessages;
-import pro.trousev.cleer.android.AndroidMessages.Action;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
@@ -57,7 +56,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				setListOfRequests(respondMessage.list, "Album", "Artist");
 				break;
 			case Playlists:
-				
+				setListOfPlaylists(respondMessage.playlists);
 				break;
 			case Playlist:
 				setListOfCompositions(respondMessage.list);
@@ -144,7 +143,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		newFragment.show(fragmentManager, "dialog");
 	}
 
-	
+	public void setListOfPlaylists(List<Playlist> playlists) {
+		if (playlists == null){
+			showScanAlertDialog();
+			return;
+		}
+		ListOfPlaylists listOfPlaylists = new ListOfPlaylists(playlists);
+		fTrans = fragmentManager.beginTransaction();
+		fTrans.replace(R.id.work_space, listOfPlaylists);
+		fTrans.addToBackStack(null);
+		fTrans.commit();
+	}
 
 	public void setListOfCompositions(List<Item> list) {
 		if ((list.isEmpty()) || (list == null)) {
@@ -176,7 +185,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		if (list == null) {
 			return;
 		}
-		queue = new ListOfCompositions(list);
+		queue = new Queue(list);
 		fTrans = fragmentManager.beginTransaction();
 		fTrans.replace(R.id.work_space, queue);
 		fTrans.addToBackStack(null);
