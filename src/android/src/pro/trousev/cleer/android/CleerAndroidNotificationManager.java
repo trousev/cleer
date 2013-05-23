@@ -39,6 +39,7 @@ public class CleerAndroidNotificationManager {
 				context).setSmallIcon(R.drawable.application_icon)
 				.setContentTitle(title).setContentText(rusTag.change(text));
 		Intent notificationIntent = new Intent(context, MainActivity.class);
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(notificationIntent);

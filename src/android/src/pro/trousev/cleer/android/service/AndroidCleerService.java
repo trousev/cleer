@@ -39,14 +39,15 @@ import android.util.Log;
 import android.widget.ProgressBar;
 
 public class AndroidCleerService extends Service {
+	
 	private static ServiceRespondMessage respondMessage = new ServiceRespondMessage();
-
 	private Queue queue = null;
 	private Player player;
 	// FIXME delete that kostil
 	private List<Item> itemList = new ArrayList<Item>();
 	private Database database = null;
 	private Library library = null;
+	private CleerAndroidNotificationManager mNotificationManager;
 
 	private void updatePlayerNotification() {
 		if (player == null)
@@ -267,7 +268,6 @@ public class AndroidCleerService extends Service {
 		}
 	};
 
-	private CleerAndroidNotificationManager mNotificationManager;
 
 	// Binder allow us get Service.this from the Activity
 	public class CleerBinder extends Binder {
