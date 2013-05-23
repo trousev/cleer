@@ -88,6 +88,7 @@ public class PlayBar extends Fragment implements OnClickListener, OnLongClickLis
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.play_bar, null, false);
+		
 		root = (MainActivity) getActivity();
 		compName = (TextView) view.findViewById(R.id.playing_compotision_name);
 		playPauseBtn = (ImageView) view.findViewById(R.id.play_pause_btn);
@@ -96,6 +97,7 @@ public class PlayBar extends Fragment implements OnClickListener, OnLongClickLis
 		queueBtn = (Button) view.findViewById(R.id.queue_btn);
 		mainMenuBtn = (Button) view.findViewById(R.id.main_menu_btn);
 		progressBar = (SeekBar) view.findViewById(R.id.player_progress_bar);
+		
 		progressBar.setOnSeekBarChangeListener(this);
 		queueBtn.setOnClickListener(root);
 		queueBtn.setOnLongClickListener(this);

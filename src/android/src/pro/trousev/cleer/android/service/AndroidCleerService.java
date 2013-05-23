@@ -103,9 +103,10 @@ public class AndroidCleerService extends Service {
 			respondMessage.list = new ArrayList<Item>();
 			switch (mes.type) {
 			case Compositions:
-//				Playlist p = library.search("");
-//				List<Item> l = p.contents();
-//				Log.d(Constants.LOG_TAG, "Service: Compositions" + p.contents().get(0).filename().toString());
+				// Playlist p = library.search("");
+				// List<Item> l = p.contents();
+				// Log.d(Constants.LOG_TAG, "Service: Compositions" +
+				// p.contents().get(0).filename().toString());
 				respondMessage.list.addAll(itemList);
 				break;
 			case Queue:
@@ -160,6 +161,14 @@ public class AndroidCleerService extends Service {
 				Log.e(Constants.LOG_TAG, "Service: Unknown PlayBar action");
 				return;
 			}
+		}
+	};
+
+	// This Event will change notification each time after player changed his
+	// status
+	private Event playerChangedStatus = new Event() {
+		@Override
+		public void messageReceived(Message message) {
 			updatePlayerNotification();
 		}
 	};
@@ -190,31 +199,31 @@ public class AndroidCleerService extends Service {
 					Log.e(Constants.LOG_TAG, "Can't scan for mediafiles");
 					e.printStackTrace();
 				}
-//				library.folder_scan(new FolderScanCallback() {
-//
-//					@Override
-//					public void started() {
-//						// TODO Auto-generated method stub
-//						
-//					}
-//
-//					@Override
-//					public void finished() {
-//						// TODO Auto-generated method stub
-//						
-//					}
-//
-//					@Override
-//					public void progress(int current, int maximum) {
-//						// TODO Auto-generated method stub
-//						
-//					}
-//
-//					@Override
-//					public void message(String message) {
-//						// TODO Auto-generated method stub
-//						
-//					}});
+				// library.folder_scan(new FolderScanCallback() {
+				//
+				// @Override
+				// public void started() {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				//
+				// @Override
+				// public void finished() {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				//
+				// @Override
+				// public void progress(int current, int maximum) {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				//
+				// @Override
+				// public void message(String message) {
+				// // TODO Auto-generated method stub
+				//
+				// }});
 				break;
 			default:
 				Log.e(Constants.LOG_TAG, "Service: Unkonwn ServiceTask action");
@@ -290,6 +299,8 @@ public class AndroidCleerService extends Service {
 				serviceTaskEvent);
 		Messaging.subscribe(AndroidMessages.ProgressBarMessage.class,
 				progressBarEvent);
+		Messaging
+				.subscribe(Player.PlayerChangeEvent.class, playerChangedStatus);
 		Messaging.subscribe(AndroidMessages.PlayBarMessage.class, playBarEvent);
 		Messaging.subscribe(AndroidMessages.SeekBarMessage.class, seekBarEvent);
 		Log.d(Constants.LOG_TAG, "Service: Subscibed on several messages");
@@ -317,6 +328,8 @@ public class AndroidCleerService extends Service {
 				serviceTaskEvent);
 		Messaging.unSubscribe(AndroidMessages.SeekBarMessage.class,
 				seekBarEvent);
+		Messaging.unSubscribe(Player.PlayerChangeEvent.class,
+				playerChangedStatus);
 		Messaging.unSubscribe(AndroidMessages.PlayBarMessage.class,
 				playBarEvent);
 		mNotificationManager.cancelAll();
