@@ -1,7 +1,15 @@
 package pro.trousev.cleer.android.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
+
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
@@ -25,7 +33,6 @@ import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.CleerAndroidNotificationManager;
 import pro.trousev.cleer.android.Constants;
-import pro.trousev.cleer.android.service.MediaScanner.MediaScannerException;
 import pro.trousev.cleer.sys.LibraryImpl;
 import pro.trousev.cleer.sys.QueueImpl;
 import pro.trousev.cleer.sys.TrackImpl;
@@ -44,9 +51,9 @@ public class AndroidCleerService extends Service {
 	private Queue queue = null;
 	private Player player;
 	// FIXME delete that kostil
-	private List<Item> itemList = new ArrayList<Item>();
-	private Database database = null;
-	private Library library = null;
+	// private List<Item> itemList = new ArrayList<Item>();
+	private Database database;
+	private Library library ;
 	private CleerAndroidNotificationManager mNotificationManager;
 
 	private void updatePlayerNotification() {
@@ -108,7 +115,7 @@ public class AndroidCleerService extends Service {
 				// List<Item> l = p.contents();
 				// Log.d(Constants.LOG_TAG, "Service: Compositions" +
 				// p.contents().get(0).filename().toString());
-				respondMessage.list.addAll(itemList);
+				respondMessage.list.addAll(library.search("").contents());
 				break;
 			case Queue:
 				respondMessage.list.addAll(queue.queue());
@@ -120,7 +127,7 @@ public class AndroidCleerService extends Service {
 			case Artists:
 				break;
 			case Playlists:
-				respondMessage.playlists = new ArrayList<Playlist>();
+				respondMessage.playlists = library.playlists();
 				break;
 			case Playlist:
 				break;
@@ -192,6 +199,8 @@ public class AndroidCleerService extends Service {
 				updatePlayerNotification();
 				break;
 			case scanSystem:
+				//library.folders()
+				// Oooops. I'm stuck.
 				MediaScanner mediaScanner = new MediaScanner(getApplication());
 				try {
 					// TODO set this to database
@@ -280,8 +289,7 @@ public class AndroidCleerService extends Service {
 		super.onCreate();
 		player = new PlayerAndroid();
 		queue = new QueueImpl(player);
-		database = new XDatabaseImpl(Constants.DATABASE_PATH,
-				getApplicationContext());
+		database = new DatabaseAndroidImpl();
 		try {
 			library = new LibraryImpl(database, TrackImpl.Factory);
 			// FIXME Make scanning of particular dirs in next version
