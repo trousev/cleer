@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="core"/>
 	<classpathentry kind="src" path="desktop"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="../../tmp/build/jars/core/jaudiotagger-2.2.0.jar"/>
+	<classpathentry kind="lib" path="../../tmp/build/jars/core/jaudiotagger-2.0.4.jar"/>
 	<classpathentry kind="lib" path="../../tmp/build/jars/desktop/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="lib" path="../../submodules/jline2/target/jline-2.12-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>

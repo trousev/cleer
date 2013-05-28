@@ -164,7 +164,16 @@ public class AudioFileHeader implements Serializable {
 		AudioFile f = null;
 		try {
 			f = AudioFileIO.read(file);
-		} catch (InvalidAudioFrameException e) {
+		} 
+		catch (NoClassDefFoundError e)
+		{
+			System.out.println("[pro.trousev.cleer] " + e.getClass().toString() + " : " + e.getMessage());
+			e.printStackTrace();
+			return ;
+		}
+		catch (Throwable e)
+		{
+			return ; // FIXME: make "unknown" genre etc
 		}
 		Tag tag = null;
 		try {

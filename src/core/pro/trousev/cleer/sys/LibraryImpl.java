@@ -15,9 +15,9 @@ import pro.trousev.cleer.Database.DatabaseObject;
 
 public class LibraryImpl implements Library {
 
-	final Database _db;
+	protected final Database _db;
 	String _focus = "default";
-	Item.Factory _item_factory;
+	protected Item.Factory _item_factory;
 	private LibrarySmartPlaylist playlistFromDatabase(DatabaseObject dbo)
 	{
 		LibrarySmartPlaylist p = Tools.Deserialize(dbo.contents());

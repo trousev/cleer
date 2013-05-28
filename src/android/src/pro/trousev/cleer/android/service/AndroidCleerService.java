@@ -15,6 +15,7 @@ import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Library;
+import pro.trousev.cleer.Library.FolderScanCallback;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
@@ -199,41 +200,43 @@ public class AndroidCleerService extends Service {
 				updatePlayerNotification();
 				break;
 			case scanSystem:
+				
 				//library.folders()
 				// Oooops. I'm stuck.
-				MediaScanner mediaScanner = new MediaScanner(getApplication());
+				/*MediaScanner mediaScanner = new MediaScanner(getApplication());
 				try {
 					// TODO set this to database
 					itemList = mediaScanner.scanner();
 				} catch (MediaScannerException e) {
 					Log.e(Constants.LOG_TAG, "Can't scan for mediafiles");
 					e.printStackTrace();
-				}
-				// library.folder_scan(new FolderScanCallback() {
-				//
-				// @Override
-				// public void started() {
-				// // TODO Auto-generated method stub
-				//
-				// }
-				//
-				// @Override
-				// public void finished() {
-				// // TODO Auto-generated method stub
-				//
-				// }
-				//
-				// @Override
-				// public void progress(int current, int maximum) {
-				// // TODO Auto-generated method stub
-				//
-				// }
-				//
-				// @Override
-				// public void message(String message) {
-				// // TODO Auto-generated method stub
-				//
-				// }});
+				}*/
+				library.folder_scan(new FolderScanCallback() {
+					
+					@Override
+					public void started() {
+						// TODO Auto-generated method stub
+						System.out.println("[pro.trousev.cleer] Media library scanning started");
+					}
+					
+					@Override
+					public void progress(int current, int maximum) {
+						System.out.println("[pro.trousev.cleer] Media library scanning progress: "+current+"/"+maximum);
+						
+					}
+					
+					@Override
+					public void message(String message) {
+						System.out.println("[pro.trousev.cleer] Media library scanning: message: "+message);
+						
+					}					
+					@Override
+					public void finished() {
+						// TODO Auto-generated method stub
+						System.out.println("[pro.trousev.cleer] Media library scanning finished");
+					}
+				});
+
 				break;
 			default:
 				Log.e(Constants.LOG_TAG, "Service: Unkonwn ServiceTask action");
@@ -291,7 +294,7 @@ public class AndroidCleerService extends Service {
 		queue = new QueueImpl(player);
 		database = new DatabaseAndroidImpl();
 		try {
-			library = new LibraryImpl(database, TrackImpl.Factory);
+			library = new LibraryAndroidImpl(database, TrackImpl.Factory, getApplication());
 			// FIXME Make scanning of particular dirs in next version
 			library.folder_add(Environment.getExternalStorageDirectory());
 		} catch (DatabaseError e) {

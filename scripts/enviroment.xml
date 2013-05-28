@@ -65,8 +65,8 @@
     <target name="env-jaudiotagger">
 	<mkdir dir="tmp/build/jars/core" />
 	<get skipexisting="true" 
-	     src="https://maven.java.net/content/repositories/snapshots/net/jthink/jaudiotagger/2.2.0-SNAPSHOT/jaudiotagger-2.2.0-20130321.162819-3.jar" 
-	     dest="tmp/build/jars/core/jaudiotagger-2.2.0.jar" />
+	     src="http://cleer.cc.trousev.pro/artifacts/core/jaudiotagger-2.0.4-20111207.115108-15.jar" 
+	     dest="tmp/build/jars/core/jaudiotagger-2.0.4.jar" />
     </target>
     <target name="env-tjws">
 	<mkdir dir="tmp/artifacts/desktop" />
@@ -81,6 +81,9 @@
 	<mkdir dir="tmp/build/jars/android" />
 	<mkdir dir="tmp/build/jars/core" />
 	<mkdir dir="tmp/build/jars/desktop" />
+	<mkdir dir="artifacts/core" />
+	<mkdir dir="artifacts/android" />
+	<mkdir dir="artifacts/desktop" />
     </target>
     <target name="clean" >
         <delete dir="tmp" />
