@@ -4,7 +4,7 @@ import java.util.List;
 
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
-import pro.trousev.cleer.android.service.RusTag;
+import pro.trousev.cleer.sys.TagImplRussian;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
@@ -41,9 +41,8 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 		ImageView icon = (ImageView) view.findViewById(R.id.is_played);
 		icon.setBackgroundResource(0);
 		try {
-			RusTag rusTag = new RusTag();
-			compName.setText(rusTag.change(getItem(position).tag("title").value()));
-			artistName.setText(rusTag.change(getItem(position).tag("artist").value()));
+			compName.setText(getItem(position).tag("title").value());
+			artistName.setText(getItem(position).tag("artist").value());
 		} catch (NoSuchTagException e) {
 			e.printStackTrace();
 		}

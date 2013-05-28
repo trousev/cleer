@@ -44,24 +44,24 @@ public class TrackImpl implements Item {
 			throw new Exception("Deserialisation failed");
 		_link = dataObject;
 	}
+	public TrackImpl(File filename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
+	{
+		_filename = filename;
+		readMetadataFromFile();
+	}
 	private void readMetadataFromFile() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
 	{
 		AudioFileHeader head = new AudioFileHeader();
 		head.readFromFile(_filename);
 		_all_tags = new HashMap<String, Tag>();
-		_all_tags.put("album", new TagImpl("album", head.getAlbum(), TagType.StrictlyClassified, ContentType.String, false));
-		_all_tags.put("artist", new TagImpl("artist", head.getArtist(), TagType.StrictlyClassified, ContentType.String, false));
-		_all_tags.put("title", new TagImpl("title", head.getTitle(), TagType.StrictlyClassified, ContentType.String, false));
-		_all_tags.put("year", new TagImpl("year", head.getYear(), TagType.StrictlyClassified, ContentType.Numeric, false));
-		_all_tags.put("number", new TagImpl("number", head.getTrack(), TagType.StrictlyClassified, ContentType.Numeric, false));
-		_all_tags.put("lyrics", new TagImpl("lyrics", head.getLyrics(), TagType.StrictlyClassified, ContentType.String, false));
-		_all_tags.put("rating", new TagImpl("rating", head.getRating(), TagType.StrictlyClassified, ContentType.Numeric, true));
-		_all_tags.put("genre", new TagImpl("genre", head.getGenre(), TagType.StrictlyClassified, ContentType.String, true));
-	}
-	public TrackImpl(File filename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
-	{
-		_filename = filename;
-		readMetadataFromFile();
+		_all_tags.put("album", new TagImplRussian("album", head.getAlbum(), TagType.StrictlyClassified, ContentType.String, false));
+		_all_tags.put("artist", new TagImplRussian("artist", head.getArtist(), TagType.StrictlyClassified, ContentType.String, false));
+		_all_tags.put("title", new TagImplRussian("title", head.getTitle(), TagType.StrictlyClassified, ContentType.String, false));
+		_all_tags.put("year", new TagImplRussian("year", head.getYear(), TagType.StrictlyClassified, ContentType.Numeric, false));
+		_all_tags.put("number", new TagImplRussian("number", head.getTrack(), TagType.StrictlyClassified, ContentType.Numeric, false));
+		_all_tags.put("lyrics", new TagImplRussian("lyrics", head.getLyrics(), TagType.StrictlyClassified, ContentType.String, false));
+		_all_tags.put("rating", new TagImplRussian("rating", head.getRating(), TagType.StrictlyClassified, ContentType.Numeric, true));
+		_all_tags.put("genre", new TagImplRussian("genre", head.getGenre(), TagType.StrictlyClassified, ContentType.String, true));
 	}
 
 	@Override

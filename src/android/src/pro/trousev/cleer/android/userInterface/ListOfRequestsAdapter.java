@@ -4,7 +4,7 @@ import java.util.List;
 
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Item.NoSuchTagException;
-import pro.trousev.cleer.android.service.RusTag;
+import pro.trousev.cleer.sys.TagImplRussian;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
@@ -33,12 +33,11 @@ public class ListOfRequestsAdapter extends ArrayAdapter<String> {
 			view = convertView;
 		TextView firstTextView = (TextView) view.findViewById(R.id.firstTag);
 		TextView secondTextView = (TextView) view.findViewById(R.id.secondTag);
-		RusTag rusTag = new RusTag();
 		try {
-			firstTextView.setText(rusTag.change(list.get(position)
-					.tag(firstTag).value()));
-			secondTextView.setText(rusTag.change(list.get(position)
-					.tag(secondTag).value()));
+			firstTextView.setText(list.get(position)
+					.tag(firstTag).value());
+			secondTextView.setText(list.get(position)
+					.tag(secondTag).value());
 		} catch (NoSuchTagException e) {
 		} catch (NullPointerException e) {
 		}

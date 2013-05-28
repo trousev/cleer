@@ -1,8 +1,8 @@
 package pro.trousev.cleer.android;
 
-import pro.trousev.cleer.android.service.RusTag;
 import pro.trousev.cleer.android.userInterface.MainActivity;
 import pro.trousev.cleer.android.userInterface.R;
+import pro.trousev.cleer.sys.TagImplRussian;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -34,10 +34,9 @@ public class CleerAndroidNotificationManager {
 	}
 
 	private Notification buildNotification(String title, String text) {
-		RusTag rusTag = new RusTag();
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				context).setSmallIcon(R.drawable.application_icon)
-				.setContentTitle(title).setContentText(rusTag.change(text));
+				.setContentTitle(title).setContentText(text);
 		Intent notificationIntent = new Intent(context, MainActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);

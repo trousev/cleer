@@ -12,7 +12,7 @@ import pro.trousev.cleer.android.AndroidMessages.ServiceRequestMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.AndroidMessages.TypeOfResult;
 import pro.trousev.cleer.android.Constants;
-import pro.trousev.cleer.android.service.RusTag;
+import pro.trousev.cleer.sys.TagImplRussian;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -65,8 +65,7 @@ public class ListOfCompositions extends ListFragment {
 			ContextMenuInfo menuInfo) {
 		Item item = (Item) list.get(((AdapterContextMenuInfo)menuInfo).position);
 		try {
-			RusTag rusTag = new RusTag();
-			menu.setHeaderTitle(rusTag.change(item.tag("title").value()));
+			menu.setHeaderTitle(item.tag("title").value());
 		} catch (NoSuchTagException e) {
 			e.printStackTrace();
 		}

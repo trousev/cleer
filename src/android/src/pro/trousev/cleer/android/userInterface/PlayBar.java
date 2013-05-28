@@ -16,7 +16,7 @@ import pro.trousev.cleer.android.AndroidMessages.PlayBarMessage;
 import pro.trousev.cleer.android.AndroidMessages.ProgressBarMessage;
 import pro.trousev.cleer.android.AndroidMessages.SeekBarMessage;
 import pro.trousev.cleer.android.Constants;
-import pro.trousev.cleer.android.service.RusTag;
+import pro.trousev.cleer.sys.TagImplRussian;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -72,9 +72,8 @@ public class PlayBar extends Fragment implements OnClickListener, OnLongClickLis
 			if (ev.track != null) {
 				try {
 					currentTrack = ev.track;
-					RusTag rusTag = new RusTag();
-					compName.setText(rusTag.change(ev.track.tag("title")
-							.value()));
+					compName.setText(ev.track.tag("title")
+							.value());
 				} catch (NoSuchTagException e) {
 					e.printStackTrace();
 				}
