@@ -123,10 +123,16 @@
         <arg value="${manifest.package}/${manifest.package}.${manifest.main}"/>
     </exec>
 </target>
-
+<target name="logcat">
+    <exec executable="${android.platform.tools.dir}/adb">
+        <arg value="logcat"/>
+        <arg value="-c"/>
+    </exec>
+</target>
 <target name="run-debug">
   <antcall target="debug" />
   <antcall target="installd" />
+  <antcall target="logcat" />
   <antcall target="run-on-device" />
 </target>
 

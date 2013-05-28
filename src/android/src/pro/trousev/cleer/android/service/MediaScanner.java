@@ -43,12 +43,16 @@ public class MediaScanner {
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
 				do{
 				Uri filePathUri = Uri.parse(cursor.getString(columnIndex));
-				String filename = filePathUri.getPath().toString();
-				File file = new File(filename);
-				try { // FIXME Make one exception for TrackImpl
+				try // FIXME Make one exception for TrackImpl 
+				{ 
+					String filename = filePathUri.getPath().toString(); // This line can cause exception. I'm serious.
+					File file = new File(filename);
 					TrackImpl track = new TrackImpl(file);
 					data.add(track);
-				} catch (Exception e) {
+				} 
+				catch (Exception e) 
+				{
+					System.out.println("[cleer] " + filePathUri + " caused exception: " + e.getMessage());
 				}
 				}while(cursor.moveToNext());
 		}

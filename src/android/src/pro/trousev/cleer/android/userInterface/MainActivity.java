@@ -81,6 +81,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		/*DatabaseAndroidImpl db = new DatabaseAndroidImpl();
+		new TestDatabase(db).run();*/
+		
 		setContentView(R.layout.main);
 		final PlayBar pb = new PlayBar();
 		final MainMenu mm = new MainMenu();

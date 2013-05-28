@@ -280,7 +280,7 @@ public class AndroidCleerService extends Service {
 		super.onCreate();
 		player = new PlayerAndroid();
 		queue = new QueueImpl(player);
-		database = new DatabaseImpl(Constants.DATABASE_PATH,
+		database = new XDatabaseImpl(Constants.DATABASE_PATH,
 				getApplicationContext());
 		try {
 			library = new LibraryImpl(database, TrackImpl.Factory);

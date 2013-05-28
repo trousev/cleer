@@ -36,12 +36,12 @@ public class TestRoutines {
 		try
 		{
 			test.run();
-			System.out.println("FAILED: "+test.name()+". Expected exception throwed, but nothing happened");
+			System.out.println("[pro.trousev.cleer] [test] [database] FAILED: "+test.name()+". Expected exception throwed, but nothing happened");
 			return false;
 		}
 		catch (Throwable t)
 		{
-			System.out.println("PASSED: "+test.name());
+			System.out.println("[pro.trousev.cleer] [test] [database] PASSED: "+test.name());
 			return true;
 		}
 	}
@@ -51,17 +51,22 @@ public class TestRoutines {
 		try
 		{
 			test.run();
-			System.out.println("PASSED: "+test.name());
+			System.out.println("[pro.trousev.cleer] [test] [database] PASSED: "+test.name());
 			return false;
 		}
 		catch (Failure f)
 		{
-			System.out.println("FAILED: "+test.name() + ": " + f.getMessage());
+			System.out.println("[pro.trousev.cleer] [test] [database] FAILED: "+test.name() + ": " + f.getMessage());
 			return true;
 		}
 		catch (Throwable t)
 		{
-			System.out.println("FAILED: [UNKNOWN ERROR]: "+test.name() + ": " + t.getMessage());
+			System.out.println("[pro.trousev.cleer] [test] [database] FAILED: [UNKNOWN: "+t.getClass().toString()+"]: "+test.name() + ": " + t.getMessage());
+			
+			for(StackTraceElement ste: t.getStackTrace())
+			{
+				System.out.println("[pro.trousev.cleer] [test] [database]       "+ste.toString());
+			}
 			return true;
 		}
 	}

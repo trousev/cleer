@@ -64,6 +64,11 @@ public interface Database {
 		 * Обновляет только поисковой контекст.
 		 **/
 		boolean update_search(String search) throws DatabaseError;
+
+		/**
+		 * Уничтожает объект в БД.
+		 */
+		void delete();
 	}
 
 	/**
@@ -160,7 +165,4 @@ public interface Database {
 	 * @return
 	 */
 	public boolean rollback() throws DatabaseError;
-
-	boolean remove(String section, DatabaseObject object, String otherSection)
-			throws DatabaseError;
 }

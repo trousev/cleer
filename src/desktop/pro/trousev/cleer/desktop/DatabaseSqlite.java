@@ -141,6 +141,10 @@ public class DatabaseSqlite implements Database {
 			return _search;
 
 		}
+		@Override
+		public void delete() {
+			_parent.remove(_section, this);
+		}
 	}
 	@Override
 	public DatabaseObject store(String section, String contents, String keywords) throws DatabaseError {

@@ -12,11 +12,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import pro.trousev.cleer.Database;
 
 
-public class DatabaseImpl implements Database {
+public class XDatabaseImpl implements Database {
 	public SQLiteDatabase db;
 
 	// constructor
-	public DatabaseImpl(String path, Context context) {
+	public XDatabaseImpl(String path, Context context) {
 		DBHelper dbHelper = new DBHelper(path, context);
 		// open last or create new database with path
 		this.db = dbHelper.getWritableDatabase();
@@ -49,12 +49,12 @@ public class DatabaseImpl implements Database {
 		private String id = null;
 		private String contents = null;
 		@SuppressWarnings("unused")
-		private DatabaseImpl parent = null;
+		private XDatabaseImpl parent = null;
 		private String section = null;
 		private String search = null;
 
 		// constructor number 1
-		public DatabaseObject(String section, DatabaseImpl parent, String id,
+		public DatabaseObject(String section, XDatabaseImpl parent, String id,
 				String contents) {
 			this.parent = parent;
 			this.id = id;
@@ -63,7 +63,7 @@ public class DatabaseImpl implements Database {
 		}
 
 		// constructor number 2
-		public DatabaseObject(DatabaseImpl parent, String id) {
+		public DatabaseObject(XDatabaseImpl parent, String id) {
 			this.parent = parent;
 			this.id = id;
 		}
@@ -169,6 +169,12 @@ public class DatabaseImpl implements Database {
 
 			return true;
 
+		}
+
+		@Override
+		public void delete() {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

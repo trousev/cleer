@@ -8,10 +8,10 @@ import pro.trousev.cleer.android.Constants;
 import android.content.Context;
 
 public class ListImpl {
-	DatabaseImpl database;
+	XDatabaseImpl database;
 	
 	public ListImpl(String path, Context context) {
-		database = new DatabaseImpl(Constants.DATABASE_PATH, context);
+		database = new XDatabaseImpl(Constants.DATABASE_PATH, context);
 	}
 	
 	public List<String> getList(String section) throws DatabaseError{
