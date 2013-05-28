@@ -1,0 +1,5 @@
+<project name="cleer-android">
+    <target name='android'>
+	<ant antfile="src/android/build.xml" dir="src/android" target="debug" />
+    </target>
+</project>

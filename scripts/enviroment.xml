@@ -56,6 +56,18 @@
             <arg value="install" />
         </exec>
     </target>
+    <target name="env-sqlite-desktop">
+	<mkdir dir="tmp/build/jars/desktop" />
+	<get skipexisting="true" 
+	     src="http://cdn.bitbucket.org/xerial/sqlite-jdbc/downloads/sqlite-jdbc-3.7.2.jar" 
+	     dest="tmp/build/jars/desktop/sqlite-jdbc-3.7.2.jar" />
+    </target>
+    <target name="env-jaudiotagger">
+	<mkdir dir="tmp/build/jars/core" />
+	<get skipexisting="true" 
+	     src="https://maven.java.net/content/repositories/snapshots/net/jthink/jaudiotagger/2.2.0-SNAPSHOT/jaudiotagger-2.2.0-20130321.162819-3.jar" 
+	     dest="tmp/build/jars/core/jaudiotagger-2.2.0.jar" />
+    </target>
     <target name="env-tjws">
 	<mkdir dir="tmp/artifacts/desktop" />
 	<get skipexisting="true" src="http://sourceforge.net/projects/tjws/files/latest/download?source=files" dest="tmp/artifacts/desktop/tjws.zip" />
@@ -65,7 +77,10 @@
 	    <fileset dir="tmp/artifacts/desktop/tjws/WebServer/lib" includes="*.jar" />
 	</copy>
     </target>
-    <target name="enviroment" depends="env-submodules,env-jline,env-tjws">
+    <target name="enviroment" depends="env-submodules,env-jline,env-tjws,env-sqlite-desktop,env-jaudiotagger">
+	<mkdir dir="tmp/build/jars/android" />
+	<mkdir dir="tmp/build/jars/core" />
+	<mkdir dir="tmp/build/jars/desktop" />
     </target>
     <target name="clean" >
         <delete dir="tmp" />

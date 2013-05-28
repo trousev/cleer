@@ -99,6 +99,12 @@
         <fileset dir="${jar.libs.dir2}">
             <include name="*.jar"/>
         </fileset>
+        <fileset dir="${jar.libs.dir3}">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${jar.libs.dir4}">
+            <include name="*.jar"/>
+        </fileset>
     </path>
 </target>
 <target name="clear">
