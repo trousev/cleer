@@ -148,6 +148,7 @@ public class DatabaseAndroidImpl implements Database {
 	@Override
 	public List<DatabaseObject> search(String section, String query,
 			SearchLanguage language) throws DatabaseError {
+		query = query.toLowerCase();
 		String where = null;
 		if(language == SearchLanguage.SearchDirectMatch)
 			where = _language_match(query);

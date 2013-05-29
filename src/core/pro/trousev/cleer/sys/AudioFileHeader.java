@@ -173,6 +173,17 @@ public class AudioFileHeader implements Serializable {
 		}
 		catch (Throwable e)
 		{
+			System.out.println("No tags for "+file.getName()+", falling to filenames.");
+			_title = file.getName();
+			try
+			{
+				_album = "sugg:"+file.getParentFile().getName();
+			} catch(Throwable e1) { _album = "Unknown Album"; }
+			try
+			{
+				_artist = "sugg:"+file.getParentFile().getParentFile().getName();
+			} catch(Throwable e1) { _artist = "Unknown Artist"; }
+			_filename = file.getAbsolutePath();
 			return ; // FIXME: make "unknown" genre etc
 		}
 		Tag tag = null;

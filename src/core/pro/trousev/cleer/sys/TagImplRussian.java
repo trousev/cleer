@@ -29,22 +29,28 @@ public class TagImplRussian extends TagImpl {
 	}
 	@Override
 	public String value() {
-		return change(super.value());
+		String was = super.value();
+		String now = encoding_change(was);
+		return now;
+		
 	}
 
-	public static String change(String s) {
+	private String encoding_change(String s) {
 		if (s == null)
 			return null;
 		if (s.isEmpty())
 			return s;
-		Charset C = Charset.forName("windows-1251");
 
 		try {
 			if ((int) s.charAt(0) < 1040)
-				return C.decode(ByteBuffer.wrap(s.getBytes("UTF-16LE")))
-						.toString();
+			{
+				String dec = new String(s.getBytes("windows-1252"), "windows-1251");
+				return dec;
+			} 
 			else
+			{
 				return s;
+			}
 		} catch (UnsupportedEncodingException e) {
 			return s;
 		}

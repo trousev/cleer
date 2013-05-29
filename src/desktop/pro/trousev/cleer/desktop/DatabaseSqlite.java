@@ -304,6 +304,7 @@ public class DatabaseSqlite implements Database {
 	public List<DatabaseObject> search(String section, String query, SearchLanguage language) 
 			throws DatabaseError 
 	{
+		query = query.toLowerCase();
 		String where = "";
 		if(language == SearchLanguage.SearchDirectMatch)
 			where = _language_match(query);
