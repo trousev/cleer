@@ -77,14 +77,18 @@
 	    <fileset dir="tmp/artifacts/desktop/tjws/WebServer/lib" includes="*.jar" />
 	</copy>
     </target>
-    <target name="enviroment" depends="env-submodules,env-jline,env-tjws,env-sqlite-desktop,env-jaudiotagger">
-	<mkdir dir="tmp/build/jars/android" />
-	<mkdir dir="tmp/build/jars/core" />
-	<mkdir dir="tmp/build/jars/desktop" />
-	<mkdir dir="artifacts/core" />
-	<mkdir dir="artifacts/android" />
-	<mkdir dir="artifacts/desktop" />
+    <target name="env-mkdirs">
+ 	    <mkdir dir="tmp/build/jars/android" />
+	    <mkdir dir="tmp/build/jars/core" />
+	    <mkdir dir="tmp/build/jars/desktop" />
+        <mkdir dir="tmp/build/jars/service" />
+	    <mkdir dir="artifacts/core" />
+	    <mkdir dir="artifacts/android" />
+	    <mkdir dir="artifacts/desktop" />
+	    <mkdir dir="artifacts/service" />
     </target>
+    <target name="enviroment" depends="env-mkdirs,env-submodules,env-jline,env-tjws,env-sqlite-desktop,env-jaudiotagger">
+   </target>
     <target name="clean" >
         <delete dir="tmp" />
     </target>
