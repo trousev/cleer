@@ -200,17 +200,6 @@ public class AndroidCleerService extends Service {
 				updatePlayerNotification();
 				break;
 			case scanSystem:
-				
-				//library.folders()
-				// Oooops. I'm stuck.
-				/*MediaScanner mediaScanner = new MediaScanner(getApplication());
-				try {
-					// TODO set this to database
-					itemList = mediaScanner.scanner();
-				} catch (MediaScannerException e) {
-					Log.e(Constants.LOG_TAG, "Can't scan for mediafiles");
-					e.printStackTrace();
-				}*/
 				library.folder_scan(new FolderScanCallback() {
 					
 					@Override
