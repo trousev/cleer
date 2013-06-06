@@ -57,13 +57,6 @@ public interface Item {
 		public void setValue(String new_value) throws ReadOnlyTagException;
 		public String toString();
 
-		public static class ReadOnlyTagException extends Exception
-		{
-			private static final long serialVersionUID = -3294597277551186761L;
-			public ReadOnlyTagException(String tagName) {
-				super(String.format("Tag is read-only: "+tagName));
-			}
-		}
 	}
 	
 	/**
@@ -107,12 +100,41 @@ public interface Item {
 	{
 		private static final long serialVersionUID = -3294597277551186761L;
 		public NoSuchTagException(String tagName) {
-			super(String.format("Cannot find tag: ",tagName));
+			super(String.format("Cannot find tag: %s",tagName));
 		}
 	}
-	/// Factory
+    public static class TagAlreadyExistsException extends Exception
+    {
+        public TagAlreadyExistsException(String tagName) {
+            super(String.format("Tag already exists: %s",tagName));
+        }
+    }
+	public static class ReadOnlyTagException extends Exception
+	{
+		private static final long serialVersionUID = -3294597277551186761L;
+		public ReadOnlyTagException(String tagName) {
+			super(String.format("Tag is read-only: "+tagName));
+		}
+	}
+/// Factory
 	public interface Factory
 	{
-		Item createTrack(File filename);
+        /**
+         * This method should create valid item from given filename
+         **/
+		Item createItem(File filename);
+        /**
+         * This method should update item's file according to new tag value.
+         * This method should be called from item's setValue(...) method.
+         **/
+        boolean writeTag(Item item, Tag tag) throws ReadOnlyTagException;
+        /** This method should create new shiny tag, suitable for something useful.
+         * Also, it must update item's file properly. Will be called from addTag(..) method;
+         **/
+        Tag createTag(Item item, String name, TagType type) throws TagAlreadyExistsException; 
+        /** 
+         * This method should remove tag from item's file.
+         **/
+        Tag removeTag(Item item, Tag tag);
 	}
 }
