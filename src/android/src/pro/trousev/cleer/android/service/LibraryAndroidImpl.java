@@ -81,7 +81,7 @@ public class LibraryAndroidImpl extends LibraryImpl {
 				callback.progress(i++, n);
 				System.out.println("Filename: "+f.toString());
 				try {
-					Item t= _item_factory.createTrack(f);
+					Item t= _item_factory.createItem(f);
 					_db.store("songs", t.serialize(), t.getSearchQuery() + " fh"+fh);
 				} 
 				catch (Throwable e) {

@@ -21,7 +21,6 @@ import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Database.DatabaseObject;
-import pro.trousev.cleer.Item.Tag.ReadOnlyTagException;
 
 public class ItemImpl implements Item {
 	
@@ -30,7 +29,7 @@ public class ItemImpl implements Item {
     Item.Factory _generator;
 	private Map<String, Tag> _all_tags; 
 	
-	public TrackImpl(Database.DatabaseObject dataObject) throws Exception
+	public ItemImpl(Database.DatabaseObject dataObject) throws Exception
 	{
 		if(!deserialize(dataObject.contents()))
 			throw new Exception("Deserialisation failed");
@@ -94,7 +93,7 @@ public class ItemImpl implements Item {
         if(!_generator.writeTag(this, tag))
         {
             tag.setValue(prev);
-            throw new ReadOnlyTagException(tag);
+            throw new ReadOnlyTagException(tag.name());
         }
 	}
 
@@ -148,10 +147,12 @@ public class ItemImpl implements Item {
 	}
 	
 	@Override
-	public boolean addTag(String name, String value) throws TagAlreadyExistsException 
+	public boolean addTag(String name, String value) throws TagAlreadyExistsException, ReadOnlyTagException 
     {
-        Tag t = new _generator.createTag(name, TagType.SoftlyClassified);
-        t.setValue(name, value);
+        Tag t = _generator.createTag(this, name, TagType.SoftlyClassified);
+        t.setValue(value);
+        _all_tags.put(name, t);
+        return true;
 	}
 	@Override
 	public Tag tag(String name) throws NoSuchTagException {
@@ -173,7 +174,7 @@ public class ItemImpl implements Item {
 		return _all_tags.values();
 	}
 	@Override
-	public String[] tagNames(TagType type) {
+	public List<String> tagNames(TagType type) {
         List<String> ans = new ArrayList<String>();
         for(Tag t: _all_tags.values())
             if(t.type() == type || type == null)
@@ -181,18 +182,12 @@ public class ItemImpl implements Item {
         return ans;
 	}
 	@Override
-	public String[] tagNames() {
+	public List<String> tagNames() {
 		//FIXME: This is generally invalid!
 		return tagNames(null);
 	}
 	@Override
-	public boolean addTag(String name, String value, TagType type) {
-        Tag t = _generator.createTag(this, name, type);
-        t.setValue(value);
-        return true;
-	}
-	@Override
-	public boolean removeTag(String name) {
+	public boolean removeTag(String name) throws NoSuchTagException {
         if(_generator.removeTag(this, tag(name)))
         {
             _all_tags.remove(name);
@@ -202,7 +197,12 @@ public class ItemImpl implements Item {
 	}
 
 	@Override
-	public boolean removeTag(Tag tag) {
-        return removeTag(tag.name);
+	public boolean removeTag(Tag tag) throws NoSuchTagException {
+        return removeTag(tag.name());
+	}
+	@Override
+	public boolean addTag(Tag tag) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

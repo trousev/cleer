@@ -1,6 +1,7 @@
 package pro.trousev.cleer.sys;
 import java.io.Serializable;
 
+import pro.trousev.cleer.Item.ReadOnlyTagException;
 import pro.trousev.cleer.Item.Tag;
 import pro.trousev.cleer.Item.TagType;
 import pro.trousev.cleer.Item.ContentType;;

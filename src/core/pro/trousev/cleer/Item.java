@@ -2,6 +2,7 @@ package pro.trousev.cleer;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 import pro.trousev.cleer.Database.DatabaseObject;
 
@@ -77,12 +78,12 @@ public interface Item {
 	 */
 	public Collection<Tag> tags();
 	
-	public String[] tagNames(TagType type);
-	public String[] tagNames();
+	public List<String> tagNames(TagType type);
+	public List<String> tagNames();
 	public boolean addTag(Tag tag);
-	public boolean addTag(String name, String value);
-	public boolean removeTag(String name);
-	public boolean removeTag(Tag tag);
+	public boolean addTag(String name, String value) throws TagAlreadyExistsException, ReadOnlyTagException;
+	public boolean removeTag(String name) throws NoSuchTagException;
+	public boolean removeTag(Tag tag) throws NoSuchTagException;
 	
 	public File filename();
 	
@@ -135,6 +136,6 @@ public interface Item {
         /** 
          * This method should remove tag from item's file.
          **/
-        Tag removeTag(Item item, Tag tag);
+        boolean removeTag(Item item, Tag tag);
 	}
 }

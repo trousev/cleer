@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,6 @@ import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Database.DatabaseObject;
-import pro.trousev.cleer.Item.Tag.ReadOnlyTagException;
 
 public class TrackImpl implements Item {
 	
@@ -174,7 +174,7 @@ public class TrackImpl implements Item {
 	{
 
 		@Override
-		public Item createTrack(File filename) {
+		public Item createItem(File filename) {
 			try {
 				return new TrackImpl(filename);
 			} catch (CannotReadException e) {
@@ -194,6 +194,25 @@ public class TrackImpl implements Item {
 				e.printStackTrace();
 			}
 			return null;
+		}
+
+		@Override
+		public boolean writeTag(Item item, Tag tag) throws ReadOnlyTagException {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public Tag createTag(Item item, String name, TagType type)
+				throws TagAlreadyExistsException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean removeTag(Item item, Tag tag) {
+			// TODO Auto-generated method stub
+			return false;
 		}
 	}
 	public final static __Factory Factory = new __Factory();
@@ -236,12 +255,12 @@ public class TrackImpl implements Item {
 		return _all_tags.values();
 	}
 	@Override
-	public String[] tagNames(TagType type) {
+	public List<String> tagNames(TagType type) {
 		if(type == TagType.SystemTag) 
-			return new String[0];
+			return new ArrayList<String>();
 		if(type == TagType.StrictlyClassified)
 		{
-			return _strict_tags;
+			return tagNames();
 		}
 		if(type == TagType.SoftlyClassified)
 		{
@@ -251,9 +270,9 @@ public class TrackImpl implements Item {
 		return null;
 	}
 	@Override
-	public String[] tagNames() {
+	public List<String> tagNames() {
 		//FIXME: This is generally invalid!
-		return _strict_tags;
+		return new ArrayList<String>(Arrays.asList(_strict_tags));
 	}
 	@Override
 	public boolean addTag(Tag tag) {

@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.List;
 
 import pro.trousev.cleer.Item;
-import pro.trousev.cleer.Item.Tag.ReadOnlyTagException;
+import pro.trousev.cleer.Item.ReadOnlyTagException;
 import pro.trousev.cleer.Plugin.Interface;
 import pro.trousev.cleer.Item.NoSuchTagException;
 

@@ -104,7 +104,7 @@ public class LibraryImpl implements Library {
 			{
 				callback.progress(i++, n);
 				try {
-					Item t= _item_factory.createTrack(f);
+					Item t= _item_factory.createItem(f);
 					_db.store("songs", t.serialize(), t.getSearchQuery() + " fh"+fh);
 				} 
 				catch (Exception e) {
