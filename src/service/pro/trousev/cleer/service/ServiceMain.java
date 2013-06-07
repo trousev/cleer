@@ -1,8 +1,10 @@
 package pro.trousev.cleer.service;
+import java.io.File;
+import pro.trousev.cleer.sys.EbookItem;
 class ServiceMain
 {
     public static void main(String[] argv)
     {
-        System.out.println("Hello, world!");
+        EbookItem.Factory.createItem(new File("../example.fb2"));
     }
 }
