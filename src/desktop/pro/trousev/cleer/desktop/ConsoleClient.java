@@ -25,7 +25,7 @@ import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.commands.CoreConsole;
 import pro.trousev.cleer.sys.LibraryImpl;
 import pro.trousev.cleer.sys.QueueImpl;
-import pro.trousev.cleer.sys.TrackImpl;
+import pro.trousev.cleer.sys.MediaItem;
 
 public class ConsoleClient {
 	
@@ -54,7 +54,7 @@ public class ConsoleClient {
 	    
 	    final Database db = new DatabaseSqlite(dbpath);
 	    
-		final Library lib = new LibraryImpl(db,TrackImpl.Factory);
+		final Library lib = new LibraryImpl(db,MediaItem.Factory);
 	    final Player player = new PlayerDesk();
 	    final Queue queue = new QueueImpl(player);
 

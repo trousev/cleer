@@ -12,30 +12,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.TagException;
 
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Database.DatabaseObject;
 
-public class ItemImpl implements Item {
-	
+public class StandardItem implements Item {
 	DatabaseObject _link = null;
 	File _filename;
     Item.Factory _generator;
 	private Map<String, Tag> _all_tags; 
+	public  Map<String, Tag> getAllTags()
+	{
+		return _all_tags;
+	}
 	
-	public ItemImpl(Database.DatabaseObject dataObject) throws Exception
+	public StandardItem(Database.DatabaseObject dataObject) throws Exception
 	{
 		if(!deserialize(dataObject.contents()))
 			throw new Exception("Deserialisation failed");
 		_link = dataObject;
 	}
-    public ItemImpl(Item.Factory generator, File filename)
+    public StandardItem(Item.Factory generator, File filename)
     {
         _filename = filename;
         _generator = generator;
@@ -66,6 +65,8 @@ public class ItemImpl implements Item {
 			ByteArrayInputStream in = new ByteArrayInputStream(Base64.decode(contents));
 			ObjectInputStream iis = new ObjectInputStream(in);
 			_all_tags = (Map<String, Tag>) iis.readObject();
+			for(Tag t: _all_tags.values())
+				t.setParent(this);
 			_filename = (File) iis.readObject();
             _generator = (Item.Factory) iis.readObject();
 			return true;
@@ -85,16 +86,18 @@ public class ItemImpl implements Item {
 	{
 		_link.update(serialize(), getSearchQuery());
 	}
-	public void setTagValue(String name, String value) throws NoSuchTagException, ReadOnlyTagException
+	@Override
+	public void setTagValue(String name, String value) throws NoSuchTagException, ReadOnlyTagException, DatabaseError
 	{
 		Tag tag = tag(name);
         String prev = tag(name).value();
-		tag.setValue(value);
+		tag.doSetValue(value);
         if(!_generator.writeTag(this, tag))
         {
-            tag.setValue(prev);
+            tag.doSetValue(prev);
             throw new ReadOnlyTagException(tag.name());
         }
+        updateTagInDatabase();
 	}
 
 	@Override

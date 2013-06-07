@@ -42,7 +42,7 @@ public class LibrarySmartPlaylist implements Playlist, Serializable{
 		{
 			_contents = new ArrayList<Item>();
 			for(DatabaseObject dbo: _db.search("songs", _query, SearchLanguage.SearchPyplay))
-				_contents.add(new TrackImpl(dbo));
+				_contents.add(new MediaItem(dbo));
 			return _contents;
 		}
 		catch (Exception e)

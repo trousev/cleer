@@ -2,8 +2,6 @@ package pro.trousev.cleer;
 
 import java.util.List;
 
-import pro.trousev.cleer.Database.DatabaseError;
-import pro.trousev.cleer.Database.DatabaseObject;
 
 
 /**

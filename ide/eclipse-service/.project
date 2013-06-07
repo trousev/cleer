@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>cleer-service</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>core</name>
+			<type>2</type>
+			<locationURI>CLEER_SOURCE/core</locationURI>
+		</link>
+		<link>
+			<name>service</name>
+			<type>2</type>
+			<locationURI>CLEER_SOURCE/service</locationURI>
+		</link>
+	</linkedResources>
+	<variableList>
+		<variable>
+			<name>CLEER_SOURCE</name>
+			<value>$%7BPARENT-2-PROJECT_LOC%7D/src</value>
+		</variable>
+		<variable>
+			<name>CLEER_ROOT</name>
+			<value>$%7BPARENT-2-PROJECT_LOC%7D</value>
+		</variable>
+	</variableList>
+</projectDescription>

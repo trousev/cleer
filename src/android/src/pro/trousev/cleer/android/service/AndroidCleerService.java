@@ -1,14 +1,7 @@
 package pro.trousev.cleer.android.service;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.TagException;
 
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
@@ -20,7 +13,6 @@ import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Messaging.Event;
 import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Player;
-import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.Queue;
@@ -34,9 +26,8 @@ import pro.trousev.cleer.android.AndroidMessages.ServiceRespondMessage;
 import pro.trousev.cleer.android.AndroidMessages.ServiceTaskMessage;
 import pro.trousev.cleer.android.CleerAndroidNotificationManager;
 import pro.trousev.cleer.android.Constants;
-import pro.trousev.cleer.sys.LibraryImpl;
+import pro.trousev.cleer.sys.MediaItem;
 import pro.trousev.cleer.sys.QueueImpl;
-import pro.trousev.cleer.sys.TrackImpl;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
@@ -294,7 +285,7 @@ public class AndroidCleerService extends Service {
 		queue = new QueueImpl(player);
 		database = new DatabaseAndroidImpl();
 		try {
-			library = new LibraryAndroidImpl(database, TrackImpl.Factory, getApplication());
+			library = new LibraryAndroidImpl(database, MediaItem.Factory, getApplication());
 			// FIXME Make scanning of particular dirs in next version
 			library.folder_add(Environment.getExternalStorageDirectory());
 		} catch (DatabaseError e) {

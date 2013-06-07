@@ -9,7 +9,7 @@ import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Database.DatabaseObject;
 import pro.trousev.cleer.Database.SearchLanguage;
 import pro.trousev.cleer.Plugin.Interface;
-import pro.trousev.cleer.sys.TrackImpl;
+import pro.trousev.cleer.sys.MediaItem;
 
 public class Library extends Command {
 
@@ -92,7 +92,7 @@ public class Library extends Command {
 				iface.storage().begin();
 				for (DatabaseObject dbo: iface.storage().search("songs", "",SearchLanguage.SearchDirectMatch) )
 				{
-					TrackImpl t = new TrackImpl(dbo);
+					MediaItem t = new MediaItem(dbo);
 					System.out.println(t.getSearchQuery());
 					dbo.update_search(t.getSearchQuery());
 				}

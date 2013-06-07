@@ -1,10 +1,14 @@
 package pro.trousev.cleer;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Database.DatabaseObject;
+import pro.trousev.cleer.Item.NoSuchTagException;
+import pro.trousev.cleer.Item.ReadOnlyTagException;
 
 /**
  * Эта штуковина репрезентует один музыкальный трек коллекции, связанный с тем или иным объектом ФС
@@ -57,6 +61,8 @@ public interface Item {
 		 */
 		public void setValue(String new_value) throws ReadOnlyTagException;
 		public String toString();
+		void setParent(Item parent);
+		void doSetValue(String new_value);
 
 	}
 	
@@ -84,7 +90,7 @@ public interface Item {
 	public boolean addTag(String name, String value) throws TagAlreadyExistsException, ReadOnlyTagException;
 	public boolean removeTag(String name) throws NoSuchTagException;
 	public boolean removeTag(Tag tag) throws NoSuchTagException;
-	
+	void setTagValue(String name, String value) throws NoSuchTagException, ReadOnlyTagException, DatabaseError;
 	public File filename();
 	
 
@@ -106,7 +112,9 @@ public interface Item {
 	}
     public static class TagAlreadyExistsException extends Exception
     {
-        public TagAlreadyExistsException(String tagName) {
+		private static final long serialVersionUID = -7471467624443067651L;
+
+		public TagAlreadyExistsException(String tagName) {
             super(String.format("Tag already exists: %s",tagName));
         }
     }
@@ -118,7 +126,7 @@ public interface Item {
 		}
 	}
 /// Factory
-	public interface Factory
+	public interface Factory extends Serializable
 	{
         /**
          * This method should create valid item from given filename
@@ -137,5 +145,8 @@ public interface Item {
          * This method should remove tag from item's file.
          **/
         boolean removeTag(Item item, Tag tag);
+
 	}
+
 }
+
