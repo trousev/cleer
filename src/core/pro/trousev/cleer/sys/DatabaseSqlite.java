@@ -1,4 +1,4 @@
-package pro.trousev.cleer.desktop;
+package pro.trousev.cleer.sys;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,7 +13,7 @@ import pro.trousev.cleer.Database;
 public class DatabaseSqlite implements Database {
 
 	Connection link = null;
-	DatabaseSqlite(String path) throws SQLException, ClassNotFoundException
+	public DatabaseSqlite(String path) throws SQLException, ClassNotFoundException
 	{
 		//Class.forName("org.hsqldb.jdbcDriver");
 		Class.forName("org.sqlite.JDBC");

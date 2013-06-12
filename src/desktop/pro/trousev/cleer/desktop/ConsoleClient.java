@@ -23,6 +23,7 @@ import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Plugin.Interface;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.commands.CoreConsole;
+import pro.trousev.cleer.sys.DatabaseSqlite;
 import pro.trousev.cleer.sys.LibraryImpl;
 import pro.trousev.cleer.sys.QueueImpl;
 import pro.trousev.cleer.sys.MediaItem;

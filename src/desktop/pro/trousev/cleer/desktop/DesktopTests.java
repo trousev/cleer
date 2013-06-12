@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Library;
+import pro.trousev.cleer.sys.DatabaseSqlite;
 import pro.trousev.cleer.sys.LibraryImpl;
 import pro.trousev.cleer.sys.MediaItem;
 

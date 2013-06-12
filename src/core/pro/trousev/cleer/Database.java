@@ -16,6 +16,7 @@ import java.util.List;
  * Поисковой контекст -- это строка-список ключевых слов, разделенных пробелом.
  **/
 public interface Database {
+
 	enum SearchLanguage
 	{
 		SearchDirectMatch
@@ -99,7 +100,7 @@ public interface Database {
 	 *         противном случае
 	 */
 	public boolean declare_section(String section) throws DatabaseError;
-
+	
 	/**
 	 * Уничтожает секцию в БД. Все объекты в секции тоже должны быть уничтожены.
 	 **/
@@ -163,4 +164,29 @@ public interface Database {
 	 * @return
 	 */
 	public boolean rollback() throws DatabaseError;
+
+
+	/////////////////////////////
+	////// Messages! ////////////
+	/////////////////////////////
+	public static class ItemInserted implements Messaging.Message
+	{
+		public String section;
+		public String name;
+		public String value;
+	}
+	public static class ItemUpdated implements Messaging.Message
+	{
+		public String section;
+		public String name;
+		public String value;
+	}
+	public static class ItemRemoved
+	{
+		public String section;
+		public String name;
+		public String value;
+	}
+	
+
 }

@@ -21,7 +21,7 @@ public class LibraryImpl implements Library {
 	private LibrarySmartPlaylist playlistFromDatabase(DatabaseObject dbo)
 	{
 		LibrarySmartPlaylist p = Tools.Deserialize(dbo.contents());
-		p.setDatabase(_db);
+		p.configure(_db, _item_factory);
 		return p;
 	}
 	
@@ -157,7 +157,7 @@ public class LibraryImpl implements Library {
 	}
 	@Override
 	public Playlist search(String query) {
-		Playlist p = new LibrarySmartPlaylist(_db,_focus,query);
+		Playlist p = new LibrarySmartPlaylist(_db,_focus,_item_factory,query);
 		p.save(_focus);
 		return p;
 	}

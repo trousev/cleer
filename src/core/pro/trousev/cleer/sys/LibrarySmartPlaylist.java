@@ -19,15 +19,17 @@ public class LibrarySmartPlaylist implements Playlist, Serializable{
 	String _query;
 	transient List<Item> _contents = null;
 	transient Database _db;
-	LibrarySmartPlaylist(Database storage, String title, String query)
+	transient Item.Factory _factory;
+	LibrarySmartPlaylist(Database storage, String title, Item.Factory generator, String query)
 	{
-		_db = storage;
+		configure(storage, generator);
 		_title = title;
 		_query = query;
 	}
-	public void setDatabase(Database db)
+	public void configure(Database db, Item.Factory factory)
 	{
 		_db = db;
+		_factory = factory;
 	}
 	@Override
 	public String query() {
@@ -42,7 +44,7 @@ public class LibrarySmartPlaylist implements Playlist, Serializable{
 		{
 			_contents = new ArrayList<Item>();
 			for(DatabaseObject dbo: _db.search("songs", _query, SearchLanguage.SearchPyplay))
-				_contents.add(new MediaItem(dbo));
+				_contents.add(_factory.createItem(dbo));
 			return _contents;
 		}
 		catch (Exception e)

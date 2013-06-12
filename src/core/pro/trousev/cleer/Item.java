@@ -7,13 +7,10 @@ import java.util.List;
 
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Database.DatabaseObject;
-import pro.trousev.cleer.Item.NoSuchTagException;
-import pro.trousev.cleer.Item.ReadOnlyTagException;
 
 /**
  * Эта штуковина репрезентует один музыкальный трек коллекции, связанный с тем или иным объектом ФС
  * @author Alexander Trousevich
- *
  */
 public interface Item {
 	/**
@@ -63,7 +60,6 @@ public interface Item {
 		public String toString();
 		void setParent(Item parent);
 		void doSetValue(String new_value);
-
 	}
 	
 	/**
@@ -138,6 +134,10 @@ public interface Item {
          * This method should create valid item from given filename
          **/
 		Item createItem(File filename);
+		/**
+		 * This method should create valid item from given DatabaseObject, using serialization routines of Item itself.
+		 */
+		Item createItem(DatabaseObject dbo);
         /**
          * This method should update item's file according to new tag value.
          * This method should be called from item's setValue(...) method.

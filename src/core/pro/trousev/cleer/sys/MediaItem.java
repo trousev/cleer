@@ -90,6 +90,17 @@ public class MediaItem extends StandardItem {
 			
 			return null;
 		}
+
+		@Override
+		public Item createItem(DatabaseObject dbo) {
+			try {
+				return new MediaItem(dbo);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		}
 	};	
 
 }
