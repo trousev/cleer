@@ -89,8 +89,8 @@ public class StandardItem implements Item {
 	@Override
 	public void setTagValue(String name, String value) throws NoSuchTagException, ReadOnlyTagException, DatabaseError
 	{
-		Tag tag = tag(name);
-        String prev = tag(name).value();
+		Tag tag = firstTag(name);
+        String prev = firstTag(name).value();
 		tag.doSetValue(value);
         if(!_generator.writeTag(this, tag))
         {
@@ -105,7 +105,7 @@ public class StandardItem implements Item {
 	{
         //FIXME: make more proper toString() call
 		try {
-			return tag("title") + " by " + tag("artist");
+			return firstTag("title") + " by " + tag("artist");
 		} catch (NoSuchTagException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,7 +120,7 @@ public class StandardItem implements Item {
 		
 		for(String tag: tagNames())
 			try {
-				query += String.format("%s:%s ",tag,tag(tag).value());
+				query += String.format("%s:%s ",tag,firstTag(tag).value());
 			} catch (NoSuchTagException e) {
 				query += String.format("%s:<NULL> ",tag);
 			}
@@ -129,7 +129,7 @@ public class StandardItem implements Item {
 		int rating;
 		try
 		{
-			rating = new Integer(tag("rating").value());
+			rating = new Integer(firstTag("rating").value());
 		}
 		catch (Exception e)
 		{
@@ -158,7 +158,18 @@ public class StandardItem implements Item {
         return true;
 	}
 	@Override
-	public Tag tag(String name) throws NoSuchTagException {
+	public List<Tag> tag(String name) 
+	{
+		List<Tag> ans = new ArrayList<Item.Tag>();
+		try {
+			ans.add(firstTag(name));
+		} catch (NoSuchTagException e) {
+			// This can and should be silently ingnored. No tags -- OK, return empty array.
+		}
+		return ans;
+	}
+	@Override
+	public Tag firstTag(String name) throws NoSuchTagException {
 	    Tag ans = _all_tags.get(name);
 		if(ans == null)
 			throw new NoSuchTagException(name);
@@ -191,7 +202,7 @@ public class StandardItem implements Item {
 	}
 	@Override
 	public boolean removeTag(String name) throws NoSuchTagException {
-        if(_generator.removeTag(this, tag(name)))
+        if(_generator.removeTag(this, firstTag(name)))
         {
             _all_tags.remove(name);
             return true;

@@ -65,7 +65,7 @@ public class ListOfCompositions extends ListFragment {
 			ContextMenuInfo menuInfo) {
 		Item item = (Item) list.get(((AdapterContextMenuInfo)menuInfo).position);
 		try {
-			menu.setHeaderTitle(item.tag("title").value());
+			menu.setHeaderTitle(item.firstTag("title").value());
 		} catch (NoSuchTagException e) {
 			e.printStackTrace();
 		}

@@ -36,7 +36,7 @@ public class RatingManagement {
 			else rating = new Integer(rated);
 			Item t = iface.player().now_playing();
 			try {
-				t.tag("rating").setValue(String.format("%d", rating));
+				t.firstTag("rating").setValue(String.format("%d", rating));
 			} catch (NoSuchTagException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

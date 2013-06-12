@@ -72,7 +72,7 @@ public class PlayBar extends Fragment implements OnClickListener, OnLongClickLis
 			if (ev.track != null) {
 				try {
 					currentTrack = ev.track;
-					compName.setText(ev.track.tag("title")
+					compName.setText(ev.track.firstTag("title")
 							.value());
 				} catch (NoSuchTagException e) {
 					e.printStackTrace();

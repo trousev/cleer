@@ -67,11 +67,17 @@ public interface Item {
 	}
 	
 	/**
-	 * Отдает тег по заданному имени
+	 * Отдает первый тег по заданному имени
+	 * @throws NoSuchTagException 
+	 */
+	public Tag firstTag(String name) throws NoSuchTagException;
+	/**
+	 * Отдает список тегов по заданному имени
 	 * @param name
 	 * @return
 	 */
-	public Tag tag(String name) throws NoSuchTagException;
+	public List<Tag> tag(String name) throws NoSuchTagException;
+	
 	/**
 	 * Отдает список всех тегов заданного типа
 	 * @param type

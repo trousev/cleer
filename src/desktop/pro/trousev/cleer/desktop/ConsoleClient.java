@@ -38,7 +38,7 @@ public class ConsoleClient {
 		String np = "[No Song]";
 		Item t = iface.queue().playing_track();
 		if(t != null)
-			np = t.tag("title").value();
+			np = t.firstTag("title").value();
 		
 		String sz = String.format("%d/%d",iface.queue().playing_index(), iface.queue().size());
 		return pl + " | " + sz + " " + np + " # ";
@@ -147,7 +147,7 @@ public class ConsoleClient {
 								int t_rating;
 								try
 								{
-									t_rating = new Integer(t.tag("rating").value());
+									t_rating = new Integer(t.firstTag("rating").value());
 								}
 								catch (Exception e)
 								{
@@ -163,12 +163,12 @@ public class ConsoleClient {
 								String[] arr ;
 								if(selected_track >= 0)
 								{
-									String[] _arr = {(selected_track == no ? "===>":"    "), rating_str, t.tag("title").value(), t.tag("artist").value(), t.tag("album").value()};
+									String[] _arr = {(selected_track == no ? "===>":"    "), rating_str, t.firstTag("title").value(), t.firstTag("artist").value(), t.firstTag("album").value()};
 									arr = _arr;
 								}
 								else
 								{
-									String[] _arr = {rating_str, t.tag("title").value(), t.tag("artist").value(), t.tag("album").value()};
+									String[] _arr = {rating_str, t.firstTag("title").value(), t.firstTag("artist").value(), t.firstTag("album").value()};
 									arr = _arr;
 								}
 								//System.out.println(t.toString());

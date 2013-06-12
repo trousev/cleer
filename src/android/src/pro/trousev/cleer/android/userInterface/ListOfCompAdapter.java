@@ -41,8 +41,8 @@ public class ListOfCompAdapter extends ArrayAdapter<Item> {
 		ImageView icon = (ImageView) view.findViewById(R.id.is_played);
 		icon.setBackgroundResource(0);
 		try {
-			compName.setText(getItem(position).tag("title").value());
-			artistName.setText(getItem(position).tag("artist").value());
+			compName.setText(getItem(position).firstTag("title").value());
+			artistName.setText(getItem(position).firstTag("artist").value());
 		} catch (NoSuchTagException e) {
 			e.printStackTrace();
 		}

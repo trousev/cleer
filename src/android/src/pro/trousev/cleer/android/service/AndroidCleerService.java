@@ -79,7 +79,7 @@ public class AndroidCleerService extends Service {
 		if (!description.equals("")) {
 			String n = "";
 			try {
-				n = queue.playing_track().tag("title").value();
+				n = queue.playing_track().firstTag("title").value();
 			} catch (NoSuchTagException e1) {
 				n = "NO_NAME_AVALIBLE";
 				// e1.printStackTrace();
