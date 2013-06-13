@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -146,18 +147,67 @@ public class DatabaseSqlite implements Database {
 		public void delete() {
 			_parent.remove(_section, this);
 		}
+		@Override
+		public boolean update_tags(Map<String, String> tags) throws DatabaseError {
+			String update = "";
+			for(String key: tags.keySet())
+			{
+				if(!update.isEmpty())
+					update += ", ";
+				update += String.format(" %s='%s' ", key, tags.get(key));
+			}
+			update = String.format("UPDATE %s SET %s where id=%s; ", _section,update,_id);
+			try {
+				PreparedStatement st = _parent.link.prepareStatement(update);
+				st.execute();
+				if(st.getUpdateCount() == 1)
+				{
+					return true;
+				}
+				else throw new DatabaseError("Statement returned not one updated row. Query: "+update+" UpdatedRows: "+st.getUpdateCount());
+			} catch (SQLException e) {
+				throw new DatabaseError(e);
+			}
+		}
+		@Override
+		public boolean update_tag(String name, String value) throws DatabaseError {
+			Map<String, String> m = new HashMap<String, String>();
+			m.put(name, value);
+			return update_tags(m);
+		}
+		@Override
+		public boolean remove_tag(String name) throws DatabaseError {
+			return update_tag(name, "");
+		}
 	}
 	@Override
-	public DatabaseObject store(String section, String contents, String keywords) throws DatabaseError {
+	public DatabaseObject store(String section, String contents,
+			String keywords, Map<String, String> tags) throws DatabaseError {
 		keywords = keywords.toLowerCase();
 		keywords = keywords.replace("'","''");
 		contents = contents.replace("'","''");
 		try {
-			link.prepareStatement(String.format("INSERT INTO %s(value,search) VALUES('%s','%s');",section,contents, keywords)).execute();
+			String names = "";
+			String values = "";
+			names="value";
+			names += ", search";
+			values = "'"+contents+"'";
+			values += ",'"+keywords+"'";
+			if(tags != null) for(String name: tags.keySet())
+			{
+				String value = tags.get(name);
+				names += "," + name;
+				values+= ",'"+value+"'";
+			}
+			link.prepareStatement(String.format("INSERT INTO %s(%s) VALUES(%s);",section, names, values)).execute();
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
 		}
 		return null;
+	}
+	@Override
+	public DatabaseObject store(String section, String contents, String keywords) throws DatabaseError {
+		return store(section,contents,keywords,null);
 	}
 
 	@Override
@@ -193,8 +243,8 @@ public class DatabaseSqlite implements Database {
 	{
 	    try
 	    {
-	    	link.prepareStatement(String.format("ALTER TABLE %s ADD COLUMN tag_%s TEXT; ", section)).execute();
-	    	link.prepareStatement(String.format("CREATE INDEX IF NOT EXISTS idx_search_%s ON %s (search)", section,section)).execute();
+	    	link.prepareStatement(String.format("ALTER TABLE %s ADD COLUMN tag_%s TEXT; ", section,name)).execute();
+	    	link.prepareStatement(String.format("CREATE INDEX IF NOT EXISTS idx_tag_%s_%s ON %s (%s)",name, section,section,name)).execute();
 	    	return true;
 	    }
 	    catch (Exception e)
@@ -316,6 +366,13 @@ public class DatabaseSqlite implements Database {
 	public List<DatabaseObject> search(String section, String query, SearchLanguage language) 
 			throws DatabaseError 
 	{
+		return search(section, query, language, null);
+	}
+	@Override
+	public List<DatabaseObject> search(String section, String query,
+			SearchLanguage language, Map<String, String> filter)
+			throws DatabaseError 
+	{
 		query = query.toLowerCase();
 		String where = "";
 		if(language == SearchLanguage.SearchDirectMatch)
@@ -324,6 +381,16 @@ public class DatabaseSqlite implements Database {
 			where = _language_like(query);
 		if(language == SearchLanguage.SearchPyplay)
 			where = _language_pyplay(query);
+		if(filter != null)
+		{
+			for(String key: filter.keySet())
+			{
+				String value = filter.get(key);
+				if(!where.isEmpty())
+					where += " AND ";
+				where += String.format("%s = '%s'", key, value);
+			}
+		}
 		try {
 			return _p_search(section, where);
 		} catch (SQLException e) {
@@ -331,10 +398,27 @@ public class DatabaseSqlite implements Database {
 		}
 	}
 	@Override
-	public DatabaseObject store(String section, String contents,
-			String keywords, Map<String, String> tags) throws DatabaseError {
-		// TODO Auto-generated method stub
-		return null;
+	public List<String> search_tag(String section, String tag,
+			Map<String, String> filter) throws DatabaseError {
+		String qq;
+		String where = "";
+		for(String key: filter.keySet())
+		{
+			String value = filter.get(key);
+			if(!where.isEmpty())
+				where += " AND ";
+			where += String.format(" %s = '%s' ", key, value); 
+		}
+		if(where.isEmpty())
+			qq = String.format("SELECT DISTINCT(tag_%s) FROM %s;",tag,section);
+		else
+			qq = String.format("SELECT DISTINCT(tag_%s) FROM %s WHERE %s;",tag,section,where);
+		try {
+			ResultSet set = link.prepareStatement(qq).executeQuery();
+		} catch (SQLException e) {
+			throw new DatabaseError(e);
+		}
+		
 	}
 	
 }

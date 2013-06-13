@@ -65,9 +65,9 @@ public interface Database {
 		 **/
 		boolean update_search(String search) throws DatabaseError;
 		
-		boolean update_tags(Map<String, String> tags);
-		boolean update_tag(String name, String value);
-		boolean remove_tag(String name);
+		boolean update_tags(Map<String, String> tags) throws DatabaseError;
+		boolean update_tag(String name, String value)throws DatabaseError;
+		boolean remove_tag(String name) throws DatabaseError;
 
 		/**
 		 * Уничтожает объект в БД.
@@ -142,9 +142,27 @@ public interface Database {
 	 * запросу. Алгоритм поиска не формализован, но должен быть умным,
 	 * эвристичным и т.п. Налагаются дополнительные требования на алгоритм
 	 * поиска, за подробностями на trousev@yandex.ru
+	 * 
+	 * @param filter -- словарь тегов, по которым следует провести 
+	 *                   предварительную фильтрацию
+	 **/
+	public List<DatabaseObject> search(String section, String query,
+			SearchLanguage language, Map<String, String> filter) throws DatabaseError;
+	/**
+	 * Производит поиск всех объектов в секции, соответствующих заданному
+	 * запросу. Алгоритм поиска не формализован, но должен быть умным,
+	 * эвристичным и т.п. Налагаются дополнительные требования на алгоритм
+	 * поиска, за подробностями на trousev@yandex.ru
 	 **/
 	public List<DatabaseObject> search(String section, String query,
 			SearchLanguage language) throws DatabaseError;
+	/**
+	 * Этот метод возвращает список значений заданного тега, под которыми 
+	 * имеется хотя бы один объект с учетом наложения фильтров. В случае отсутствия
+	 * фильтров -- это прекрасный способ узнать список всех значений данного тег.
+	 * @throws DatabaseError 
+	 */
+	public List<String> search_tag (String section, String tag, Map<String, String> filter) throws DatabaseError;
 	/**
 	 * Уничтожает выбранный DatabaseObject
 	 **/

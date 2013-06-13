@@ -85,6 +85,10 @@ public class StandardItem implements Item {
 	private void updateTagInDatabase() throws DatabaseError
 	{
 		_link.update(serialize(), getSearchQuery());
+		Map<String, String> dbtags = new HashMap<String, String>();
+		for(Tag tag: tags())
+			dbtags.put(tag.name(), tag.value());
+		_link.update_tags(dbtags);
 	}
 	@Override
 	public void setTagValue(String name, String value) throws NoSuchTagException, ReadOnlyTagException, DatabaseError

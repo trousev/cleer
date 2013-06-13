@@ -3,7 +3,9 @@ package pro.trousev.cleer.sys;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
@@ -12,6 +14,7 @@ import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Database.DatabaseObject;
+import pro.trousev.cleer.Item.Tag;
 
 public class LibraryImpl implements Library {
 
@@ -105,7 +108,10 @@ public class LibraryImpl implements Library {
 				callback.progress(i++, n);
 				try {
 					Item t= _item_factory.createItem(f);
-					_db.store("songs", t.serialize(), t.getSearchQuery() + " fh"+fh);
+					Map<String, String> dbtags = new HashMap<String, String>();
+					for(Tag tag: t.tags())
+						dbtags.put(tag.name(), tag.value());
+					_db.store("songs", t.serialize(), t.getSearchQuery() + " fh"+fh, dbtags);
 				} 
 				catch (Exception e) {
 					e.printStackTrace();

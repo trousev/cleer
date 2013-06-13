@@ -3,6 +3,7 @@ package pro.trousev.cleer.android.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -91,6 +92,23 @@ public class DatabaseAndroidImpl implements Database {
 		public void delete()
 		{
 			_parent._db.delete(_section, String.format("id='%s'",_id), null);
+		}
+		@Override
+		public boolean update_tags(Map<String, String> tags)
+				throws DatabaseError {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		@Override
+		public boolean update_tag(String name, String value)
+				throws DatabaseError {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		@Override
+		public boolean remove_tag(String name) throws DatabaseError {
+			// TODO Auto-generated method stub
+			return false;
 		}
 	}
 	
@@ -262,6 +280,34 @@ public class DatabaseAndroidImpl implements Database {
 			where += String.format(" ( %s ) ", or_clause);
 		}
 		return where;
+	}
+	@Override
+	public boolean declare_tag(String section, String name) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public DatabaseObject store(String section, String contents,
+			String keywords, Map<String, String> tags) throws DatabaseError {
+		// Since android database have no OLAP extensions, no need for this method
+		//FIXME: BUT: tags are nesessary, and they're should be implemented anyway.
+		return store(section, contents, keywords);
+	}
+	@Override
+	public List<DatabaseObject> search(String section, String query,
+			SearchLanguage language, Map<String, String> filter)
+			throws DatabaseError {
+		// Since android database have no OLAP extensions, no need for this method
+		// FIXME: BUT: tags are nesessary, and they're should be implemented anyway.
+		return search(section, query, language);
+	}
+	@Override
+	public List<String> search_tag(String section, String tag,
+			Map<String, String> filter) {
+		// TODO Auto-generated method stub
+		// Since android database have no OLAP extensions, no need for this method
+		// FIXME: BUT: tags are nesessary, and they're should be implemented anyway.
+		return null;
 	}
 	
 }
