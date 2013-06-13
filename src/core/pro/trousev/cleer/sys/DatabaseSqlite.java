@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import pro.trousev.cleer.Database;
 
@@ -174,12 +175,10 @@ public class DatabaseSqlite implements Database {
 		}
 	}
 	@Override
-	public boolean declare_section(String section) {
+	public boolean declare_section(String section) 
+	{
 	    try
 	    {
-	    	//This is for HSQLDB
-	    	//return  link.prepareStatement(String.format("CREATE TABLE %s (id IDENTITY , value VARCHAR(10000), search VARCHAR(10000))", section)).execute();
-	    	//This is for SQLite
 	    	link.prepareStatement(String.format("CREATE TABLE %s (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, value VARCHAR(10000), search VARCHAR(10000))", section)).execute();
 	    	link.prepareStatement(String.format("CREATE INDEX IF NOT EXISTS idx_search_%s ON %s (search)", section,section)).execute();
 	    	return true;
@@ -188,7 +187,20 @@ public class DatabaseSqlite implements Database {
 	    {
 	    	return false;
 	    }
-	    
+	}
+	@Override
+	public boolean declare_tag(String section, String name) 
+	{
+	    try
+	    {
+	    	link.prepareStatement(String.format("ALTER TABLE %s ADD COLUMN tag_%s TEXT; ", section)).execute();
+	    	link.prepareStatement(String.format("CREATE INDEX IF NOT EXISTS idx_search_%s ON %s (search)", section,section)).execute();
+	    	return true;
+	    }
+	    catch (Exception e)
+	    {
+	    	return false;
+	    }
 	}
 	@Override
 	public boolean clear_section(String section) {
@@ -317,6 +329,12 @@ public class DatabaseSqlite implements Database {
 		} catch (SQLException e) {
 			throw new DatabaseError(e); 
 		}
+	}
+	@Override
+	public DatabaseObject store(String section, String contents,
+			String keywords, Map<String, String> tags) throws DatabaseError {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

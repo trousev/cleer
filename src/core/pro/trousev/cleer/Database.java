@@ -1,6 +1,7 @@
 package pro.trousev.cleer;
 
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -63,6 +64,10 @@ public interface Database {
 		 * Обновляет только поисковой контекст.
 		 **/
 		boolean update_search(String search) throws DatabaseError;
+		
+		boolean update_tags(Map<String, String> tags);
+		boolean update_tag(String name, String value);
+		boolean remove_tag(String name);
 
 		/**
 		 * Уничтожает объект в БД.
@@ -102,6 +107,11 @@ public interface Database {
 	public boolean declare_section(String section) throws DatabaseError;
 	
 	/**
+	 * Добавляет дополнительный критерий поиска в БД. (для СУБД -- поле, для NoSQL -- relation и т.п.)
+	 */
+	public boolean declare_tag(String section, String name);
+	
+	/**
 	 * Уничтожает секцию в БД. Все объекты в секции тоже должны быть уничтожены.
 	 **/
 	public boolean clear_section(String section) throws DatabaseError;
@@ -109,6 +119,9 @@ public interface Database {
 	/**
 	 * Создает и возвращает новый объект в соответствующую секцию в БД.
 	 **/
+	public DatabaseObject store(String section, String contents, String keywords, Map<String, String> tags)
+			throws DatabaseError;
+	
 	public DatabaseObject store(String section, String contents, String keywords)
 			throws DatabaseError;
 

@@ -2,15 +2,8 @@ package pro.trousev.cleer.service;
 import java.io.File;
 import java.sql.SQLException;
 
-import pro.trousev.cleer.Console;
-import pro.trousev.cleer.ConsoleOutput;
-import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Library;
-import pro.trousev.cleer.Player;
-import pro.trousev.cleer.Queue;
-import pro.trousev.cleer.Plugin.Interface;
-import pro.trousev.cleer.sys.EbookItem;
 class ServiceMain
 {
     public static void main(String[] argv) throws SQLException, ClassNotFoundException, DatabaseError
@@ -22,7 +15,6 @@ class ServiceMain
 			@Override
 			public void started() {
 				System.out.println("Scanning started");
-				
 			}
 			
 			@Override
@@ -44,6 +36,5 @@ class ServiceMain
 				
 			}
 		});
-        //EbookItem.Factory.createItem(new File("/home/doctor/test/kuku/Staut_Niro_Vulf_61_Poddelka_dlya_ubiystva.172555.fb2"));
     }
 }
