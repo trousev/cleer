@@ -397,6 +397,7 @@ public class DatabaseSqlite implements Database {
 			throw new DatabaseError(e); 
 		}
 	}
+	
 	@Override
 	public List<String> search_tag(String section, String tag,
 			Map<String, String> filter) throws DatabaseError {
