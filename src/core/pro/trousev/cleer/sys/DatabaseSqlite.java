@@ -415,11 +415,17 @@ public class DatabaseSqlite implements Database {
 		else
 			qq = String.format("SELECT DISTINCT(tag_%s) FROM %s WHERE %s;",tag,section,where);
 		try {
+			List<String> ans = new ArrayList<String>();
 			ResultSet set = link.prepareStatement(qq).executeQuery();
+			while(set.next())
+			{
+				ans.add(set.getString(1));
+			}
+			set.close();
+			return ans;
 		} catch (SQLException e) {
 			throw new DatabaseError(e);
 		}
-		
 	}
 	
 }
