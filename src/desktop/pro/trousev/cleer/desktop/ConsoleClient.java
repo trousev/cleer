@@ -23,9 +23,10 @@ import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Plugin.Interface;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.commands.CoreConsole;
+import pro.trousev.cleer.sys.DatabaseSqlite;
 import pro.trousev.cleer.sys.LibraryImpl;
 import pro.trousev.cleer.sys.QueueImpl;
-import pro.trousev.cleer.sys.TrackImpl;
+import pro.trousev.cleer.sys.MediaItem;
 
 public class ConsoleClient {
 	
@@ -38,7 +39,7 @@ public class ConsoleClient {
 		String np = "[No Song]";
 		Item t = iface.queue().playing_track();
 		if(t != null)
-			np = t.tag("title").value();
+			np = t.firstTag("title").value();
 		
 		String sz = String.format("%d/%d",iface.queue().playing_index(), iface.queue().size());
 		return pl + " | " + sz + " " + np + " # ";
@@ -54,7 +55,7 @@ public class ConsoleClient {
 	    
 	    final Database db = new DatabaseSqlite(dbpath);
 	    
-		final Library lib = new LibraryImpl(db,TrackImpl.Factory);
+		final Library lib = new LibraryImpl(db,MediaItem.Factory);
 	    final Player player = new PlayerDesk();
 	    final Queue queue = new QueueImpl(player);
 
@@ -147,7 +148,7 @@ public class ConsoleClient {
 								int t_rating;
 								try
 								{
-									t_rating = new Integer(t.tag("rating").value());
+									t_rating = new Integer(t.firstTag("rating").value());
 								}
 								catch (Exception e)
 								{
@@ -163,12 +164,12 @@ public class ConsoleClient {
 								String[] arr ;
 								if(selected_track >= 0)
 								{
-									String[] _arr = {(selected_track == no ? "===>":"    "), rating_str, t.tag("title").value(), t.tag("artist").value(), t.tag("album").value()};
+									String[] _arr = {(selected_track == no ? "===>":"    "), rating_str, t.firstTag("title").value(), t.firstTag("artist").value(), t.firstTag("album").value()};
 									arr = _arr;
 								}
 								else
 								{
-									String[] _arr = {rating_str, t.tag("title").value(), t.tag("artist").value(), t.tag("album").value()};
+									String[] _arr = {rating_str, t.firstTag("title").value(), t.firstTag("artist").value(), t.firstTag("album").value()};
 									arr = _arr;
 								}
 								//System.out.println(t.toString());

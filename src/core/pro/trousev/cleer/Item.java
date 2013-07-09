@@ -1,14 +1,16 @@
 package pro.trousev.cleer;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
+import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Database.DatabaseObject;
 
 /**
  * Эта штуковина репрезентует один музыкальный трек коллекции, связанный с тем или иным объектом ФС
  * @author Alexander Trousevich
- *
  */
 public interface Item {
 	/**
@@ -56,22 +58,22 @@ public interface Item {
 		 */
 		public void setValue(String new_value) throws ReadOnlyTagException;
 		public String toString();
-
-		public static class ReadOnlyTagException extends Exception
-		{
-			private static final long serialVersionUID = -3294597277551186761L;
-			public ReadOnlyTagException(String tagName) {
-				super(String.format("Tag is read-only: "+tagName));
-			}
-		}
+		void setParent(Item parent);
+		void doSetValue(String new_value);
 	}
 	
 	/**
-	 * Отдает тег по заданному имени
+	 * Отдает первый тег по заданному имени
+	 * @throws NoSuchTagException 
+	 */
+	public Tag firstTag(String name) throws NoSuchTagException;
+	/**
+	 * Отдает список тегов по заданному имени
 	 * @param name
 	 * @return
 	 */
-	public Tag tag(String name) throws NoSuchTagException;
+	public List<Tag> tag(String name) throws NoSuchTagException;
+	
 	/**
 	 * Отдает список всех тегов заданного типа
 	 * @param type
@@ -84,13 +86,13 @@ public interface Item {
 	 */
 	public Collection<Tag> tags();
 	
-	public String[] tagNames(TagType type);
-	public String[] tagNames();
+	public List<String> tagNames(TagType type);
+	public List<String> tagNames();
 	public boolean addTag(Tag tag);
-	public boolean addTag(String name, String value);
-	public boolean removeTag(String name);
-	public boolean removeTag(Tag tag);
-	
+	public boolean addTag(String name, String value) throws TagAlreadyExistsException, ReadOnlyTagException;
+	public boolean removeTag(String name) throws NoSuchTagException;
+	public boolean removeTag(Tag tag) throws NoSuchTagException;
+	void setTagValue(String name, String value) throws NoSuchTagException, ReadOnlyTagException, DatabaseError;
 	public File filename();
 	
 
@@ -107,12 +109,50 @@ public interface Item {
 	{
 		private static final long serialVersionUID = -3294597277551186761L;
 		public NoSuchTagException(String tagName) {
-			super(String.format("Cannot find tag: ",tagName));
+			super(String.format("Cannot find tag: %s",tagName));
 		}
 	}
-	/// Factory
-	public interface Factory
+    public static class TagAlreadyExistsException extends Exception
+    {
+		private static final long serialVersionUID = -7471467624443067651L;
+
+		public TagAlreadyExistsException(String tagName) {
+            super(String.format("Tag already exists: %s",tagName));
+        }
+    }
+	public static class ReadOnlyTagException extends Exception
 	{
-		Item createTrack(File filename);
+		private static final long serialVersionUID = -3294597277551186761L;
+		public ReadOnlyTagException(String tagName) {
+			super(String.format("Tag is read-only: "+tagName));
+		}
 	}
+/// Factory
+	public interface Factory extends Serializable
+	{
+        /**
+         * This method should create valid item from given filename
+         **/
+		Item createItem(File filename);
+		/**
+		 * This method should create valid item from given DatabaseObject, using serialization routines of Item itself.
+		 */
+		Item createItem(DatabaseObject dbo);
+        /**
+         * This method should update item's file according to new tag value.
+         * This method should be called from item's setValue(...) method.
+         **/
+        boolean writeTag(Item item, Tag tag) throws ReadOnlyTagException;
+        /** This method should create new shiny tag, suitable for something useful.
+         * Also, it must update item's file properly. Will be called from addTag(..) method;
+         **/
+        Tag createTag(Item item, String name, TagType type) throws TagAlreadyExistsException; 
+        /** 
+         * This method should remove tag from item's file.
+         **/
+        boolean removeTag(Item item, Tag tag);
+
+	}
+
 }
+

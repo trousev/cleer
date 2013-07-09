@@ -33,7 +33,7 @@ public interface Plugin {
 		 * @param iface Доступный интерфейс плеера
 		 * @return
 		 */
-		public boolean main(List<String> args, PrintStream stdout, Interface iface);
+		public boolean main(List<String> args, PrintStream stdout, Interface iface) throws Exception;
 	}
 	List<Command> commands();
 }

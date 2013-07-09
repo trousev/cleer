@@ -1,0 +1,8 @@
+<project name="cleer-core">
+  <path id="path.build.classpath">
+      <fileset dir="artifacts/core" includes="**/*.jar" />
+      <fileset dir="artifacts/${cleer.target}" includes="**/*.jar" />
+      <fileset dir="tmp/build/jars/core" includes="**/*.jar" />
+      <fileset dir="tmp/build/jars/${cleer.target}" includes="**/*.jar" />
+    </path>
+</project>

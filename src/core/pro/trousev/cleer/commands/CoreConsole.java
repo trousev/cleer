@@ -32,6 +32,8 @@ public class CoreConsole implements Console
 		register(new SystemCommands.GarbageCollection());
 		register(new SystemCommands.PerformTests());
 		register(new RatingManagement.Rate());
+		register(new Library.Sync());
+		register(new RatingManagement.Tag());
 	}
 	static class CommandNotFoundException extends Console.CommandNotFoundException
 	{
@@ -69,7 +71,13 @@ public class CoreConsole implements Console
 		Command cmd = command(command);
 		if(cmd == null)
 			throw new CommandNotFoundException("No such command: "+command);
-		cmd.main(args, writer, iface);
+		try {
+			cmd.main(args, writer, iface);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new CommandNotFoundException(e.getMessage());
+		}
 	}
 
 }

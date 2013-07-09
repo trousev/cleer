@@ -67,7 +67,7 @@ public class Queue extends ListOfCompositions {
 		Item item = (Item) list
 				.get(((AdapterContextMenuInfo) menuInfo).position);
 		try {
-			menu.setHeaderTitle(item.tag("title").value());
+			menu.setHeaderTitle(item.firstTag("title").value());
 		} catch (NoSuchTagException e) {
 			e.printStackTrace();
 		}

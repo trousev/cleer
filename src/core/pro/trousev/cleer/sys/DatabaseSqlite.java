@@ -1,4 +1,4 @@
-package pro.trousev.cleer.desktop;
+package pro.trousev.cleer.sys;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,14 +6,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pro.trousev.cleer.Database;
 
 public class DatabaseSqlite implements Database {
 
 	Connection link = null;
-	DatabaseSqlite(String path) throws SQLException, ClassNotFoundException
+	Map<String, List<String> > _tags_stored;
+	public DatabaseSqlite(String path) throws SQLException, ClassNotFoundException
 	{
 		//Class.forName("org.hsqldb.jdbcDriver");
 		Class.forName("org.sqlite.JDBC");
@@ -145,18 +149,91 @@ public class DatabaseSqlite implements Database {
 		public void delete() {
 			_parent.remove(_section, this);
 		}
+		@Override
+		public boolean update_tags(Map<String, String> tags) throws DatabaseError {
+			if(tags != null) ensureTagEnlisted(_section, tags.keySet());
+			String update = "";
+			for(String key: tags.keySet())
+			{
+				if(!update.isEmpty())
+					update += ", ";
+				update += String.format(" tag_%s='%s' ", key, tags.get(key));
+			}
+			update = String.format("UPDATE %s SET %s where id=%s; ", _section,update,_id);
+			try {
+				PreparedStatement st = _parent.link.prepareStatement(update);
+				st.execute();
+				if(st.getUpdateCount() == 1)
+				{
+					return true;
+				}
+				else throw new DatabaseError("Statement returned not one updated row. Query: "+update+" UpdatedRows: "+st.getUpdateCount());
+			} catch (SQLException e) {
+				throw new DatabaseError(e);
+			}
+		}
+		@Override
+		public boolean update_tag(String name, String value) throws DatabaseError {
+			Map<String, String> m = new HashMap<String, String>();
+			m.put(name, value);
+			return update_tags(m);
+		}
+		@Override
+		public boolean remove_tag(String name) throws DatabaseError {
+			return update_tag(name, "");
+		}
+	}
+	private void ensureTagEnlisted(String section, Collection<String> tagNames)
+	{
+		if(_tags_stored == null) _tags_stored = new HashMap<String, List<String>>();
+		if(_tags_stored.get(section) == null) _tags_stored.put(section, new ArrayList<String>());
+		for(String tagName: tagNames)
+		{
+			if(_tags_stored.get(section).contains(tagName))
+				continue;
+			try
+			{
+				declare_tag(section, tagName);
+			} catch(Throwable t) 
+			{ 
+				t.printStackTrace();
+			}
+			_tags_stored.get(section).add(tagName);
+		}
+		
 	}
 	@Override
-	public DatabaseObject store(String section, String contents, String keywords) throws DatabaseError {
+	public DatabaseObject store(String section, String contents,
+			String keywords, Map<String, String> tags) throws DatabaseError {
+		if(tags != null) ensureTagEnlisted(section, tags.keySet());
 		keywords = keywords.toLowerCase();
 		keywords = keywords.replace("'","''");
 		contents = contents.replace("'","''");
+		String query = "No QUery";
 		try {
-			link.prepareStatement(String.format("INSERT INTO %s(value,search) VALUES('%s','%s');",section,contents, keywords)).execute();
+			String names = "";
+			String values = "";
+			names="value";
+			names += ", search";
+			values = "'"+contents+"'";
+			values += ",'"+keywords+"'";
+			if(tags != null) for(String name: tags.keySet())
+			{
+				String value = tags.get(name);
+				names += ", tag_" + name;
+				value = value.replace("'", "''");
+				values+= ",'"+value+"'";
+			}
+			query = String.format("INSERT INTO %s(%s) VALUES(%s);",section, names, values);
+			link.prepareStatement(query).execute();
 		} catch (SQLException e) {
-			throw new DatabaseError(e);
+			throw new DatabaseError(e+ "/q:"+query);
 		}
 		return null;
+	}
+	@Override
+	public DatabaseObject store(String section, String contents, String keywords) throws DatabaseError {
+		return store(section,contents,keywords,null);
 	}
 
 	@Override
@@ -174,12 +251,10 @@ public class DatabaseSqlite implements Database {
 		}
 	}
 	@Override
-	public boolean declare_section(String section) {
+	public boolean declare_section(String section) 
+	{
 	    try
 	    {
-	    	//This is for HSQLDB
-	    	//return  link.prepareStatement(String.format("CREATE TABLE %s (id IDENTITY , value VARCHAR(10000), search VARCHAR(10000))", section)).execute();
-	    	//This is for SQLite
 	    	link.prepareStatement(String.format("CREATE TABLE %s (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, value VARCHAR(10000), search VARCHAR(10000))", section)).execute();
 	    	link.prepareStatement(String.format("CREATE INDEX IF NOT EXISTS idx_search_%s ON %s (search)", section,section)).execute();
 	    	return true;
@@ -188,7 +263,20 @@ public class DatabaseSqlite implements Database {
 	    {
 	    	return false;
 	    }
-	    
+	}
+	@Override
+	public boolean declare_tag(String section, String name) 
+	{
+	    try
+	    {
+	    	link.prepareStatement(String.format("ALTER TABLE %s ADD COLUMN tag_%s TEXT; ", section,name)).execute();
+	    	link.prepareStatement(String.format("CREATE INDEX IF NOT EXISTS idx_tag_%s_%s ON %s (%s)",name, section,section,name)).execute();
+	    	return true;
+	    }
+	    catch (Exception e)
+	    {
+	    	return false;
+	    }
 	}
 	@Override
 	public boolean clear_section(String section) {
@@ -304,6 +392,13 @@ public class DatabaseSqlite implements Database {
 	public List<DatabaseObject> search(String section, String query, SearchLanguage language) 
 			throws DatabaseError 
 	{
+		return search(section, query, language, null);
+	}
+	@Override
+	public List<DatabaseObject> search(String section, String query,
+			SearchLanguage language, Map<String, String> filter)
+			throws DatabaseError 
+	{
 		query = query.toLowerCase();
 		String where = "";
 		if(language == SearchLanguage.SearchDirectMatch)
@@ -312,10 +407,51 @@ public class DatabaseSqlite implements Database {
 			where = _language_like(query);
 		if(language == SearchLanguage.SearchPyplay)
 			where = _language_pyplay(query);
+		if(filter != null)
+		{
+			for(String key: filter.keySet())
+			{
+				String value = filter.get(key);
+				if(!where.isEmpty())
+					where += " AND ";
+				where += String.format("%s = '%s'", key, value);
+			}
+		}
 		try {
 			return _p_search(section, where);
 		} catch (SQLException e) {
 			throw new DatabaseError(e); 
+		}
+		//return null;
+	}
+	
+	@Override
+	public List<String> search_tag(String section, String tag,
+			Map<String, String> filter) throws DatabaseError {
+		String qq;
+		String where = "";
+		for(String key: filter.keySet())
+		{
+			String value = filter.get(key);
+			if(!where.isEmpty())
+				where += " AND ";
+			where += String.format(" %s = '%s' ", key, value); 
+		}
+		if(where.isEmpty())
+			qq = String.format("SELECT DISTINCT(tag_%s) FROM %s;",tag,section);
+		else
+			qq = String.format("SELECT DISTINCT(tag_%s) FROM %s WHERE %s;",tag,section,where);
+		try {
+			List<String> ans = new ArrayList<String>();
+			ResultSet set = link.prepareStatement(qq).executeQuery();
+			while(set.next())
+			{
+				ans.add(set.getString(1));
+			}
+			set.close();
+			return ans;
+		} catch (SQLException e) {
+			throw new DatabaseError(e);
 		}
 	}
 	

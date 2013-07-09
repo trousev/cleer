@@ -35,9 +35,9 @@ public class ListOfRequestsAdapter extends ArrayAdapter<String> {
 		TextView secondTextView = (TextView) view.findViewById(R.id.secondTag);
 		try {
 			firstTextView.setText(list.get(position)
-					.tag(firstTag).value());
+					.firstTag(firstTag).value());
 			secondTextView.setText(list.get(position)
-					.tag(secondTag).value());
+					.firstTag(secondTag).value());
 		} catch (NoSuchTagException e) {
 		} catch (NullPointerException e) {
 		}

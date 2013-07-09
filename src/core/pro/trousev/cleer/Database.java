@@ -1,9 +1,8 @@
 package pro.trousev.cleer;
 
 import java.util.List;
+import java.util.Map;
 
-import pro.trousev.cleer.Database.DatabaseError;
-import pro.trousev.cleer.Database.DatabaseObject;
 
 
 /**
@@ -18,6 +17,7 @@ import pro.trousev.cleer.Database.DatabaseObject;
  * Поисковой контекст -- это строка-список ключевых слов, разделенных пробелом.
  **/
 public interface Database {
+
 	enum SearchLanguage
 	{
 		SearchDirectMatch
@@ -64,6 +64,10 @@ public interface Database {
 		 * Обновляет только поисковой контекст.
 		 **/
 		boolean update_search(String search) throws DatabaseError;
+		
+		boolean update_tags(Map<String, String> tags) throws DatabaseError;
+		boolean update_tag(String name, String value)throws DatabaseError;
+		boolean remove_tag(String name) throws DatabaseError;
 
 		/**
 		 * Уничтожает объект в БД.
@@ -101,7 +105,12 @@ public interface Database {
 	 *         противном случае
 	 */
 	public boolean declare_section(String section) throws DatabaseError;
-
+	
+	/**
+	 * Добавляет дополнительный критерий поиска в БД. (для СУБД -- поле, для NoSQL -- relation и т.п.)
+	 */
+	public boolean declare_tag(String section, String name);
+	
 	/**
 	 * Уничтожает секцию в БД. Все объекты в секции тоже должны быть уничтожены.
 	 **/
@@ -110,6 +119,9 @@ public interface Database {
 	/**
 	 * Создает и возвращает новый объект в соответствующую секцию в БД.
 	 **/
+	public DatabaseObject store(String section, String contents, String keywords, Map<String, String> tags)
+			throws DatabaseError;
+	
 	public DatabaseObject store(String section, String contents, String keywords)
 			throws DatabaseError;
 
@@ -130,9 +142,27 @@ public interface Database {
 	 * запросу. Алгоритм поиска не формализован, но должен быть умным,
 	 * эвристичным и т.п. Налагаются дополнительные требования на алгоритм
 	 * поиска, за подробностями на trousev@yandex.ru
+	 * 
+	 * @param filter -- словарь тегов, по которым следует провести 
+	 *                   предварительную фильтрацию
+	 **/
+	public List<DatabaseObject> search(String section, String query,
+			SearchLanguage language, Map<String, String> filter) throws DatabaseError;
+	/**
+	 * Производит поиск всех объектов в секции, соответствующих заданному
+	 * запросу. Алгоритм поиска не формализован, но должен быть умным,
+	 * эвристичным и т.п. Налагаются дополнительные требования на алгоритм
+	 * поиска, за подробностями на trousev@yandex.ru
 	 **/
 	public List<DatabaseObject> search(String section, String query,
 			SearchLanguage language) throws DatabaseError;
+	/**
+	 * Этот метод возвращает список значений заданного тега, под которыми 
+	 * имеется хотя бы один объект с учетом наложения фильтров. В случае отсутствия
+	 * фильтров -- это прекрасный способ узнать список всех значений данного тег.
+	 * @throws DatabaseError 
+	 */
+	public List<String> search_tag (String section, String tag, Map<String, String> filter) throws DatabaseError;
 	/**
 	 * Уничтожает выбранный DatabaseObject
 	 **/
@@ -165,4 +195,29 @@ public interface Database {
 	 * @return
 	 */
 	public boolean rollback() throws DatabaseError;
+
+
+	/////////////////////////////
+	////// Messages! ////////////
+	/////////////////////////////
+	public static class ItemInserted implements Messaging.Message
+	{
+		public String section;
+		public String name;
+		public String value;
+	}
+	public static class ItemUpdated implements Messaging.Message
+	{
+		public String section;
+		public String name;
+		public String value;
+	}
+	public static class ItemRemoved
+	{
+		public String section;
+		public String name;
+		public String value;
+	}
+	
+
 }

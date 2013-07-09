@@ -3,7 +3,9 @@ package pro.trousev.cleer.sys;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
@@ -12,6 +14,7 @@ import pro.trousev.cleer.Library;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Database.DatabaseObject;
+import pro.trousev.cleer.Item.Tag;
 
 public class LibraryImpl implements Library {
 
@@ -21,7 +24,7 @@ public class LibraryImpl implements Library {
 	private LibrarySmartPlaylist playlistFromDatabase(DatabaseObject dbo)
 	{
 		LibrarySmartPlaylist p = Tools.Deserialize(dbo.contents());
-		p.setDatabase(_db);
+		p.configure(_db, _item_factory);
 		return p;
 	}
 	
@@ -104,8 +107,11 @@ public class LibraryImpl implements Library {
 			{
 				callback.progress(i++, n);
 				try {
-					Item t= _item_factory.createTrack(f);
-					_db.store("songs", t.serialize(), t.getSearchQuery() + " fh"+fh);
+					Item t= _item_factory.createItem(f);
+					Map<String, String> dbtags = new HashMap<String, String>();
+					for(Tag tag: t.tags())
+						dbtags.put(tag.name(), tag.value());
+					_db.store("songs", t.serialize(), t.getSearchQuery() + " fh"+fh, dbtags);
 				} 
 				catch (Exception e) {
 					e.printStackTrace();
@@ -157,7 +163,7 @@ public class LibraryImpl implements Library {
 	}
 	@Override
 	public Playlist search(String query) {
-		Playlist p = new LibrarySmartPlaylist(_db,_focus,query);
+		Playlist p = new LibrarySmartPlaylist(_db,_focus,_item_factory,query);
 		p.save(_focus);
 		return p;
 	}
