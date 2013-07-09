@@ -227,10 +227,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		this.finish();
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
 		this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
-		return super.onCreateOptionsMenu(menu);
+		System.out.println("[cleer] Menu Created.");
+		return super.onPrepareOptionsMenu(menu);
+		
 	}
+	/*public boolean onCreateOptionsMenu(Menu menu) {
+	}*/
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

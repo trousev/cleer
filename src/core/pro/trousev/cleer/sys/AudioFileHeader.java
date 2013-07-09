@@ -30,7 +30,7 @@ public class AudioFileHeader implements Serializable {
 	private String _lyrics;
 	private String _tags;
 	private String _genre;
-
+	
 	// Sourceinfo
 	private String _filename;
 
@@ -134,6 +134,11 @@ public class AudioFileHeader implements Serializable {
 			_write_tag.setField(FieldKey.LYRICS, in);
 	}
 
+	public void setTags(String in) throws KeyNotFoundException, FieldDataInvalidException {
+		_tags = in;
+		if (_write_file != null)
+			_write_tag.setField(FieldKey.TAGS, in);
+	}
 	public String getTags() {
 		return _tags;
 	}

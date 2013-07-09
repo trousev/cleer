@@ -33,6 +33,7 @@ public class CoreConsole implements Console
 		register(new SystemCommands.PerformTests());
 		register(new RatingManagement.Rate());
 		register(new Library.Sync());
+		register(new RatingManagement.Tag());
 	}
 	static class CommandNotFoundException extends Console.CommandNotFoundException
 	{
@@ -74,6 +75,7 @@ public class CoreConsole implements Console
 			cmd.main(args, writer, iface);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
 			throw new CommandNotFoundException(e.getMessage());
 		}
 	}

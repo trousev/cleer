@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import pro.trousev.cleer.Database;
 public class DatabaseSqlite implements Database {
 
 	Connection link = null;
+	Map<String, List<String> > _tags_stored;
 	public DatabaseSqlite(String path) throws SQLException, ClassNotFoundException
 	{
 		//Class.forName("org.hsqldb.jdbcDriver");
@@ -149,12 +151,13 @@ public class DatabaseSqlite implements Database {
 		}
 		@Override
 		public boolean update_tags(Map<String, String> tags) throws DatabaseError {
+			if(tags != null) ensureTagEnlisted(_section, tags.keySet());
 			String update = "";
 			for(String key: tags.keySet())
 			{
 				if(!update.isEmpty())
 					update += ", ";
-				update += String.format(" %s='%s' ", key, tags.get(key));
+				update += String.format(" tag_%s='%s' ", key, tags.get(key));
 			}
 			update = String.format("UPDATE %s SET %s where id=%s; ", _section,update,_id);
 			try {
@@ -180,12 +183,33 @@ public class DatabaseSqlite implements Database {
 			return update_tag(name, "");
 		}
 	}
+	private void ensureTagEnlisted(String section, Collection<String> tagNames)
+	{
+		if(_tags_stored == null) _tags_stored = new HashMap<String, List<String>>();
+		if(_tags_stored.get(section) == null) _tags_stored.put(section, new ArrayList<String>());
+		for(String tagName: tagNames)
+		{
+			if(_tags_stored.get(section).contains(tagName))
+				continue;
+			try
+			{
+				declare_tag(section, tagName);
+			} catch(Throwable t) 
+			{ 
+				t.printStackTrace();
+			}
+			_tags_stored.get(section).add(tagName);
+		}
+		
+	}
 	@Override
 	public DatabaseObject store(String section, String contents,
 			String keywords, Map<String, String> tags) throws DatabaseError {
+		if(tags != null) ensureTagEnlisted(section, tags.keySet());
 		keywords = keywords.toLowerCase();
 		keywords = keywords.replace("'","''");
 		contents = contents.replace("'","''");
+		String query = "No QUery";
 		try {
 			String names = "";
 			String values = "";
@@ -196,12 +220,14 @@ public class DatabaseSqlite implements Database {
 			if(tags != null) for(String name: tags.keySet())
 			{
 				String value = tags.get(name);
-				names += "," + name;
+				names += ", tag_" + name;
+				value = value.replace("'", "''");
 				values+= ",'"+value+"'";
 			}
-			link.prepareStatement(String.format("INSERT INTO %s(%s) VALUES(%s);",section, names, values)).execute();
+			query = String.format("INSERT INTO %s(%s) VALUES(%s);",section, names, values);
+			link.prepareStatement(query).execute();
 		} catch (SQLException e) {
-			throw new DatabaseError(e);
+			throw new DatabaseError(e+ "/q:"+query);
 		}
 		return null;
 	}
@@ -396,6 +422,7 @@ public class DatabaseSqlite implements Database {
 		} catch (SQLException e) {
 			throw new DatabaseError(e); 
 		}
+		//return null;
 	}
 	
 	@Override

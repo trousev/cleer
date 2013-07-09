@@ -93,7 +93,23 @@ public class StandardItem implements Item {
 	@Override
 	public void setTagValue(String name, String value) throws NoSuchTagException, ReadOnlyTagException, DatabaseError
 	{
-		Tag tag = firstTag(name);
+		Tag tag = null;
+		try
+		{
+			tag = firstTag(name);
+			if(tag == null) throw new NoSuchTagException(name);
+		}
+		catch (NoSuchTagException exc)
+		{
+			try {
+				addTag(name, value);
+			} catch (TagAlreadyExistsException e) {
+				// TODO Auto-generated catch block
+				return ;
+			}
+			tag = firstTag(name);
+		}
+		
         String prev = firstTag(name).value();
 		tag.doSetValue(value);
         if(!_generator.writeTag(this, tag))
@@ -157,8 +173,8 @@ public class StandardItem implements Item {
 	public boolean addTag(String name, String value) throws TagAlreadyExistsException, ReadOnlyTagException 
     {
         Tag t = _generator.createTag(this, name, TagType.SoftlyClassified);
-        t.setValue(value);
         _all_tags.put(name, t);
+        t.setValue(value);
         return true;
 	}
 	@Override

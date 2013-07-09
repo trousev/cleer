@@ -32,6 +32,9 @@ public class PlayerDesk implements Player
 		public void run()
 		{
 			try {
+				for(String s: args)
+					System.out.print(s+" ");
+				System.out.println("");
 				_process = Runtime.getRuntime().exec(args);
 			} catch (IOException e) {
 				delegate.onCannotLaunchProcess(e.getMessage());
@@ -89,7 +92,7 @@ public class PlayerDesk implements Player
 		args[0] = "mplayer";
 		if(track == null)
 			return ;
-		args[1] = "--cache";
+		args[1] = "-cache";
 		args[2] = "16000";
 		args[3] = track.filename().getAbsolutePath();
 		this.track = track;

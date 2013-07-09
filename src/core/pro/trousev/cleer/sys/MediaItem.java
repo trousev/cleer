@@ -34,7 +34,43 @@ public class MediaItem extends StandardItem {
 			{
 				head.readFromFile(item.filename());
 				head.begin();
-				head.setRating(tag.value());
+				//head.setRating(tag.value());
+				if(tag.name() == "album") head.setAlbum(tag.value());
+				else if(tag.name() == "artist") head.setArtist(tag.value());
+				else if(tag.name() == "title") head.setTitle(tag.value());
+				else if(tag.name() == "year") head.setYear(tag.value());
+				else if(tag.name() == "number") throw new ReadOnlyTagException("WTH");
+				else if(tag.name() == "lyrics") head.setLyrics(tag.value());
+				else if(tag.name() == "genre") head.setGenre(tag.value());
+				else if(tag.name() == "rating") head.setRating(tag.value());
+				else
+				{
+					String _tag_string = head.getTags();
+					String[] orig_tags = _tag_string.split(" ");
+					boolean should_add = true;
+					for(int i=0; i<orig_tags.length; i++)
+					{
+						String one_tag = orig_tags[i];
+						if(!one_tag.contains(":")) continue;
+						String[] arr = one_tag.split(":");
+						if(arr[0].equals(tag.name()))
+						{
+							should_add = false;
+							orig_tags[i] = tag.name()+":"+tag.value();
+							break;
+						}
+					}
+					if(should_add)
+						_tag_string = _tag_string+" "+tag.name()+":"+tag.value();
+					else
+					{
+						_tag_string = "";
+						for(String tt: orig_tags)
+							_tag_string += " "+tt;
+					}
+					head.setTags(_tag_string);
+				}
+				
 				head.commit();
 				return true;
 			} catch (Throwable e) {
@@ -52,7 +88,7 @@ public class MediaItem extends StandardItem {
 		@Override
 		public Tag createTag(Item item, String name, TagType type)
 				throws TagAlreadyExistsException {
-			return null;
+			return new StandardTag(item, name, null, type, ContentType.String, true);
 		}
 		
 		@Override
@@ -70,6 +106,14 @@ public class MediaItem extends StandardItem {
 				_all_tags.put("lyrics", new TagImplRussian(s, "lyrics", head.getLyrics(), TagType.StrictlyClassified, ContentType.String, false));
 				_all_tags.put("rating", new TagImplRussian(s, "rating", head.getRating(), TagType.StrictlyClassified, ContentType.Numeric, true));
 				_all_tags.put("genre", new TagImplRussian(s, "genre", head.getGenre(), TagType.StrictlyClassified, ContentType.String, true));
+				for(String facet: head.getTags().split(" "))
+				{
+					if(facet.contains(":"))
+					{
+						String[] arr = facet.split(":");
+						_all_tags.put(arr[0], new TagImplRussian(s, arr[0], arr[1], TagType.SoftlyClassified, ContentType.String, true));
+					}
+				}
 				return s;
 		    } catch (CannotReadException e) {
 				// TODO Auto-generated catch block
