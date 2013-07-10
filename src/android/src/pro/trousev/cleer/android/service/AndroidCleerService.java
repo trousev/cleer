@@ -3,6 +3,8 @@ package pro.trousev.cleer.android.service;
 import java.util.ArrayList;
 
 
+import pro.trousev.cleer.Console;
+import pro.trousev.cleer.ConsoleOutput;
 import pro.trousev.cleer.Database;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Item;
@@ -15,6 +17,7 @@ import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Player.PlayerChangeEvent;
 import pro.trousev.cleer.Player.Status;
+import pro.trousev.cleer.Plugin.Interface;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Queue.EnqueueMode;
 import pro.trousev.cleer.android.AndroidMessages;
@@ -37,7 +40,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-public class AndroidCleerService extends Service {
+public class AndroidCleerService extends Service implements Interface{
 	
 	private static ServiceRespondMessage respondMessage = new ServiceRespondMessage();
 	private Queue queue = null;
@@ -96,73 +99,6 @@ public class AndroidCleerService extends Service {
 		}
 	}
 
-	private Event serviceRequestEvent = new Messaging.Event() {
-		@Override
-		public void messageReceived(Message message) {
-			ServiceRequestMessage mes = (ServiceRequestMessage) message;
-			respondMessage.list = new ArrayList<Item>();
-			switch (mes.type) {
-			case Compositions:
-				// Playlist p = library.search("");
-				// List<Item> l = p.contents();
-				// Log.d(Constants.LOG_TAG, "Service: Compositions" +
-				// p.contents().get(0).filename().toString());
-				respondMessage.list.addAll(library.search("").contents());
-				break;
-			case Queue:
-				respondMessage.list.addAll(queue.queue());
-				break;
-			case Albums:
-				break;
-			case Genres:
-				break;
-			case Artists:
-				break;
-			case Playlists:
-				respondMessage.playlists = library.playlists();
-				break;
-			case Playlist:
-				break;
-			case PlaylistsInDialog:
-				break;
-			}
-			respondMessage.typeOfContent = mes.type;
-			Messaging.fire(respondMessage);
-		}
-	};
-
-	private Event playBarEvent = new Messaging.Event() {
-
-		@Override
-		public void messageReceived(Message message) {
-			if (player == null)
-				if ((player.getStatus() == Status.Closed)
-						|| (player.getStatus() == Status.Error)
-						|| (player.getStatus() == Status.Processing))
-					return;
-			PlayBarMessage mes = (PlayBarMessage) message;
-			switch (mes.action) {
-			case Play:
-				queue.play();
-				break;
-			case Resume:
-				queue.resume();
-				break;
-			case Pause:
-				queue.pause();
-				break;
-			case Next:
-				queue.next();
-				break;
-			case Previous:
-				queue.prev();
-				break;
-			default:
-				Log.e(Constants.LOG_TAG, "Service: Unknown PlayBar action");
-				return;
-			}
-		}
-	};
 
 	// This Event will change notification each time after player changed his
 	// status
@@ -173,92 +109,7 @@ public class AndroidCleerService extends Service {
 		}
 	};
 
-	private Event serviceTaskEvent = new Messaging.Event() {
-		@Override
-		public void messageReceived(Message message) {
-			Log.d(Constants.LOG_TAG, getApplicationContext().getPackageName());
-			ServiceTaskMessage mes = (ServiceTaskMessage) message;
-			switch (mes.action) {
-			case clearQueue:
-				queue.clear();
-				break;
-			case addToQueue:
-				queue.enqueue(mes.list, EnqueueMode.AfterAll);
-				break;
-			case setToQueue:
-				queue.enqueue(mes.list, EnqueueMode.ReplaceAll);
-				queue.seek(mes.position);
-				updatePlayerNotification();
-				break;
-			case scanSystem:
-				library.folder_scan(new FolderScanCallback() {
-					
-					@Override
-					public void started() {
-						// TODO Auto-generated method stub
-						System.out.println("[pro.trousev.cleer] Media library scanning started");
-					}
-					
-					@Override
-					public void progress(int current, int maximum) {
-						System.out.println("[pro.trousev.cleer] Media library scanning progress: "+current+"/"+maximum);
-						
-					}
-					
-					@Override
-					public void message(String message) {
-						System.out.println("[pro.trousev.cleer] Media library scanning: message: "+message);
-						
-					}					
-					@Override
-					public void finished() {
-						// TODO Auto-generated method stub
-						System.out.println("[pro.trousev.cleer] Media library scanning finished");
-					}
-				});
 
-				break;
-			default:
-				Log.e(Constants.LOG_TAG, "Service: Unkonwn ServiceTask action");
-				return;
-			}
-			Log.d(Constants.LOG_TAG, "Service: \"switch\" completed");
-
-		}
-	};
-
-	private Event progressBarEvent = new Messaging.Event() {
-
-		@Override
-		public void messageReceived(Message message) {
-			// Log.d(Constants.LOG_TAG, "Timer tick");
-			ProgressBarMessage mes = (ProgressBarMessage) message;
-			ProgressBar p = mes.progressBar;
-			if ((player.getStatus() == Status.Playing)
-					|| (player.getStatus() == Status.Paused)) {
-				p.setMax(player.getDuration());
-				p.setProgress(player.getCurrentPosition());
-			} else {
-				p.setMax(1);
-				p.setProgress(0);
-			}
-		}
-	};
-
-	private Event seekBarEvent = new Messaging.Event() {
-
-		@Override
-		public void messageReceived(Message message) {
-			Log.d(Constants.LOG_TAG, "Service: SeekBar message received");
-			SeekBarMessage mes = (SeekBarMessage) message;
-			int position = mes.value;
-			if (player != null)
-				if ((player.getStatus() == Status.Playing)
-						|| (player.getStatus() == Status.Paused))
-					player.setCurrentPosition(position);
-			Log.d(Constants.LOG_TAG, "Service: SeekBar message proceeed");
-		}
-	};
 
 
 	// Binder allow us get Service.this from the Activity
@@ -284,16 +135,8 @@ public class AndroidCleerService extends Service {
 		}
 		mNotificationManager = new CleerAndroidNotificationManager(this);
 		Log.d(Constants.LOG_TAG, "Service: All service instances created");
-		Messaging.subscribe(AndroidMessages.ServiceRequestMessage.class,
-				serviceRequestEvent);
-		Messaging.subscribe(AndroidMessages.ServiceTaskMessage.class,
-				serviceTaskEvent);
-		Messaging.subscribe(AndroidMessages.ProgressBarMessage.class,
-				progressBarEvent);
 		Messaging
 				.subscribe(Player.PlayerChangeEvent.class, playerChangedStatus);
-		Messaging.subscribe(AndroidMessages.PlayBarMessage.class, playBarEvent);
-		Messaging.subscribe(AndroidMessages.SeekBarMessage.class, seekBarEvent);
 		Log.d(Constants.LOG_TAG, "Service: Subscibed on several messages");
 	}
 
@@ -313,16 +156,8 @@ public class AndroidCleerService extends Service {
 
 	public void onDestroy() {
 		queue.clear();
-		Messaging.unSubscribe(AndroidMessages.ServiceRequestMessage.class,
-				serviceRequestEvent);
-		Messaging.unSubscribe(AndroidMessages.ServiceTaskMessage.class,
-				serviceTaskEvent);
-		Messaging.unSubscribe(AndroidMessages.SeekBarMessage.class,
-				seekBarEvent);
 		Messaging.unSubscribe(Player.PlayerChangeEvent.class,
 				playerChangedStatus);
-		Messaging.unSubscribe(AndroidMessages.PlayBarMessage.class,
-				playBarEvent);
 		mNotificationManager.cancelAll();
 		super.onDestroy();
 		Log.d(Constants.LOG_TAG, "Service: Destroyed");
@@ -340,5 +175,35 @@ public class AndroidCleerService extends Service {
 
 	public void onRebind(Intent intent) {
 		Log.d(Constants.LOG_TAG, "Service.onRebind()");
+	}
+
+	@Override
+	public Library library() {
+		return library;
+	}
+
+	@Override
+	public Database storage() {
+		return database;
+	}
+
+	@Override
+	public Console console() {
+		return null;
+	}
+
+	@Override
+	public Player player() {
+		return player;
+	}
+
+	@Override
+	public Queue queue() {
+		return queue;
+	}
+
+	@Override
+	public ConsoleOutput output() {
+		return null;
 	}
 }
