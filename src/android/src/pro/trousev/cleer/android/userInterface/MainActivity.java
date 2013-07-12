@@ -28,6 +28,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private Intent serviceIntent;
 	SwipePageAdapter main_pager_adapter;
 	ViewPager main_pager;
+	Menu _main_menu;
 	public static MainActivity singletone = null;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -90,12 +91,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu)
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
+		//this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
+		//System.out.println("[cleer] Menu Created.");
+		boolean ans = super.onCreateOptionsMenu(menu);
+		menu.clear();
 		this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
-		System.out.println("[cleer] Menu Created.");
-		return super.onPrepareOptionsMenu(menu);
-		
+		return ans;
 	}
 
 	

@@ -28,6 +28,7 @@ import pro.trousev.cleer.Player;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging.Message;
+import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.android.userInterface.SwipePageAdapter.SwipePage;
 
 public class QueueView extends SwipePage implements OnItemClickListener, OnClickListener{
@@ -66,6 +67,32 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 		    {
 		    	LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		    	_star = (RatingBar) inflater.inflate(R.layout.pretty_rating_bar, parent, false);
+		    	_star.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+					
+					@Override
+					public void onRatingChanged(RatingBar ratingBar, float rating,
+							boolean fromUser) {
+						if(!fromUser) return ;
+						Item np = MainActivity.service.queue().playing_track();
+						if(np == null) return ;
+						int new_rating = (int) rating;
+						int old_rating = 0;
+						try
+						{
+							old_rating = new Integer(np.firstTag("rating").value());
+						} catch(Throwable e){}
+						if(new_rating != old_rating)
+						{
+							System.out.println("Rated: "+new_rating+" : "+np.toString());
+							try {
+								np.setTagValue("rating", String.format("%d",new_rating));
+							} catch (Throwable e) {
+								// TODO Auto-generated catch block
+								_star.setRating(old_rating);
+							} 
+						}
+					}
+				});
 		    	//_star = new RatingBar(_context);
 		    }
 		    
@@ -84,6 +111,14 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 		    		ViewGroup p = ((ViewGroup)_star.getParent());
 		    		if(p!=null)p.removeView(_star);
 		    		star_box.addView(_star);
+		    		try
+		    		{
+		    			_star.setRating(new Float(i.firstTag("rating").value()));
+		    		}
+		    		catch (Throwable t)
+		    		{
+		    			_star.setRating(0);
+		    		}
 		    	}
 		    	else
 		    	{
@@ -141,6 +176,7 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 	ImageButton _next;
 	ImageButton _play;
 	ImageButton _shuffle;
+	ListView _list;
 	SeekBar _seek;
 	Boolean _seekBarFlag = true;
 	Thread _seekBarUpdater = null;
@@ -159,6 +195,29 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 			int no = ((Queue.QueueSongChangedMessage) message ).track_number;
 			System.out.println("[cleer] Focus is on: "+no);
 			_adapter.notifyDataSetChanged();
+			try
+			{
+				_list.smoothScrollToPosition(no+2);
+			}
+			catch (Throwable e) // For 2.1 devices, API <= 7
+			{
+				_list.setSelectionFromTop(no, 20);
+			}
+			
+		}
+	};
+	Messaging.Event _playerChangeEvent = new Messaging.Event() {
+		
+		@Override
+		public void messageReceived(Message message) {
+			System.out.println("[cleer] PlayerChangeEvent!");
+			if(_play != null)
+			{
+				if(MainActivity.service.player().getStatus() == Status.Playing)
+					_play.setBackgroundResource(R.drawable.media_playback_pause_symbolic_state);
+				else
+					_play.setBackgroundResource(R.drawable.media_playback_start_symbolic_state);
+			}
 		}
 	};
 	
@@ -185,14 +244,14 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 	public View getView(LayoutInflater inflater, ViewGroup container) {
         View rootView = inflater.inflate(R.layout.queue_view, container, false);
 		
-        ListView queueListView = (ListView) rootView.findViewById(R.id.queue_list);
-		System.out.println("[cleer] queueListView = "+queueListView);
+        _list = (ListView) rootView.findViewById(R.id.queue_list);
+		System.out.println("[cleer] queueListView = "+_list);
 		
 		//ArrayAdapter <String> adapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.playlist_item);
 		_adapter = new QueueViewAdapter(rootView.getContext());
 		
-		queueListView.setAdapter(_adapter);
-		queueListView.setOnItemClickListener(this);
+		_list.setAdapter(_adapter);
+		_list.setOnItemClickListener(this);
 		_prev = (ImageButton) rootView.findViewById(R.id.queue_prev);
 		_play = (ImageButton) rootView.findViewById(R.id.queue_play);
 		_next = (ImageButton) rootView.findViewById(R.id.queue_next);
@@ -259,6 +318,7 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 			subscribed = true;
 			Messaging.subscribe(Queue.QueueChangedMessage.class, _queueChangedEvent);
 			Messaging.subscribe(Queue.QueueSongChangedMessage.class, _songChangeEvent);
+			Messaging.subscribe(Player.PlayerChangeEvent.class, _playerChangeEvent);
 		}
 		subscribed = true;
 		
@@ -309,6 +369,7 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 	{
 		Messaging.unSubscribe(Queue.QueueChangedMessage.class, _queueChangedEvent);
 		Messaging.unSubscribe(Queue.QueueSongChangedMessage.class, _songChangeEvent);
+		Messaging.unSubscribe(Player.PlayerChangeEvent.class, _playerChangeEvent);
 		synchronized(_seekBarFlag)
 		{
 			_seekBarFlag = false;
