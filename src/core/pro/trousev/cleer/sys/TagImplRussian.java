@@ -30,7 +30,7 @@ public class TagImplRussian extends StandardTag {
 	private String encoding_change(String s) {
 		if (s == null)
 			return null;
-		if (s.isEmpty())
+		if (s.length() == 0)
 			return s;
 
 		try {

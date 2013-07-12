@@ -190,7 +190,7 @@ public class LibraryImpl implements Library {
 	{
 		List<Playlist> ans = new ArrayList<Playlist>();
 		try {
-			for(DatabaseObject dbo: _db.search("playlists", Tools.playlist_hash("pl"), SearchLanguage.SearchSqlLike))
+			for(DatabaseObject dbo: _db.search("playlists", "pl", SearchLanguage.SearchSqlLike))
 				ans.add(playlistFromDatabase(dbo));
 		} catch (DatabaseError e) {
 			// TODO Auto-generated catch block

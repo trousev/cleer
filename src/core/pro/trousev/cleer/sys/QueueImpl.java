@@ -20,6 +20,8 @@ public class QueueImpl implements Queue {
 	private Player player;
 	private List<Item> queue = null;
 	private int current = 0;
+	private static final QueueChangedMessage _queueChangedMessage = new QueueChangedMessage();
+	private static final QueueSongChangedMessage _queueSongChangedMessage = new QueueSongChangedMessage();
 
 	public QueueImpl(Player player) {
 		this.player = player;
@@ -67,10 +69,14 @@ public class QueueImpl implements Queue {
 		player.close();
 		queue.clear();
 		current = 0;
+		Messaging.fire(_queueChangedMessage);
+		_queueSongChangedMessage.track_number = current;
+		Messaging.fire(_queueSongChangedMessage);
 	}
 
 	@Override
 	public void enqueue(List<Item> tracks, EnqueueMode mode) {
+		if(tracks.size() == 0) return ;
 		if (mode == EnqueueMode.AfterAll) {
 			queue.addAll(tracks);
 		}
@@ -98,6 +104,7 @@ public class QueueImpl implements Queue {
 			clear();
 			enqueue(tracks, EnqueueMode.Immidiaely);
 		}
+		Messaging.fire(_queueChangedMessage);
 	}
 
 	@Override
@@ -152,6 +159,8 @@ public class QueueImpl implements Queue {
 			e.printStackTrace();
 		}
 		player.play();
+		_queueSongChangedMessage.track_number = current;
+		Messaging.fire(_queueSongChangedMessage);
 		return true;
 	}
 
@@ -177,5 +186,6 @@ public class QueueImpl implements Queue {
 			queue.set(first, S);
 			queue.set(second, F);
 		}
+		Messaging.fire(_queueChangedMessage);
 	}
 }

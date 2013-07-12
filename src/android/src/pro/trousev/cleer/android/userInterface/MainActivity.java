@@ -2,7 +2,9 @@ package pro.trousev.cleer.android.userInterface;
 
 import java.util.List;
 
+import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Player.Reason;
+import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Queue.EnqueueMode;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.android.Constants;
@@ -26,10 +28,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private Intent serviceIntent;
 	SwipePageAdapter main_pager_adapter;
 	ViewPager main_pager;
+	public static MainActivity singletone = null;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		singletone = this;
 		setContentView(R.layout.main);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the app.
@@ -44,9 +47,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 						.getService();
 				serviceIsBound = true;
 				
-				Playlist p = service.library().search("****");
-				service.queue().enqueue(p.contents(), EnqueueMode.Immidiaely);
-				service.player().stop(Reason.UserBreak);
 				postInit();
 			}
 
@@ -66,12 +66,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	{
 		main_pager_adapter = new SwipePageAdapter(getSupportFragmentManager());
 		
-		main_pager_adapter.addPage(new QueueView());
-		main_pager_adapter.addPage(new PlaylistsView());
+		main_pager_adapter.addPage(new QueueView(main_pager_adapter));
+		main_pager_adapter.addPage(new PlaylistsView(main_pager_adapter));
         
 		// Set up the ViewPager with the sections adapter.
 		main_pager = (ViewPager) findViewById(R.id.pager);
+		System.out.println("[cleer] Pager: "+main_pager);
+		System.out.println("[cleer] Adapter: "+main_pager_adapter);
 		main_pager.setAdapter(main_pager_adapter);
+		main_pager_adapter.setPager(main_pager);
+		
 	}
 	public void onClick(View view) {
 		int id = view.getId();
@@ -99,6 +103,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void onDestroy() {
 		if (serviceIsBound)
 			unbindService(serviceConnection);
+		main_pager_adapter.onDestroy();
 		Log.d(Constants.LOG_TAG, "MainActivity.onDestoy()");
 		System.runFinalization();
 		super.onDestroy();

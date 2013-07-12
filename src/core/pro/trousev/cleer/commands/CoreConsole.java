@@ -33,6 +33,7 @@ public class CoreConsole implements Console
 		register(new SystemCommands.PerformTests());
 		register(new RatingManagement.Rate());
 		register(new Library.Sync());
+		register(new Library.PlaylistList());
 		register(new RatingManagement.Tag());
 	}
 	static class CommandNotFoundException extends Console.CommandNotFoundException

@@ -172,16 +172,19 @@ public class PlayerAndroid implements Player, MediaPlayer.OnPreparedListener,
 
 	@Override
 	public int getCurrentPosition() {
+		if(mediaPlayer == null) return 0;
 		return mediaPlayer.getCurrentPosition();
 	}
 
 	@Override
 	public int getDuration() {
+		if(mediaPlayer == null) return 1;
 		return mediaPlayer.getDuration();
 	}
 
 	@Override
 	public void setCurrentPosition(int msec) {
+		if(mediaPlayer == null) return ;
 		mediaPlayer.seekTo(msec);
 	}
 

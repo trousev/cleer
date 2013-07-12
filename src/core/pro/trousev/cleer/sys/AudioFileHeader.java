@@ -214,7 +214,7 @@ public class AudioFileHeader implements Serializable {
 		_user_rating = tag.getFirst(FieldKey.RATING);
 
 		try {
-			if (_user_rating == null || _user_rating.isEmpty()) {
+			if (_user_rating == null || _user_rating.length() == 0  ) {
 				Iterator<TagField> iter = tag.getFields();
 				while (iter.hasNext()) {
 					TagField field = iter.next();
@@ -235,7 +235,7 @@ public class AudioFileHeader implements Serializable {
 
 		// // This is Compability Layer with Winamp Comment Format
 		try {
-			if (_user_rating == null || _user_rating.isEmpty()) {
+			if (_user_rating == null || _user_rating.length() == 0 ) {
 				String comm = tag.getFirst(FieldKey.COMMENT);
 				if (comm.contains("*****"))
 					_user_rating = "5";

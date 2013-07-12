@@ -155,7 +155,7 @@ public class DatabaseSqlite implements Database {
 			String update = "";
 			for(String key: tags.keySet())
 			{
-				if(!update.isEmpty())
+				if(update.length() != 0)
 					update += ", ";
 				update += String.format(" tag_%s='%s' ", key, tags.get(key));
 			}
@@ -373,16 +373,16 @@ public class DatabaseSqlite implements Database {
 		for(String or_list: query.split(" "))
 		{
 			or_list = or_list.trim();
-			if(or_list.isEmpty()) continue;
+			if(or_list.length() == 0) continue;
 			String or_clause = "";
 			for(String item: or_list.split(","))
 			{
-				if(!or_clause.isEmpty())
+				if(or_clause.length() != 0)
 					or_clause += " OR ";
 				or_clause += String.format("search LIKE '%%%s%%'",item);
 			}
-			if(or_clause.isEmpty()) continue;
-			if(!where.isEmpty())
+			if(or_clause.length() == 0) continue;
+			if(where.length() != 0)
 				where += " AND ";
 			where += String.format(" ( %s ) ", or_clause);
 		}
@@ -412,7 +412,7 @@ public class DatabaseSqlite implements Database {
 			for(String key: filter.keySet())
 			{
 				String value = filter.get(key);
-				if(!where.isEmpty())
+				if(where.length() != 0)
 					where += " AND ";
 				where += String.format("%s = '%s'", key, value);
 			}
@@ -433,11 +433,11 @@ public class DatabaseSqlite implements Database {
 		for(String key: filter.keySet())
 		{
 			String value = filter.get(key);
-			if(!where.isEmpty())
+			if(where.length() != 0)
 				where += " AND ";
 			where += String.format(" %s = '%s' ", key, value); 
 		}
-		if(where.isEmpty())
+		if(where.length() == 0)
 			qq = String.format("SELECT DISTINCT(tag_%s) FROM %s;",tag,section);
 		else
 			qq = String.format("SELECT DISTINCT(tag_%s) FROM %s WHERE %s;",tag,section,where);

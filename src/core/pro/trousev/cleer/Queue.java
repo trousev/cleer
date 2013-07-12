@@ -135,4 +135,10 @@ public interface Queue {
 	 * Перемешивает всю очередь, за исключением текущего индекса
 	 */
 	void shuffle();
+	
+	/**
+	 * This message is sent when queue is changed.
+	 */
+	public static class QueueChangedMessage implements Messaging.Message {}
+	public static class QueueSongChangedMessage implements Messaging.Message { public int track_number; }
 }

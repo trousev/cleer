@@ -9,15 +9,42 @@ import java.nio.channels.FileChannel;
 import java.util.List;
 
 
+import pro.trousev.cleer.ConsoleOutput.Type;
 import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Database.DatabaseObject;
 import pro.trousev.cleer.Database.SearchLanguage;
 import pro.trousev.cleer.Item;
+import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Plugin.Interface;
 import pro.trousev.cleer.sys.MediaItem;
 
 public class Library extends Command {
 
+	public static class PlaylistList extends Command
+	{
+
+		@Override
+		public String name() {
+			return "pls";
+		}
+
+		@Override
+		public String help(boolean is_short) {
+			return "Lists all aviable playlists";
+		}
+
+		@Override
+		public boolean main(List<String> args, PrintStream stdout,
+				Interface iface) throws Exception {
+			for(Playlist p: iface.library().playlists())
+			{
+				iface.output().printMessage(p.title() + "\t" + p.query(), Type.MessageTypeInfo, null);
+			}
+			iface.output().printMessage("=====", Type.MessageTypeInfo, null);
+			return true;
+		}
+		
+	}
 	public static class Sync extends Command
 	{
 		public static void copyFile(File sourceFile, File destFile) throws IOException {

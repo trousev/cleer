@@ -23,5 +23,8 @@
     <string name="need_scan_dialog_title">Library is empty</string>
     <string name="new_playlist">New playlist</string>
     <string name="need_scan">There is no mediafiles in library. Maybe you should refresh it.</string>
+    <string name="playlist_add_title">Playlist Title</string>
+    <string name="playlist_add_query">Search Query</string>
+    <string name="playlist_add_query_dsc">example: Queen,Beatles ***</string>
 
 </resources>

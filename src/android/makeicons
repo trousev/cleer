@@ -1,0 +1,53 @@
+#!/bin/bash
+ICONS="res/.scalable"
+
+FOLDERS="hdpi ldpi mdpi xhdpi"
+declare -A sizes
+declare -A aspects
+declare -A filters
+declare -A filtered_icons
+declare -A android_states
+
+source makeicons.conf
+
+for name in $SUBNAMES; do
+  for folder in $FOLDERS; do
+    if [ -d res/drawable-$folder ]; then
+      aspect=${aspects["$name"]}
+      gsize=${sizes["$folder"]}
+      if [ ! $aspect == "." ]; then
+        gsize=$(echo "$gsize*$aspect" | bc | sed s/\\..*//g)
+      fi
+      out_icon=res/drawable-$folder/$(echo $(basename $name) | sed s/-/_/g)
+      convert -density 1200 -resize ${gsize}x${gsize} +antialias -background transparent $ICONS/$name.svg $out_icon.png
+      req_filters=${filtered_icons[$name]}
+      if [ ! "$req_filters" == "." ]; then
+	for req_filter in $req_filters; do
+          matrix=${filters["$req_filter"]}
+          convert $out_icon.png -recolor "$matrix" ${out_icon}_${req_filter}.png
+        done
+      fi
+    fi
+  done
+done
+
+
+for name in "${!android_states[@]}"; do 
+    aname=$(echo $name | sed s/-/_/g)
+    cat << EOF > res/drawable/${aname}_state.xml
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+EOF
+    for subline in ${android_states[$name]}; do
+        state=$(echo $subline | sed s/:.*//g)
+        value=$(echo $subline | sed s/.*://g)
+	cat << EOF >> res/drawable/${aname}_state.xml
+     <item android:state_$state="true"
+           android:drawable="@drawable/${aname}_${value}" />
+EOF
+    done
+    cat << EOF >> res/drawable/${aname}_state.xml
+    <item android:drawable="@drawable/${aname}" />
+</selector>
+EOF
+done
