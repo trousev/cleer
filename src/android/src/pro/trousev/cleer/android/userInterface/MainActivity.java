@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -76,7 +77,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		System.out.println("[cleer] Adapter: "+main_pager_adapter);
 		main_pager.setAdapter(main_pager_adapter);
 		main_pager_adapter.setPager(main_pager);
-		
 	}
 	public void onClick(View view) {
 		int id = view.getId();
@@ -93,14 +93,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		//this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
+		//
 		//System.out.println("[cleer] Menu Created.");
+		//this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
+		
 		boolean ans = super.onCreateOptionsMenu(menu);
+		
+		
 		menu.clear();
 		this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
+		_main_menu = menu;
+		main_pager_adapter.setMenu(_main_menu);
+		
 		return ans;
 	}
-
+	public boolean on_scanSystem_click(MenuItem item)
+	{
+		LibraryUpdatePopup p = new LibraryUpdatePopup(R.layout.update_library_dialog, main_pager);
+		p.show();
+		p.update();
+		return true;
+	}
 	
 	@Override
 	public void onDestroy() {

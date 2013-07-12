@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,6 +26,7 @@ public class SwipePageAdapter extends FragmentPagerAdapter {
 		public View getView(LayoutInflater inflater, ViewGroup container){return null;}
 		public String getName(){ return "";}
 		public void onShow(){}
+		public Menu updateMenu(Menu m){return m;}
 		public View getParentView() { return _parent.getPager(); };
 		public SwipePage sibling(Class type)
 		{
@@ -61,13 +63,53 @@ public class SwipePageAdapter extends FragmentPagerAdapter {
 	
 	List<SwipePage> _pages = new ArrayList<SwipePageAdapter.SwipePage>();
 	ViewPager _pager = null;
+	Menu _menu;
 	View getPager()
 	{
 		return _pager;
 	}
+	void setMenu(Menu m)
+	{
+		_menu = m;
+		updateMenu();
+	}
+	void changePageEvent(int arg0)
+	{
+		System.out.println("[cleer] onPageChanged"+arg0);
+		_pages.get(arg0).onShow();
+		if(_menu != null)
+			updateMenu();
+	}
+	public void updateMenu()
+	{
+		_menu.clear();
+		_pages.get(_pager.getCurrentItem()).updateMenu(_menu);
+		MainActivity.singletone.getMenuInflater().inflate(R.menu.main_option_menu, _menu);
+	}
 	void setPager(ViewPager v)
 	{
 		_pager = v;
+		_pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int arg0) {
+				// TODO Auto-generated method stub
+				changePageEvent(arg0);
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		changePageEvent(_pager.getCurrentItem());
 	}
 			
 	void addPage(SwipePage np)

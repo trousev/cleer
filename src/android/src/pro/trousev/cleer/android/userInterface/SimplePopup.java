@@ -37,7 +37,7 @@ public class SimplePopup {
 		System.out.println("[cleer] Size is "+size);
 
 	    LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    _dialogView = inflater.inflate(R.layout.playlist_add_dialog, null, false);
+	    _dialogView = inflater.inflate(target_layout, null, false);
 	    System.out.println("[cleer] "+_dialogView.getWidth()+"x"+_dialogView.getHeight());
 	    pw = new PopupWindow(
 	    		_dialogView, 

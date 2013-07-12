@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -197,13 +198,12 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 			_adapter.notifyDataSetChanged();
 			try
 			{
-				_list.smoothScrollToPosition(no+2);
+				_list.smoothScrollToPosition(no);
 			}
 			catch (Throwable e) // For 2.1 devices, API <= 7
 			{
 				_list.setSelectionFromTop(no, 20);
 			}
-			
 		}
 	};
 	Messaging.Event _playerChangeEvent = new Messaging.Event() {
@@ -237,7 +237,11 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 	@Override
 	public void onShow() {
 		// TODO Auto-generated method stub
-		
+	}
+	@Override
+	public Menu updateMenu(Menu m)
+	{
+		return m;
 	}
 
 	@Override

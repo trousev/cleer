@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -176,7 +177,12 @@ public class PlaylistsView extends SwipePage implements OnItemClickListener{
 	public void onShow() {
 		// TODO Auto-generated method stub
 	}
-
+	@Override
+	public Menu updateMenu(Menu m)
+	{
+		return m;
+	}
+	
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		System.out.println("[cleer] Item clicked: "+arg2);
