@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RatingBar xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pretty_rating_bar"
-    style="@style/foodRatingBar"
+    style="@style/gnomeRatingBar"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:numStars="5"

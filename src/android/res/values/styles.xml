@@ -13,10 +13,9 @@
     </style>
 
    <!-- Попытка сварганить няшный RatingBar, спасибо http://stackoverflow.com/questions/5800657/ -->
-   <style name="foodRatingBar" parent="@android:style/Widget.RatingBar">
-       <item name="android:progressDrawable">@drawable/food_rating_bar_full</item>
+   <style name="gnomeRatingBar" parent="@android:style/Widget.RatingBar">
+       <item name="android:progressDrawable">@drawable/gnome_rating_bar_full</item>
        <item name="android:minHeight">23dip</item>
        <item name="android:maxHeight">25dip</item>
    </style>
-    
 </resources>
