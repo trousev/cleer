@@ -4,10 +4,12 @@
     </tstamp>
     <exec executable="git" outputproperty="REVISION">
 	<arg value="rev-list" /> 
-	<arg value="master" /> 
+	<arg value="--all" /> 
 	<arg value="--count" /> 
     </exec>
-    
+    <target name="print-revision">
+	<echo>Revision: ${REVISION}</echo>
+    </target>
     <target name="os" depends="if_windows, if_unix"/>
     <target name="checkos">
         <condition property="isWindows">
