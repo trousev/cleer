@@ -195,7 +195,7 @@ public class DatabaseAndroidImpl implements Database {
 
 	@Override
 	public boolean begin() throws DatabaseError {
-		_db.beginTransactionNonExclusive();
+		_db.beginTransaction();
 		return true;
 	}
 

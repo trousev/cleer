@@ -3,13 +3,12 @@
    
         <item
             android:showAsAction="never" 
-            android:id="@+id/scanSystem"
+            android:id="@+id/menu_scan_system"
             android:title="@string/refresh"
             android:icon="@drawable/refresh_icon"
-            android:onClick="on_scanSystem_click"
             />
         <item 
-            android:id="@+id/exit_option_btn"
+            android:id="@+id/menu_exit_program"
             android:title="@string/exit"
             android:showAsAction="never"
             android:icon="@drawable/exit_icon"/>

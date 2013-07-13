@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import pro.trousev.cleer.Messaging;
+import pro.trousev.cleer.Messaging.Message;
+
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class SwipePageAdapter extends FragmentPagerAdapter {
+	
+	public static class SwipePageAdapterMenuChanged implements Messaging.Message{}
+	SwipePageAdapterMenuChanged _swipePageAdapterMenuChanged = new SwipePageAdapterMenuChanged();
 	
 	public static abstract class SwipePage
 	{
@@ -85,6 +91,7 @@ public class SwipePageAdapter extends FragmentPagerAdapter {
 		_menu.clear();
 		_pages.get(_pager.getCurrentItem()).updateMenu(_menu);
 		MainActivity.singletone.getMenuInflater().inflate(R.menu.main_option_menu, _menu);
+		Messaging.fire(_swipePageAdapterMenuChanged);
 	}
 	void setPager(ViewPager v)
 	{
