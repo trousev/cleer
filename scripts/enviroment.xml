@@ -91,7 +91,12 @@
     </target>
     <target name="enviroment" depends="env-mkdirs,env-submodules,env-jline,env-tjws,env-sqlite-desktop,env-jaudiotagger">
    </target>
-    <target name="clean" >
+    <target name="clean">
+	<delete dir="tmp/product" />
+	<delete dir="tmp/android" />
+	<delete dir="tmp/biuld/bin" />
+    </target>
+    <target name="full-clean" >
         <delete dir="tmp" />
     </target>
 </project>

@@ -8,6 +8,6 @@
     </target>
     <target name='android' depends="android-set-version">
 	<ant antfile="build.xml" dir="src/android" target="debug" />
-	<copy file="tmp/android/cleer-debug.apk" tofile="tmp/product/cleer-${cleer.version}.r${REVISION}-debug.apk"/>
+	<copy file="tmp/android/cleer-debug.apk" tofile="tmp/product/android/cleer-${cleer.version}.r${REVISION}-debug.apk"/>
     </target>
 </project>
