@@ -1,0 +1,25 @@
+<xsl:stylesheet version="1.0" 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+>
+    <xsl:output method="xml" indent="yes"/>
+
+    <xsl:template match="@* | node()">
+        <xsl:copy>
+            <xsl:apply-templates select="@* | node()"/>
+        </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="@android:versionCode">
+        <xsl:attribute name="android:versionCode">
+            <xsl:text>{revision}</xsl:text>
+        </xsl:attribute>
+    </xsl:template>
+
+    <xsl:template match="@android:versionName">
+        <xsl:attribute name="android:versionName">
+            <xsl:text>{version}</xsl:text>
+        </xsl:attribute>
+    </xsl:template>
+
+</xsl:stylesheet>

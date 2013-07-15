@@ -1,5 +1,13 @@
 <project name="cleer-android">
-    <target name='android'>
+    <target name="android-set-version">
+	<copy file="src/android/set-version.xml" tofile="tmp/android/set-version.xml" />
+	<replace file="tmp/android/set-version.xml" token="{version}" value="${cleer.version}"/>
+	<replace file="tmp/android/set-version.xml" token="{revision}" value="${REVISION}"/>
+	<xslt style="tmp/android/set-version.xml" in="src/android/AndroidManifest.xml" out="tmp/AndroidManifest.t" />
+	<move file="tmp/AndroidManifest.t" tofile="src/android/AndroidManifest.xml" />
+    </target>
+    <target name='android' depends="android-set-version">
 	<ant antfile="build.xml" dir="src/android" target="debug" />
+	<copy file="tmp/android/cleer-debug.apk" tofile="tmp/product/cleer-${cleer.version}.r${REVISION}-debug.apk"/>
     </target>
 </project>

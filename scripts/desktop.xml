@@ -27,8 +27,6 @@
             <zipgroupfileset dir="." excludes="META-INF/*.SF" includes="tmp/build/jars/core/*.jar" />
             <zipgroupfileset dir="." excludes="META-INF/*.SF" includes="tmp/build/jars/${cleer.target}/*.jar" />
         </jar>
-        <copy file="tmp/product/${cleer.target}/cleer-${cleer.target}-${cleer.version}-rev${REVISION}.jar" tofile="tmp/product/${cleer.target}/cleer-${cleer.target}-${cleer.version}.jar" />
-        <copy file="tmp/product/${cleer.target}/cleer-${cleer.target}-${cleer.version}-rev${REVISION}.jar" tofile="tmp/product/${cleer.target}/cleer-${cleer.target}.jar" />
     </target>
     
     <target name="desktop">
@@ -42,6 +40,5 @@
         <mkdir dir="tmp/package/win32" />
         <get skipexisting="true" src="http://cleer.cc.trousev.pro/artifacts/win32/jre.tar.gz" dest="tmp/artifacts/win32/jre.tar.gz"  />
         <get skipexisting="true" src="${artifacts.win32.mplayer}" dest="tmp/artifacts/win32/mplayer.7z"  />
-        
     </target>
 </project>
