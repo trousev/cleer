@@ -64,7 +64,7 @@ public class Library extends Command {
 			//	throw new Exception("Folder is not writeable");
 			for(Item item: iface.library().focus().contents())
 			{
-				File target = new File(args.get(0)+"/"+item.filename().getName());
+				File target = new File(args.get(0)+"/"+item.firstTag("artist").value() + " - " + item.firstTag("title").value()+".mp3");
 				if(!target.exists())
 					try
 					{
