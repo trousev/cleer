@@ -29,6 +29,7 @@ public class CoreConsole implements Console
 		register(new BasicLibraryManagement.Shuffle());
 		register(new BasicLibraryManagement.Focus());
 		register(new BasicLibraryManagement.Enqueue());
+		register(new BasicLibraryManagement.Loop());
 		register(new SystemCommands.GarbageCollection());
 		register(new SystemCommands.PerformTests());
 		register(new RatingManagement.Rate());

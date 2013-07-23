@@ -11,7 +11,7 @@ public interface Queue {
 	 * @author doctor
 	 * 
 	 */
-	enum EnqueueMode {
+	static enum EnqueueMode {
 		/**
 		 * Песня(и) добавляется после текущей. Текущая песна останавливается,
 		 * начинает играть новая
@@ -33,6 +33,22 @@ public interface Queue {
 		ReplaceAll
 	}
 
+	enum LoopMode {
+		/**
+		 * No loop at all: playback is ended when playlist is ended.
+		 */
+		LoopNothing,
+		
+		/**
+		 * Repeat playlist when it's over
+		 */
+		LoopPlaylist,
+		
+		/**
+		 * Loop very this song
+		 */
+		LoopCurrentTrack
+	}
 	/**
 	 * @return current playback queue
 	 */
@@ -135,6 +151,9 @@ public interface Queue {
 	 * Перемешивает всю очередь, за исключением текущего индекса
 	 */
 	void shuffle();
+	
+	 void setLoop(LoopMode new_mode);
+	 LoopMode loop();
 	
 	/**
 	 * This message is sent when queue is changed.

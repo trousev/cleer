@@ -20,6 +20,7 @@ public class QueueImpl implements Queue {
 	private Player player;
 	private List<Item> queue = null;
 	private int current = 0;
+	private LoopMode _loop = LoopMode.LoopPlaylist;
 	private static final QueueChangedMessage _queueChangedMessage = new QueueChangedMessage();
 	private static final QueueSongChangedMessage _queueSongChangedMessage = new QueueSongChangedMessage();
 
@@ -33,7 +34,17 @@ public class QueueImpl implements Queue {
 				PlayerChangeEvent ev = (PlayerChangeEvent) message;
 				if (ev.status == Status.Stopped
 						&& ev.reason == Reason.EndOfTrack && ev.error == null) {
-					next();
+					if(_loop == LoopMode.LoopNothing)
+						next();
+					if(_loop == LoopMode.LoopPlaylist)
+					{
+						if (((current + 1) >= size()) || ((current + 1) < 0))
+							seek(-current);
+						else 
+							next();
+					}
+					if(_loop == LoopMode.LoopCurrentTrack)
+						play();
 				}
 			}
 		});
@@ -188,4 +199,17 @@ public class QueueImpl implements Queue {
 		}
 		Messaging.fire(_queueChangedMessage);
 	}
+
+	@Override
+	public void setLoop(LoopMode new_mode) {
+		// TODO Auto-generated method stub
+		_loop = new_mode;
+	}
+
+	@Override
+	public LoopMode loop() {
+		return _loop;
+	}
+
+
 }

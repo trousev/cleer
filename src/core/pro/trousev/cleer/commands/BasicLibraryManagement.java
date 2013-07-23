@@ -4,10 +4,12 @@ import java.io.PrintStream;
 import java.util.List;
 
 import pro.trousev.cleer.Console.CommandNotFoundException;
+import pro.trousev.cleer.ConsoleOutput.Type;
 import pro.trousev.cleer.Player.Status;
 import pro.trousev.cleer.Playlist;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Plugin.Interface;
+import pro.trousev.cleer.Queue.LoopMode;
 import pro.trousev.cleer.sys.Tools;
 
 public class BasicLibraryManagement {
@@ -110,5 +112,32 @@ public class BasicLibraryManagement {
 			}
 			return true;
 		}
+	}
+	public static class Loop extends Command
+	{
+
+		@Override
+		public String name() {
+			return "loop";
+		}
+
+		@Override
+		public String help(boolean is_short) {
+			return "Switches loop mode";
+		}
+
+		@Override
+		public boolean main(List<String> args, PrintStream stdout,
+				Interface iface) throws Exception {
+			if(iface.queue().loop().equals(LoopMode.LoopNothing)) 
+				iface.queue().setLoop(LoopMode.LoopPlaylist);
+			else if(iface.queue().loop().equals(LoopMode.LoopPlaylist)) 
+				iface.queue().setLoop(LoopMode.LoopCurrentTrack);
+			else if(iface.queue().loop().equals(LoopMode.LoopCurrentTrack)) 
+				iface.queue().setLoop(LoopMode.LoopNothing);
+			iface.output().printMessage("Loop mode: "+iface.queue().loop(), Type.MessageTypeInfo, null);
+			return true;
+		}
+		
 	}
 }
