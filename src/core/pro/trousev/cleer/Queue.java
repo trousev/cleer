@@ -159,5 +159,6 @@ public interface Queue {
 	 * This message is sent when queue is changed.
 	 */
 	public static class QueueChangedMessage implements Messaging.Message {}
-	public static class QueueSongChangedMessage implements Messaging.Message { public int track_number; }
+	public static class QueueSongChangedMessage implements Messaging.Message {}
+	public static class QueueLoopTypeChangedMessage implements Messaging.Message {}
 }

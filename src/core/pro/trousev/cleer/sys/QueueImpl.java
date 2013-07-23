@@ -23,6 +23,7 @@ public class QueueImpl implements Queue {
 	private LoopMode _loop = LoopMode.LoopPlaylist;
 	private static final QueueChangedMessage _queueChangedMessage = new QueueChangedMessage();
 	private static final QueueSongChangedMessage _queueSongChangedMessage = new QueueSongChangedMessage();
+	private static final QueueLoopTypeChangedMessage _queueLoopTypeChangedMessage = new QueueLoopTypeChangedMessage();
 
 	public QueueImpl(Player player) {
 		this.player = player;
@@ -81,7 +82,6 @@ public class QueueImpl implements Queue {
 		queue.clear();
 		current = 0;
 		Messaging.fire(_queueChangedMessage);
-		_queueSongChangedMessage.track_number = current;
 		Messaging.fire(_queueSongChangedMessage);
 	}
 
@@ -170,7 +170,6 @@ public class QueueImpl implements Queue {
 			e.printStackTrace();
 		}
 		player.play();
-		_queueSongChangedMessage.track_number = current;
 		Messaging.fire(_queueSongChangedMessage);
 		return true;
 	}
@@ -204,6 +203,7 @@ public class QueueImpl implements Queue {
 	public void setLoop(LoopMode new_mode) {
 		// TODO Auto-generated method stub
 		_loop = new_mode;
+		Messaging.fire(_queueLoopTypeChangedMessage);
 	}
 
 	@Override

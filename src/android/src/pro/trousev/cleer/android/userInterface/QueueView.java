@@ -3,6 +3,8 @@ package pro.trousev.cleer.android.userInterface;
 import java.util.List;
 
 
+
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -30,6 +32,7 @@ import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.Item.NoSuchTagException;
 import pro.trousev.cleer.Messaging.Message;
 import pro.trousev.cleer.Player.Status;
+import pro.trousev.cleer.Queue.LoopMode;
 import pro.trousev.cleer.android.userInterface.SwipePageAdapter.SwipePage;
 
 public class QueueView extends SwipePage implements OnItemClickListener, OnClickListener{
@@ -177,6 +180,7 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 	ImageButton _next;
 	ImageButton _play;
 	ImageButton _shuffle;
+	ImageButton _loop;
 	ListView _list;
 	SeekBar _seek;
 	Boolean _seekBarFlag = true;
@@ -193,7 +197,7 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 	Messaging.Event _songChangeEvent = new Messaging.Event() {
 		@Override
 		public void messageReceived(Message message) {
-			int no = ((Queue.QueueSongChangedMessage) message ).track_number;
+			int no = MainActivity.service.queue().playing_index();
 			System.out.println("[cleer] Focus is on: "+no);
 			_adapter.notifyDataSetChanged();
 			try
@@ -218,6 +222,19 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 				else
 					_play.setBackgroundResource(R.drawable.media_playback_start_symbolic_state);
 			}
+		}
+	};
+	Messaging.Event _LoopChangeEvent = new Messaging.Event() {
+		
+		@Override
+		public void messageReceived(Message message) {
+			LoopMode m = MainActivity.service.queue().loop();
+			if(m == LoopMode.LoopNothing)
+				_loop.setBackgroundResource(R.drawable.media_playlist_repeat_symbolic_state);
+			if(m == LoopMode.LoopPlaylist)
+				_loop.setBackgroundResource(R.drawable.media_playlist_repeat_symbolic_blue_light);
+			if(m == LoopMode.LoopCurrentTrack)
+				_loop.setBackgroundResource(R.drawable.media_playlist_repeat_symbolic_orange_light);
 		}
 	};
 	
@@ -259,6 +276,7 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 		_prev = (ImageButton) rootView.findViewById(R.id.queue_prev);
 		_play = (ImageButton) rootView.findViewById(R.id.queue_play);
 		_next = (ImageButton) rootView.findViewById(R.id.queue_next);
+		_loop = (ImageButton) rootView.findViewById(R.id.queue_loop);
 		_shuffle = (ImageButton) rootView.findViewById(R.id.queue_shuffle);
 		_seek = (SeekBar) rootView.findViewById(R.id.queue_seek);
 		_seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -316,6 +334,21 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 				MainActivity.service.queue().shuffle();
 			}
 		});
+		_loop.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				LoopMode curr = MainActivity.service.queue().loop();
+				if(curr == LoopMode.LoopPlaylist)
+					curr = LoopMode.LoopCurrentTrack;
+				else if(curr == LoopMode.LoopCurrentTrack)
+					curr = LoopMode.LoopNothing;
+				else if(curr == LoopMode.LoopNothing)
+					curr = LoopMode.LoopPlaylist;
+				MainActivity.service.queue().setLoop(curr);
+			}
+		});
+
 		//_selfView = rootView;
 		if(!subscribed)
 		{
@@ -323,6 +356,7 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 			Messaging.subscribe(Queue.QueueChangedMessage.class, _queueChangedEvent);
 			Messaging.subscribe(Queue.QueueSongChangedMessage.class, _songChangeEvent);
 			Messaging.subscribe(Player.PlayerChangeEvent.class, _playerChangeEvent);
+			Messaging.subscribe(Queue.QueueLoopTypeChangedMessage.class, _LoopChangeEvent);
 		}
 		subscribed = true;
 		
@@ -354,6 +388,9 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 		}
 
 		Messaging.fire(new Queue.QueueChangedMessage());
+		Messaging.fire(new Queue.QueueSongChangedMessage());
+		Messaging.fire(new Player.PlayerChangeEvent());
+		Messaging.fire(new Queue.QueueLoopTypeChangedMessage());
 		return rootView;
 	}
 
@@ -374,6 +411,7 @@ public class QueueView extends SwipePage implements OnItemClickListener, OnClick
 		Messaging.unSubscribe(Queue.QueueChangedMessage.class, _queueChangedEvent);
 		Messaging.unSubscribe(Queue.QueueSongChangedMessage.class, _songChangeEvent);
 		Messaging.unSubscribe(Player.PlayerChangeEvent.class, _playerChangeEvent);
+		Messaging.unSubscribe(Queue.QueueLoopTypeChangedMessage.class, _LoopChangeEvent);
 		synchronized(_seekBarFlag)
 		{
 			_seekBarFlag = false;
