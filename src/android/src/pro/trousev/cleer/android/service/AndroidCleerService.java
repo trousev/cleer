@@ -32,8 +32,15 @@ import pro.trousev.cleer.android.Constants;
 import pro.trousev.cleer.sys.MediaItem;
 import pro.trousev.cleer.sys.QueueImpl;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.media.RemoteControlClient;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
@@ -118,7 +125,10 @@ public class AndroidCleerService extends Service implements Interface{
 			return AndroidCleerService.this;
 		}
 	}
-
+    
+	public void registerAsMediaPlayer()
+	{
+	}
 	public void onCreate() {
 		super.onCreate();
 		player = new PlayerAndroid();
@@ -138,6 +148,31 @@ public class AndroidCleerService extends Service implements Interface{
 		Messaging
 				.subscribe(Player.PlayerChangeEvent.class, playerChangedStatus);
 		Log.d(Constants.LOG_TAG, "Service: Subscibed on several messages");
+		
+		
+		registerReceiver(new BroadcastReceiver() {
+			
+			boolean was_playing=false;
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				int state = (Integer) intent.getExtras().get("state");
+				if(state == 1)
+				{
+					if(was_playing)
+						player.resume();
+				}
+				if(state == 0)
+				{
+					if(player.getStatus() == Status.Playing)
+					{
+						was_playing = true;
+						player.pause();
+					}
+					else 
+						was_playing = false;
+				}
+			}
+		}, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 	}
 
 	// This method is called every time UI starts
