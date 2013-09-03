@@ -199,6 +199,16 @@ public class ConsoleClient {
 							int selected_track, Callback songSelectAction) {
 						printTrackList(tracks.contents(), selected_track, songSelectAction);
 					}
+
+					@Override
+					public void printMessage(String message, Type messageType) {
+						printMessage(message,messageType,null);
+					}
+
+					@Override
+					public void printMessage(String message) {
+						printMessage(message,Type.MessageTypeInfo);
+					}
 					
 				};
 			}

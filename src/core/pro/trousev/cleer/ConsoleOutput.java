@@ -12,6 +12,8 @@ public interface ConsoleOutput {
 	{
 		MessageTypeError, MessageTypeInfo, MessageTypeQuestion, MessageTypeWarning
 	}
+    public void printMessage(String message, Type messageType);
+	public void printMessage(String message);
 	public void printMessage(String message, Type messageType, Callback dismissAction);
 	public void printException(Throwable t, String additionalMessage, Callback dismissAction);
 	public void printTrackList(List<Item> tracks, int selected_track, Callback songSelectAction);

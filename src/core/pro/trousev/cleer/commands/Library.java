@@ -77,7 +77,7 @@ public class Library extends Command {
 
 		@Override
 		public String help(boolean is_short) {
-			return "Test";
+			return "Syncs current focus to specified local folder";
 		}
 
 		@Override
@@ -93,15 +93,21 @@ public class Library extends Command {
 			{
 				File target = new File(args.get(0)+"/"+item.firstTag("artist").value() + " - " + item.firstTag("title").value()+".mp3");
 				if(!target.exists())
+				{
 					try
 					{
+						iface.output().printMessage("Copying file: "+item.filename());
 						copyFile(item.filename(), target);
-						System.out.println(item.filename());
 					}
 					catch (Throwable t)
 					{
-						System.out.println("WARNING: "+t.getMessage()+" in file: "+item.filename());
+						iface.output().printException(t, "WARNING: "+t.getMessage()+" in file: "+item.filename(), null);
 					}
+				}
+				else
+				{
+					iface.output().printMessage("Skipping file: "+item.filename());
+				}
 			}
 			return true;
 		}
