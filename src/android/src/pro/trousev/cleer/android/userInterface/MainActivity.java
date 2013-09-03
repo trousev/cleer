@@ -38,10 +38,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		public void messageReceived(Message message) {
 			MenuItem m = (MenuItem)  _main_menu.findItem(R.id.menu_scan_system);
 			m.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-				
 				@Override
 				public boolean onMenuItemClick(MenuItem item) {
 					on_scanSystem_click(item);
+					return true;
+				}
+			});
+			
+			((MenuItem) _main_menu.findItem(R.id.menu_exit_program)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+					exit();
 					return true;
 				}
 			});
@@ -101,6 +108,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void exit() {
 		if (serviceIsBound)
 			unbindService(serviceConnection);
+		
 		stopService(new Intent(this, AndroidCleerService.class));
 		serviceIsBound = false;
 		this.finish();
@@ -114,8 +122,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		//this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
 		
 		boolean ans = super.onCreateOptionsMenu(menu);
-		
-		
 		menu.clear();
 		this.getMenuInflater().inflate(R.menu.main_option_menu, menu);
 		_main_menu = menu;

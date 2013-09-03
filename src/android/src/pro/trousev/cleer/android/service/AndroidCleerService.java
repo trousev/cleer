@@ -145,8 +145,7 @@ public class AndroidCleerService extends Service implements Interface{
 		}
 		mNotificationManager = new CleerAndroidNotificationManager(this);
 		Log.d(Constants.LOG_TAG, "Service: All service instances created");
-		Messaging
-				.subscribe(Player.PlayerChangeEvent.class, playerChangedStatus);
+		Messaging.subscribe(Player.PlayerChangeEvent.class, playerChangedStatus);
 		Log.d(Constants.LOG_TAG, "Service: Subscibed on several messages");
 		
 		
@@ -188,7 +187,6 @@ public class AndroidCleerService extends Service implements Interface{
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
-
 	public void onDestroy() {
 		queue.clear();
 		Messaging.unSubscribe(Player.PlayerChangeEvent.class,
@@ -205,6 +203,8 @@ public class AndroidCleerService extends Service implements Interface{
 
 	public boolean onUnbind(Intent intent) {
 		Log.d(Constants.LOG_TAG, "Service.onUnbind()");
+		if(player.getStatus() != Status.Playing)
+			stopSelf();	//Harakiri if service is no longer needed.
 		return true; // for onServiceConnected
 	}
 
