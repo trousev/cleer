@@ -4,26 +4,10 @@
     android:layout_height="fill_parent"
     android:background="#000000"
     android:orientation="vertical"
-    >
-
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/playlist_add_title"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/playlist_add_title"
-        android:text="@string/playlist_add_query"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    android:paddingBottom="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp" >
 
     <TextView
         android:id="@+id/textView3"
@@ -40,15 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView3"
-        android:ems="10" />
-
-    <Button
-        android:id="@+id/playlist_add_cancel_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/playlist_add_query"
-        android:text="Cancel" />
+        android:ems="10" >
+        <requestFocus />
+    </EditText>
 
     <EditText
         android:id="@+id/playlist_add_title"
@@ -58,7 +36,6 @@
         android:layout_below="@+id/textView1"
         android:ems="10" >
 
-        <requestFocus />
     </EditText>
 
     <Button
@@ -68,7 +45,42 @@
         android:layout_alignBaseline="@+id/playlist_add_cancel_button"
         android:layout_alignBottom="@+id/playlist_add_cancel_button"
         android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/playlist_add_cancel_button"
+        android:layout_toRightOf="@+id/playlist_add_delete_button"
         android:text="OK" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/playlist_add_query"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/playlist_add_query"
+        android:text="@string/playlist_add_title"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/playlist_add_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Cancel" />
+
+    <Button
+        android:id="@+id/playlist_add_delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/playlist_add_cancel_button"
+        android:layout_alignBottom="@+id/playlist_add_cancel_button"
+        android:layout_toRightOf="@+id/playlist_add_cancel_button"
+        android:text="Delete" />
 
 </RelativeLayout>

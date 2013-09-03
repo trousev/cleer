@@ -4,8 +4,11 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +24,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import pro.trousev.cleer.Item;
 import pro.trousev.cleer.Messaging;
 import pro.trousev.cleer.Playlist;
@@ -29,7 +34,7 @@ import pro.trousev.cleer.Queue.EnqueueMode;
 import pro.trousev.cleer.Queue;
 import pro.trousev.cleer.android.userInterface.SwipePageAdapter.SwipePage;
 
-public class PlaylistsView extends SwipePage implements OnItemClickListener{
+public class PlaylistsView extends SwipePage implements OnItemClickListener, OnItemLongClickListener{
 
 	PlaylistsView(SwipePageAdapter parent) {
 		super(parent);
@@ -115,20 +120,55 @@ public class PlaylistsView extends SwipePage implements OnItemClickListener{
 		    return rowView;
 		  }
 	}
-	private class PlayListPopup extends SimplePopup implements OnClickListener
+	private class PlayListPopup extends SimplePopup implements OnClickListener, OnEditorActionListener
 	{
 		Button _ok;
 		Button _cancel;
+		Button _delete;
 		EditText _title;
 		EditText _query;
 		public PlayListPopup(int target_layout, View parent_view) {
 			super(target_layout, parent_view);
 			_ok = (Button) getView().findViewById(R.id.playlist_add_ok_button);
 			_cancel = (Button)getView().findViewById(R.id.playlist_add_cancel_button);
+			_delete = (Button)getView().findViewById(R.id.playlist_add_delete_button);
 			_title = (EditText) getView().findViewById(R.id.playlist_add_title);
 			_query = (EditText) getView().findViewById(R.id.playlist_add_query);
 			_ok.setOnClickListener(this);
+			_ok.setEnabled(false);
 			_cancel.setOnClickListener(this);
+			_query.setOnEditorActionListener(this);
+			_query.addTextChangedListener( new TextWatcher() {
+				
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void afterTextChanged(Editable s) {
+					_title.setHint(s.toString());
+					_ok.setEnabled(true);
+				}
+			});
+			_delete.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					String title = _title.getText().toString();
+					MainActivity.service.library().playlist_remove(title);
+					_adapter.refresh();
+					hide();
+				}
+			});
 		}
 
 		@Override
@@ -136,13 +176,36 @@ public class PlaylistsView extends SwipePage implements OnItemClickListener{
 			System.out.println("[cleer] popupOnClick");
 			if(v == _ok)
 			{
-				addPlaylist(_title.getText().toString(), _query.getText().toString());
+				String title = _title.getText().toString();
+				if(title == null || title.length() == 0)
+					title = _query.getText().toString();
+				addPlaylist(title, _query.getText().toString());
 				hide();
 			}
 			if(v == _cancel)
 			{
 				hide();
 			}
+		}
+
+		@Override
+		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+			System.out.println("KUUGH!");
+			if(v == _query)
+			{
+				System.out.println("WAAAGH");
+				return true;
+			}
+			return false;
+		}
+		public void iAmEdit()
+		{
+			_title.setEnabled(false);
+			_ok.setEnabled(true);
+		}
+		public void iAmNew()
+		{
+			_delete.setVisibility(View.GONE);
 		}
 		
 	}
@@ -164,6 +227,7 @@ public class PlaylistsView extends SwipePage implements OnItemClickListener{
 		
 		viewPlaylists.setAdapter(_adapter);
 		viewPlaylists.setOnItemClickListener(this);
+		viewPlaylists.setOnItemLongClickListener(this);
 		_selfView = rootView;
 		return rootView;
 	}
@@ -190,6 +254,8 @@ public class PlaylistsView extends SwipePage implements OnItemClickListener{
 		if(pl.title().equals(PLAYLIST_ADD_STRING))
 		{
 			PlayListPopup p = new PlayListPopup(R.layout.playlist_add_dialog, _selfView);
+			p.iAmNew();
+			System.out.println("cleer popup showed");
 			p.show();
 		}
 		else
@@ -204,9 +270,26 @@ public class PlaylistsView extends SwipePage implements OnItemClickListener{
 	{
 		MainActivity.service.library().setFocus(name);
 		MainActivity.service.library().search(query);
-		
 		_adapter.refresh();
-		System.out.println("[cleer] NOT IMPLEMENTED YET");
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) 
+	{
+		System.out.println("[cleer] Item longclicked: "+arg2);
+		Playlist pl = _adapter.getItem(arg2);
+		if(pl.title().equals(PLAYLIST_ADD_STRING))
+		{
+			return false;
+		}
+		PlayListPopup p = new PlayListPopup(R.layout.playlist_add_dialog, _selfView);
+		p._query.setText(pl.query());
+		p._title.setText(pl.title());
+		p.iAmEdit();
+		System.out.println("cleer popup showed");
+		p.show();
+		return true;
 	}
 
 }

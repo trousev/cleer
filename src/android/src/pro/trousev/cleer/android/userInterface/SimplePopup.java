@@ -44,7 +44,6 @@ public class SimplePopup {
 	    	       size.x, 
 	    	       size.y, 
 	    	       true);
-	    
 	    // The code below assumes that the root container has an id called 'main'
 		
 	}
