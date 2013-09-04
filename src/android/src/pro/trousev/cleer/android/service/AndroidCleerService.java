@@ -44,6 +44,7 @@ import android.media.RemoteControlClient;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.ProgressBar;
 
@@ -105,30 +106,61 @@ public class AndroidCleerService extends Service implements Interface{
 			}
 		}
 	}
+	private boolean _broadcast_was_playing = false;
+	private BroadcastReceiver shouldPauseReceiver = new BroadcastReceiver()
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if(player.getStatus() == Status.Playing)
+			{
+				_broadcast_was_playing = true;
+				player.pause();
+			}
+			else
+				_broadcast_was_playing = false;
+		}
+	};
+	private BroadcastReceiver shouldResumeReceiver = new BroadcastReceiver()
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if(_broadcast_was_playing)
+				player.resume();
+		}
+	};
 	
-	private BroadcastReceiver headphoneReceiver = new BroadcastReceiver() {
-		
-		boolean was_playing=false;
+	
+	private BroadcastReceiver headphonesReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int state = (Integer) intent.getExtras().get("state");
-			if(state == 1)
-			{
-				if(was_playing)
-					player.resume();
-			}
 			if(state == 0)
 			{
-				if(player.getStatus() == Status.Playing)
-				{
-					was_playing = true;
-					player.pause();
-				}
-				else 
-					was_playing = false;
+				shouldPauseReceiver.onReceive(context, intent);
+			}
+			else
+			{
+				shouldResumeReceiver.onReceive(context, intent);
 			}
 		}
 	};
+	private BroadcastReceiver callReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String state = (String) intent.getExtras().get("state");
+			if(state.equals(TelephonyManager.EXTRA_STATE_IDLE))
+			{
+				shouldResumeReceiver.onReceive(context, intent);
+			}
+			else
+			{
+				shouldPauseReceiver.onReceive(context, intent);
+			}
+		}
+	};
+	
 
 	// This Event will change notification each time after player changed his
 	// status
@@ -172,7 +204,8 @@ public class AndroidCleerService extends Service implements Interface{
 		Log.d(Constants.LOG_TAG, "Service: Subscibed on several messages");
 		
 		
-		registerReceiver(headphoneReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+		registerReceiver(headphonesReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+		registerReceiver(callReceiver, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
 	}
 
 	// This method is called every time UI starts
@@ -193,7 +226,8 @@ public class AndroidCleerService extends Service implements Interface{
 		Messaging.unSubscribe(Player.PlayerChangeEvent.class,
 				playerChangedStatus);
 		mNotificationManager.cancelAll();
-		unregisterReceiver(headphoneReceiver);
+		unregisterReceiver(headphonesReceiver);
+		unregisterReceiver(callReceiver);
 		try {
 			System.out.println("Closing database...");
 			database.close();

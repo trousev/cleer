@@ -6,8 +6,12 @@ import java.util.Collection;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 import pro.trousev.cleer.Database;
@@ -16,6 +20,7 @@ import pro.trousev.cleer.Database.DatabaseError;
 import pro.trousev.cleer.Database.DatabaseObject;
 import pro.trousev.cleer.Database.SearchLanguage;
 import pro.trousev.cleer.Item.Factory;
+import pro.trousev.cleer.android.userInterface.MainActivity;
 import pro.trousev.cleer.sys.Hash;
 import pro.trousev.cleer.sys.LibraryImpl;
 
@@ -29,6 +34,7 @@ public class LibraryAndroidImpl extends LibraryImpl {
 	}
 	public boolean folder_scan(FolderScanCallback callback)
 	{
+		
 		callback.started();
 		List<File> all_files = new ArrayList<File>(); // Ща получим!
 
