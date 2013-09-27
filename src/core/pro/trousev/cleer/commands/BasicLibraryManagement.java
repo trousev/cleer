@@ -133,7 +133,7 @@ public class BasicLibraryManagement {
 				iface.queue().setLoop(LoopMode.LoopPlaylist);
 			else if(iface.queue().loop().equals(LoopMode.LoopPlaylist)) 
 				iface.queue().setLoop(LoopMode.LoopCurrentTrack);
-			if(iface.queue().loop().equals(LoopMode.LoopCurrentTrack)) 
+			else if(iface.queue().loop().equals(LoopMode.LoopCurrentTrack)) 
 				iface.queue().setLoop(LoopMode.LoopNothing);
 			iface.output().printMessage("Loop mode: "+iface.queue().loop(), Type.MessageTypeInfo, null);
 			return true;
