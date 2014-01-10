@@ -1,5 +1,6 @@
 package pro.trousev.cleer.desktop;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -51,7 +52,10 @@ public class ConsoleClient {
 
 	    final Console console = new CoreConsole();
 	    
-	    String dbpath = System.getProperty("user.home") + "/.config/cleer/database.sqlite";
+	    String dbfolder = System.getProperty("user.home") + "/.config/cleer";
+	    new File(dbfolder).mkdirs();
+	    String dbpath = dbfolder + "/database.sqlite";
+
 	    
 	    final Database db = new DatabaseSqlite(dbpath);
 	    

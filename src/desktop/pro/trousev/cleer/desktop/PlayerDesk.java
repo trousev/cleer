@@ -23,7 +23,7 @@ public class PlayerDesk implements Player
 		SubprocessDelegate delegate;
 		Process _process;
 		Boolean killed = new Boolean(false);
-		public Subprocess(String[] args, SubprocessDelegate delegate) 
+		public Subprocess(String[] args, SubprocessDelegate delegate)
 		{
 			this.args = args;
 			this.delegate = delegate;
@@ -32,9 +32,11 @@ public class PlayerDesk implements Player
 		public void run()
 		{
 			try {
-				for(String s: args)
+				/*
+                                for(String s: args)
 					System.out.print(s+" ");
 				System.out.println("");
+                                */
 				_process = Runtime.getRuntime().exec(args);
 			} catch (IOException e) {
 				delegate.onCannotLaunchProcess(e.getMessage());
@@ -55,7 +57,7 @@ public class PlayerDesk implements Player
 				}
 				if(length == -1)
 				{
-					synchronized (killed) 
+					synchronized (killed)
 					{
 						if(killed)
 							delegate.onProcessKilled();
@@ -97,25 +99,25 @@ public class PlayerDesk implements Player
 		args[3] = track.filename().getAbsolutePath();
 		this.track = track;
 		subprocess = new Subprocess(args, new SubprocessDelegate() {
-			
+
 			@Override
 			public void onStartedProcess() {
-				
+
 			}
-			
+
 			@Override
 			public void onReadingError(String message) {
 				stop(Reason.EndOfTrack);
 			}
-			
+
 			@Override
 			public void onEndOfFileReached() {
 				stop(Reason.EndOfTrack);
 			}
-			
+
 			@Override
 			public void onCannotLaunchProcess(String message) {
-				
+
 			}
 
 			@Override
@@ -143,7 +145,7 @@ public class PlayerDesk implements Player
 		if(current_status == Status.Playing || current_status == Status.Paused)
 			stop(Reason.UserBreak);
 		subprocess.start();
-		
+
 		playerChangeEvent.error = null;
 		playerChangeEvent.reason = null;
 		playerChangeEvent.sender = this;
@@ -191,7 +193,7 @@ public class PlayerDesk implements Player
         return -1;
     }
 
-    @Override 
+    @Override
     public int getCurrentPosition() {
         return -1;
     }
