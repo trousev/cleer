@@ -4,14 +4,14 @@
         <mkdir dir="tmp/build/jars/${cleer.target}" />
         <mkdir dir="tmp/build/jars/core" />
         <copy file="submodules/jline2/target/jline-2.12-SNAPSHOT.jar" todir="tmp/build/jars/${cleer.target}" />
-        <javac encoding="utf-8" includeAntRuntime="false" srcdir="src/core" destdir="tmp/build/bin/${cleer.target}" classpathref="path.build.classpath" />
+        <javac source="1.5" target="1.5" encoding="utf-8" includeAntRuntime="false" srcdir="src/core" destdir="tmp/build/bin/${cleer.target}" classpathref="path.build.classpath" />
         <path id="path.build.tmp.updated">
             <path refid="path.build.classpath"/>
             <fileset dir="src/core">
                 <include name="**/*.java"/>
             </fileset>
         </path>
-        <javac encoding="utf-8" includeAntRuntime="false" srcdir="src/${cleer.target}" destdir="tmp/build/bin/${cleer.target}" classpathref="path.build.tmp.updated" />
+        <javac target="1.5" source="1.5" encoding="utf-8" includeAntRuntime="false" srcdir="src/${cleer.target}" destdir="tmp/build/bin/${cleer.target}" classpathref="path.build.tmp.updated" />
     </target>
 
     <target name="core-jar-platform-desktop" depends="core-compile-platform-desktop">
@@ -28,12 +28,12 @@
             <zipgroupfileset dir="." excludes="META-INF/*.SF" includes="tmp/build/jars/${cleer.target}/*.jar" />
         </jar>
     </target>
-    
+
     <target name="desktop">
         <property name="cleer.target" value="desktop" />
         <antcall target="core-jar-platform-desktop" />
     </target>
-    
+
     <target name="nsis">
         <mkdir dir="tmp/artifacts/win32" />
         <delete dir="tmp/package/win32" />
