@@ -3,7 +3,7 @@
         <mkdir dir="tmp/build/bin/${cleer.target}" />
         <mkdir dir="tmp/build/jars/${cleer.target}" />
         <mkdir dir="tmp/build/jars/core" />
-        <copy file="submodules/jline2/target/jline-2.12-SNAPSHOT.jar" todir="tmp/build/jars/${cleer.target}" />
+        <copy file="submodules/jline2/target/jline-2.13-SNAPSHOT.jar" todir="tmp/build/jars/${cleer.target}" />
         <javac source="1.5" target="1.5" encoding="utf-8" includeAntRuntime="false" srcdir="src/core" destdir="tmp/build/bin/${cleer.target}" classpathref="path.build.classpath" />
         <path id="path.build.tmp.updated">
             <path refid="path.build.classpath"/>
